@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+        
+    <wb-module deploy-name="TripVibe">
+                
+        <wb-resource deploy-path="/" source-path="/webapp" tag="defaultRootSource"/>
+                
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
+                
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/resources"/>
+                
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/resource"/>
+                
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/js"/>
+                
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/resource.css"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/reference"/>
+                
+        <property name="context-root" value="tripvibe"/>
+                
+        <property name="java-output-path" value="/TripVibe/webapp/WEB-INF/classes"/>
+            
+    </wb-module>
+    
+</project-modules>
