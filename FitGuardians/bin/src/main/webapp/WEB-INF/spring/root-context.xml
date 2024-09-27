@@ -9,8 +9,8 @@
 	 <bean class="org.apache.commons.dbcp.BasicDataSource" id="dataSource" destroy-method="close">
 	 	<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
 	 	<property name="url" value="jdbc:oracle:thin:@localhost:1521:xe" />
-	 	<property name="username" value="아직" />
-	 	<property name="password" value="아직" />
+	 	<property name="username" value="fitguardians" />
+	 	<property name="password" value="fitguardians" />
 	 </bean>
 	 
 	 <!-- mybatis-config와 연결 -->
