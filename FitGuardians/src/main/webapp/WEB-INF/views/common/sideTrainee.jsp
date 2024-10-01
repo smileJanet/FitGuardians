@@ -166,6 +166,8 @@ pageEncoding="UTF-8"%>
         >
       </li>
       
+      <hr class="sidebar-divider" />
+      
       <li class="nav-item">
         <a class="nav-link" href="javascript:void(0)">
           <i class="fas fa-map"></i>
