@@ -75,7 +75,7 @@ pageEncoding="UTF-8"%>
         <li class="nav-item">
           <a
             class="nav-link collapsed"
-            href="#"
+            href="../Trainer/traineeManagement.jsp"
             data-toggle="collapse"
             data-target="#collapseTwo"
             aria-expanded="true"

@@ -109,7 +109,7 @@
                                 </h6>
                                 <a class="dropdown-item d-flex align-items-center" href="#" data-toggle="modal" data-target="#chatModal1">
                                     <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="img/undraw_profile_1.svg"
+                                        <img class="rounded-circle" src=""
                                             alt="...">
                                         <div class="status-indicator bg-success"></div>
                                     </div>
@@ -121,7 +121,7 @@
                                 </a>
                                 <a class="dropdown-item d-flex align-items-center" href="#">
                                     <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="img/undraw_profile_2.svg"
+                                        <img class="rounded-circle" src=""
                                             alt="...">
                                         <div class="status-indicator"></div>
                                     </div>
@@ -133,7 +133,7 @@
                                 </a>
                                 <a class="dropdown-item d-flex align-items-center" href="#">
                                     <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="img/undraw_profile_3.svg"
+                                        <img class="rounded-circle" src=""
                                             alt="...">
                                         <div class="status-indicator bg-warning"></div>
                                     </div>
@@ -145,7 +145,7 @@
                                 </a>
                                 <a class="dropdown-item d-flex align-items-center" href="#">
                                     <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="https://source.unsplash.com/Mv9hjnEUHR4/60x60"
+                                        <img class="rounded-circle" src=""
                                             alt="...">
                                         <div class="status-indicator bg-success"></div>
                                     </div>
