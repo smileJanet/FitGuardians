@@ -8,10 +8,12 @@
 	
 	<typeAliases>
 		<typeAlias type="com.kh.fitguardians.gym.model.vo.Gym" alias="Gym"/>
+		<typeAlias alias="Member" type="com.kh.fitguardians.member.model.vo.Member"/>
 	</typeAliases>
 	
 	<mappers>
 		<mapper resource="/mappers/gym-mapper.xml"/>
+		<mapper resource="/mappers/member-mapper.xml"/>
 	</mappers>
 
 </configuration>
