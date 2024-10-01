@@ -1,5 +1,7 @@
 package com.kh.fitguardians.common.template;
 
+import com.kh.fitguardians.common.model.vo.PageInfo;
+
 public class Pagination {
 
 	public static PageInfo getPageInfo(int listCount, int currentPage, int pageLimit, int boardLimit) {

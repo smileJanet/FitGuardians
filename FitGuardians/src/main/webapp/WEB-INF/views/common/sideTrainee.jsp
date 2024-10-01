@@ -46,10 +46,7 @@ pageEncoding="UTF-8"%>
       id="accordionSidebar"
     >
       <!-- Sidebar - Brand -->
-      <a
-        class="sidebar-brand d-flex align-items-center justify-content-center"
-        href="index.html"
-      >
+      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
         <div class="sidebar-brand-icon rotate-n-15">
           <i class="fas fa-laugh-wink"></i>
         </div>
@@ -163,11 +160,22 @@ pageEncoding="UTF-8"%>
 
       <!-- Nav Item - Charts -->
       <li class="nav-item">
-        <a class="nav-link" href="charts.html">
+        <a class="nav-link" href="javascript:void(0)">
           <i class="fas fa-fw fa-chart-area"></i>
           <span>스케쥴러</span></a
         >
       </li>
+      
+      <hr class="sidebar-divider" />
+      
+      <li class="nav-item">
+        <a class="nav-link" href="javascript:void(0)">
+          <i class="fas fa-map"></i>
+          <span>헬스장 찾기</span></a
+        >
+      </li>
+      
+      
 
       <!-- Divider -->
       <hr class="sidebar-divider d-none d-md-block" />
@@ -177,23 +185,7 @@ pageEncoding="UTF-8"%>
         <button class="rounded-circle border-0" id="sidebarToggle"></button>
       </div>
 
-      <!-- Sidebar Message -->
-      <div class="sidebar-card d-none d-lg-flex">
-        <img
-          class="sidebar-card-illustration mb-2"
-          src="img/undraw_rocket.svg"
-          alt="..."
-        />
-        <p class="text-center mb-2">
-          <strong>SB Admin Pro</strong> is packed with premium features,
-          components, and more!
-        </p>
-        <a
-          class="btn btn-success btn-sm"
-          href="https://startbootstrap.com/theme/sb-admin-pro"
-          >Upgrade to Pro!</a
-        >
-      </div>
+      
     </ul>
     <!-- End of Sidebar -->
   </body>
