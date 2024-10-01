@@ -169,7 +169,7 @@ pageEncoding="UTF-8"%>
       <hr class="sidebar-divider" />
       
       <li class="nav-item">
-        <a class="nav-link" href="javascript:void(0)">
+        <a class="nav-link" href="searchGym.ma">
           <i class="fas fa-map"></i>
           <span>헬스장 찾기</span></a
         >
