@@ -4,16 +4,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-public class MemberController {
+public class memberController {
 
-	
-	@RequestMapping("loginform.me")
-	public String loginForm() {
-		return "common/loginForm";
+	@RequestMapping("traineeDetail.me")
+	public String memberDetailView() {
+		return "Trainer/traineeDetailInfo";
 	}
 	
-	@RequestMapping("enrollForm.me")
-	public String enrollForm() {
-		return "common/enrollForm";
-	}
 }
