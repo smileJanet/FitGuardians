@@ -160,11 +160,20 @@ pageEncoding="UTF-8"%>
 
       <!-- Nav Item - Charts -->
       <li class="nav-item">
-        <a class="nav-link" href="charts.html">
+        <a class="nav-link" href="javascript:void(0)">
           <i class="fas fa-fw fa-chart-area"></i>
           <span>스케쥴러</span></a
         >
       </li>
+      
+      <li class="nav-item">
+        <a class="nav-link" href="javascript:void(0)">
+          <i class="fas fa-map"></i>
+          <span>헬스장 찾기</span></a
+        >
+      </li>
+      
+      
 
       <!-- Divider -->
       <hr class="sidebar-divider d-none d-md-block" />
