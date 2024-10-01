@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -109,7 +110,7 @@
                                 </h6>
                                 <a class="dropdown-item d-flex align-items-center" href="#" data-toggle="modal" data-target="#chatModal1">
                                     <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="img/undraw_profile_1.svg"
+                                        <img class="rounded-circle" src=""
                                             alt="...">
                                         <div class="status-indicator bg-success"></div>
                                     </div>
@@ -121,7 +122,7 @@
                                 </a>
                                 <a class="dropdown-item d-flex align-items-center" href="#">
                                     <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="img/undraw_profile_2.svg"
+                                        <img class="rounded-circle" src=""
                                             alt="...">
                                         <div class="status-indicator"></div>
                                     </div>
@@ -133,7 +134,7 @@
                                 </a>
                                 <a class="dropdown-item d-flex align-items-center" href="#">
                                     <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="img/undraw_profile_3.svg"
+                                        <img class="rounded-circle" src=""
                                             alt="...">
                                         <div class="status-indicator bg-warning"></div>
                                     </div>
@@ -145,7 +146,7 @@
                                 </a>
                                 <a class="dropdown-item d-flex align-items-center" href="#">
                                     <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="https://source.unsplash.com/Mv9hjnEUHR4/60x60"
+                                        <img class="rounded-circle" src=""
                                             alt="...">
                                         <div class="status-indicator bg-success"></div>
                                     </div>
@@ -173,7 +174,7 @@
                                             <!-- 더미 채팅 메시지 -->
                                             <div class="d-flex mb-3">
                                                 <div class="mr-2">
-                                                    <img class="rounded-circle" src="img/undraw_profile_1.svg" alt="Emily" style="width: 40px;">
+                                                    <img class="rounded-circle" src="" alt="Emily" style="width: 40px;">
                                                 </div>
                                                 <div class="bg-light p-2 rounded" style="max-width: 70%;">
                                                     <p class="mb-0">Hi there! I was wondering if you can help me with something.</p>
@@ -188,7 +189,7 @@
                                             </div>
                                             <div class="d-flex mb-3">
                                                 <div class="mr-2">
-                                                    <img class="rounded-circle" src="img/undraw_profile_1.svg" alt="Emily" style="width: 40px;">
+                                                    <img class="rounded-circle" src="" alt="Emily" style="width: 40px;">
                                                 </div>
                                                 <div class="bg-light p-2 rounded" style="max-width: 70%;">
                                                     <p class="mb-0">I need some advice regarding my project. Can we talk about it?</p>
@@ -211,35 +212,55 @@
                         <div class="topbar-divider d-none d-sm-block"></div>
 
                         <!-- Nav Item - User Information -->
-                        <li class="nav-item dropdown no-arrow">
-                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
-                                <img class="img-profile rounded-circle"
-                                    src="img/undraw_profile.svg">
-                            </a>
-                            <!-- Dropdown - User Information -->
-                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="#">
-                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Profile
-                                </a>
-                                <a class="dropdown-item" href="#">
-                                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Settings
-                                </a>
-                                <a class="dropdown-item" href="#">
-                                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Activity Log
-                                </a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Logout
-                                </a>
-                            </div>
-                        </li>
+                        
+                        <c:choose>
+                        	<c:when test="${not empty loginUser}">
+		                        <li class="nav-item dropdown no-arrow">
+		                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+		                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">회원 이름</span>
+		                                <img class="img-profile rounded-circle" src="">
+		                            </a>
+		                            <!-- Dropdown - User Information -->
+		                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+		                                aria-labelledby="userDropdown">
+		                                <a class="dropdown-item" href="#">
+		                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+		                                    Profile
+		                                </a>
+		                                <a class="dropdown-item" href="#">
+		                                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+		                                    Settings
+		                                </a>
+		                                <a class="dropdown-item" href="#">
+		                                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+		                                    Activity Log
+		                                </a>
+		                                <div class="dropdown-divider"></div>
+		                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+		                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+		                                    Logout
+		                                </a>
+		                            </div>
+		                        </li>
+	                        </c:when>
+	                        <c:otherwise>
+	                        	 <li class="nav-item dropdown no-arrow">
+		                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+		                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">로그인을 해주세요</span>
+		                            </a>
+		                            <!-- Dropdown - User Information -->
+		                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+		                                aria-labelledby="userDropdown">
+		                                <a class="dropdown-item" href="#">
+		                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+		                                    회원가입
+		                                </a>
+		                            </div>
+		                        </li>
+	                        </c:otherwise>
+                        </c:choose>
 
                     </ul>
 
