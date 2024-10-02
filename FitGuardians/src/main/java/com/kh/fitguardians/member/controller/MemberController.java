@@ -1,5 +1,7 @@
 package com.kh.fitguardians.member.controller;
 
+import java.io.IOException;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.kh.fitguardians.common.template.APIPropertiesSelecter;
 import com.kh.fitguardians.member.model.service.MemberServiceImpl;
 import com.kh.fitguardians.member.model.vo.Member;
 
@@ -21,7 +24,8 @@ public class MemberController {
 	private BCryptPasswordEncoder bcryptPasswordEncoder;
 	
 	@RequestMapping("loginform.me")
-	public String loginForm() {
+	public String loginForm() throws IOException {
+		APIPropertiesSelecter.naverLoginAPI();
 		return "common/loginForm";
 	}
 	
