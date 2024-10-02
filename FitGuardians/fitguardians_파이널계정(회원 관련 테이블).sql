@@ -43,6 +43,7 @@ COMMENT ON COLUMN MEMBER.PROFILE_PIC IS '회원 프로필 사진';
 COMMENT ON COLUMN MEMBER.MEMBERSHIP IS '회원이 소유한 회원권';
 
 INSERT INTO MEMBER VALUES(1, 'test01', '1234', '실험맨', 'test@naver.com', '010-1111-1111', 'F', 11, '서울역', SYSDATE, 1, '이박사', 'Y', '임시api', '임시설정값', 'asdf/asd.png', '아무튼있음');
+COMMIT;
 
 -- 유저 테이블 회원번호 시퀀스
 CREATE SEQUENCE SEQ_USER_NO NOCACHE;
