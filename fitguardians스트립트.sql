@@ -51,3 +51,7 @@ COMMENT ON COLUMN member.qr IS 'qr코드 발급후 저장 경로';
 COMMENT ON COLUMN member.profile_pic IS '회원 프로필 사진';
 
 COMMENT ON COLUMN member.membership IS '회원이 소유한 회원권';
+
+create sequence seq_mno start with 4 NOCACHE;
+drop SEQUENCE seq_mno;
+

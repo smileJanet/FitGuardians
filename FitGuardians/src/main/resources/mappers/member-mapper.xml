@@ -9,4 +9,34 @@
 		   and status = 'Y'
 	</select>
 
+	<insert id="insertMember">
+		INSERT 
+		  INTO member 
+		     ( user_no
+		     , user_id
+		     , user_pwd
+		     , user_name
+		     , email
+		     , phone
+		     , gender
+		     , age
+		     , address
+		     , user_level
+		     , qr
+		     )
+        VALUES
+        	 (
+        	   seq_mno.nextval
+        	 , #{userId}
+        	 , #{userPwd}
+        	 , #{userName}
+        	 , #{email}
+        	 , #{phone}
+        	 , #{gender}
+        	 , #{age}
+        	 , #{address}
+        	 , #{userLevel} 
+        	 , 'qr_code_path'
+        	 )
+	</insert>
 </mapper>
