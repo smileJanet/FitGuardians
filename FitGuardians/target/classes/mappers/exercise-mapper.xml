@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="exerciseMapper">
+    <!-- ai플랜, 트레이너 플랜 작성 -->
+    
+    <!-- ai 플랜 -->
+ <resultMap type="Exercise" id="exerciseResult">
+  	<result column="ai_exercise_no" property="aiExerciseNo"/>
+ 	<result column="user_no" property="userNo"/>
+ 	<result column="exercise_goal" property="exerciseGoal"/>
+ 	<result column="fitness_level" property="fitnessLevel"/>
+ 	<result column="exercise_type" property="exerciseType"/>
+ 	<result column="equipment" property="equpment"/>
+ 	<result column="health_condition" property="healthCondition"/>
+ 	<result column="days_per_week" property="daysPerWeek"/>
+ 	<result column="duration" property="duration"/>
+ 	<result column="plan_duration_week" property="planDurationWeek"/>
+ </resultMap>
+ 
+     <!-- 트레이너 플랜 -->
+ <resultMap type="Workout" id="workoutResult">
+  	<result column="ex_no" property="exerciseNo"/>
+ 	<result column="user_no" property="userNo"/>
+ 	<result column="workout_date" property="workoutDate"/>
+ 	<result column="workout_category" property="workoutCategory"/>
+ 	<result column="difficulty" property="difficulty"/>
+ 	<result column="description" property="description"/>
+ 	<result column="targetmuscle" property="targetMuscle"/>
+ 	<result column="tmimage" property="tmImage"/>
+ 	<result column="kcal" property="kcal"/>
+ </resultMap>
+ 
+ 
+ 
+ 
+ 
+</mapper>
