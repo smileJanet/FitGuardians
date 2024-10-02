@@ -30,7 +30,7 @@
             </ul>
 
             <!-- 입력 폼 -->
-            <form action="" method="post">
+            <form action="login.me" method="post">
                 <!-- 아이디 -->
                 <div class="first-input input__block first-input__block">
                     <input type="text" placeholder="아이디" class="input" id="userId" name="userId"/>
