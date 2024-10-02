@@ -9,7 +9,7 @@
 <body>
 Main
 
-<jsp:forward page="Trainer/traineeManagement.jsp" />
+<jsp:forward page="Trainee/traineeDashboard.jsp" />
 
 </body>
 </html>

@@ -38,6 +38,8 @@ pageEncoding="UTF-8"%>
     <!-- Page level custom scripts -->
     <script src="./resources/templates/js/demo/chart-area-demo.js"></script>
     <script src="./resources/templates/js/demo/chart-pie-demo.js"></script>
+    
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=YOUR_APP_KEY&libraries=services,clusterer,drawing"></script>
   </head>
   <body id="page-top">
     <!-- Sidebar -->
