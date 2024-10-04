@@ -42,7 +42,7 @@
                         <div style="display:flex;">
                             <div class="card mb-3 py-2 border-bottom-info" style="width:50%; margin:50px; margin-right:25px;">
                                 <h4 style="margin-left:10px; font-weight:600; padding:20px; margin:20px;" align="center">뫅두팔님 운동 계획하기</h4>
-                                  <div class="prescription">
+                                  <div class="prescription" align="center">
                                     <div class="exercisePrescription">
                                         <span>운동 목적</span>
                                         <select class="selectExercise" name="goal">
@@ -142,31 +142,14 @@
 
                             <div class="card mb-4 py-3 border-bottom-primary" style="width:50%; margin:50px; margin-left:25px;">
                                 <h4 style="margin-left:10px; font-weight:600; padding:20px; margin:20px;" align="center">AI가 추천해준 운동계획</h4>
-                                <div class="prescription">
-                                    <div class="aiRecommend">
-                                        <span>운동 정보</span>
-                                        <div>
-                                        	<ul>
-	                                        	<li>요일 : 매주 월요일</li>
-	                                        	<li>지속 기간 : 4주</li>
-	                                        	<li>난이도 : 보통</li>
-	                                        	<li>운동 목적 : 체중 감량</li>
-	                                        	<li>프로그램 설명 : 살뺴주는 프로그램입니당</li>
-	                                        </ul>
-                                        </div>
+                                <div class="prescription aiprep">
+                                  
+                                  <div class="btn btn-danger btn-circle" id="saveBtn"><i class="fas fa-check"></i></div> 
+                                    <div class="aiRecommend aiInfo">
+										<!-- 운동 정보 삽입될 예정 -->
                                     </div>
-                                    <div class="aiRecommend">
-                                        <span>운동 프로그램</span>
-                                        <div>
-                                          <div class="planIndex">1회차 운동</div>
-	                                        <ul>
-	                                        	<li>지속 시간 : 20분</li>
-	                                        	<li>기구 : 덤벨</li>
-	                                        	<li>운동명 : 덤벨로우</li>
-	                                        	<li>횟수 : 15-20회</li>
-	                                        	<li>세트수 : 2회</li>
-	                                        </ul>
-                                        </div>
+                                    <div class="aiRecommend aiProgram">
+                                        <!-- 운동 프로그램 생성될 예정 -->
                                     </div>
                                 </div>
                             </div>
@@ -216,11 +199,52 @@
 	                         session_duration : encodeURIComponent($('select[name="session_duration"]').val()),
 	                         plan_duration_weeks : encodeURIComponent($('select[name="plan_duration_weeks"]').val()),
                 		}),
-                		success: function(result){
-                			console.log(result);
+                		success: function(data){
                 			
+                			let exerciseArr = data.result;
+                			let info = '<span>운동 정보</span>';
+                			let value = '<span> 운동스케줄 </span> <br /> <div class = "row">';
                 			
+                			//aiInfo 메소드
                 			
+               				info += '<div>'
+               				      + '<ul>'
+               				      + '<li> 회수 : 주 ' + exerciseArr.schedule.days_per_week + '회 </li>'
+               				      + '<li> 플랜 기간 : ' + exerciseArr.total_weeks + '주 </li>'
+               				      + '<li> 난이도 : ' + exerciseArr.fitness_level + '</li>'
+               				      + '<li> 운동 목적 : ' + exerciseArr.goal + '</li>'
+               				      + '<li> 프로그램 설명 : ' + exerciseArr.seo_content + '</li>'
+               					  + '</ul>'
+               					  + '</div>';
+                				      
+                			
+                			//aiProgram 메소드
+                			$.each(exerciseArr.exercises, function(index, exerciseDay){
+                				value += '<div class = "col">'
+                				      + '<div class = "planIndex">' + exerciseDay.day + ' 운동 </div>'
+                				  
+                				let sessionCount = 1;
+                				      
+                			  $.each(exerciseDay.exercises, function(i, exercise){
+                					value += '<div>' + sessionCount + '회차 운동 </div>'
+		              				      + '<br />'
+		            				      + '<ul>'
+		            				      + '<li> 운동명 :' + exercise.name +'</li>'
+		            				      + '<li> 기구 :' + exercise.equipment +'</li>'
+		            				      + '<li> 지속 기간 :' + exercise.duration +'</li>'
+		            				      + '<li> 횟수 : ' + exercise.repetitions +'</li>'
+		            				      + '<li> 세트수 : ' + exercise.sets +'</li>'
+                				  	      + '</ul>'
+		            				      + '<br />';
+                				  	      sessionCount++;
+                			  })	      
+                				value += '</div>'; //col
+                					   + '</div>' //row
+                				       + '<br />';
+                			}); // aiProgram을 위한 메소드
+                			
+                			$('.aiInfo').html(info);
+                			$('.aiProgram').html(value);
                 			
                 		},
                 		error : function(){

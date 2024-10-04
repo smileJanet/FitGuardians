@@ -39,3 +39,8 @@ span{
     width: 180px; 
     height:25px;
 }
+
+#saveBtn{
+    margin:20px;
+    float:right;
+}
