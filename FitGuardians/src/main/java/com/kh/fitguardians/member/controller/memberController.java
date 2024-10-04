@@ -13,15 +13,16 @@ import com.kh.fitguardians.member.model.service.MemberServiceImpl;
 import com.kh.fitguardians.member.model.vo.Member;
 
 @Controller
-public class memberController {
+public class MemberController {
 	
 	@Autowired
 	private MemberServiceImpl mService = new MemberServiceImpl();
 	@Autowired
 	private BCryptPasswordEncoder bcryptPasswordEncoder; 
-	@RequestMapping("traineeDetail.me")
-	public String memberDetailView() {
-		return "Trainer/traineeDetailInfo";
+	
+	@RequestMapping("loginform.me")
+	public String loginForm() {
+		return "common/loginForm";
 	}
 	
 	@RequestMapping("enrollForm.me")
