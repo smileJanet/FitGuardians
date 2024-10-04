@@ -25,7 +25,6 @@ public class MemberController {
 	
 	@RequestMapping("loginform.me")
 	public String loginForm() throws IOException {
-		APIPropertiesSelecter.naverLoginAPI();
 		return "common/loginForm";
 	}
 	
