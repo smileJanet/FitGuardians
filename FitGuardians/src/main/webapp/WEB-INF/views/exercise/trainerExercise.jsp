@@ -172,9 +172,23 @@
                     document.addEventListener('DOMContentLoaded', function() {
                     const calendarEl = document.getElementById('calendar')
                     const calendar = new FullCalendar.Calendar(calendarEl, {
-                        initialView: 'dayGridWeek'
+                    	themeSystem: 'bootstrap5',
+                        height:'600px',
+                    	initialView: 'dayGridWeek',
+                        navLinks : true,
+                        editable: true,
+                        nowIndicator: true,
+                        dayMaxEvents : true,
+                        selectable: true,
+                        weekNumbers:true,
+                        headerToolbar: {
+                            start: 'dayGridMonth,dayGridWeek,dayGridDay',
+                            center: 'title',
+                            end: 'today prev,next' 
+                        },
+                        locale: 'ko',
                     })
-                    calendar.render()
+                    calendar.render();
                     })
             
                 </script>

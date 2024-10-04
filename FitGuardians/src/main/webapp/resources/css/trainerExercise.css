@@ -44,3 +44,16 @@ span{
     margin:20px;
     float:right;
 }
+
+.fc-prev-button, .fc-next-button {
+    font-size: 12px !important; 
+    color:white;
+    padding: 5px 5px !important; 
+    width: 40px !important; 
+    height: 40px !important; 
+} 
+
+.fc-icon-chevron-left, .fc-icon-chevron-right{
+    margin:0;
+    padding:0;
+}
