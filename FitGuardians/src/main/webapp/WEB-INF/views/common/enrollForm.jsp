@@ -143,6 +143,8 @@
                         
                         })
 					}else{
+						$("#idcheck").show();
+						$("#idcheck").text("영문으로 시작하는 6~20자리 아이디가 아닙니다 다시입력해주세요").css("color","red");
 						submit.attr("disabled");
 						submit.addClass("disabled");
 					}
@@ -196,13 +198,11 @@
                     }
                 })
                 
-                
 			   //----------- reset ---------------------
                 let reset  = $(".links").find("li").find("#reset")  ; 
 			   reset.on("click",function(e){
 			     e.preventDefault();
-			     $(this).parent().parent().siblings("form")
-			     .find(".input__block").find(".input").val("");
+			     $(this).parent().parent().siblings("form").find(".input").val("");
 			   })
 			   
 			   // 이메일 인증

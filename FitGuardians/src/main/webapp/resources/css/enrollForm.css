@@ -238,3 +238,8 @@ footer p a .fa-behance {
 #postNum{
     flex: .5;
 }
+
+.input-group:not(.has-validation) > .form-control:not(:last-child){
+    border-top-right-radius: .35rem;
+    border-bottom-right-radius: .35rem;
+}
