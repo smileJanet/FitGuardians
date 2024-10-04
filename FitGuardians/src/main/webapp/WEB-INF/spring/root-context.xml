@@ -30,4 +30,19 @@
 	 	<property name="maxInMemorySize" value="100000000" />
 	 </bean>
 		
+	<!-- 메일 전송 -->
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+	 	<property name="host" value="smtp.gmail.com"/> <!-- SMTP 서버 주소 -->
+        <property name="port" value="587"/> <!-- SMTP 포트 -->
+        <property name="username" value="finalfirstteam@gmail.com"/> <!-- 사용자 이메일 -->
+        <property name="password" value="zyqx hjeh onih vosg"/> <!-- 사용자 비밀번호 -->
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.transport.protocol">smtp</prop>
+                <prop key="mail.smtp.auth">true</prop>
+                <prop key="mail.smtp.starttls.enable">true</prop>
+                <prop key="mail.debug">true</prop>
+            </props>
+        </property>
+	</bean>
 </beans>

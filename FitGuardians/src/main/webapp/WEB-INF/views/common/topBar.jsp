@@ -20,7 +20,7 @@
                     <ul class="navbar-nav ml-auto">
 
 						<c:choose>
-							<c:when test="">
+							<c:when test="${ not empty loginUser }">
 		                        <!-- Nav Item - Search Dropdown (Visible Only XS) -->
 		                        <li class="nav-item dropdown no-arrow d-sm-none">
 		                            <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
@@ -225,8 +225,8 @@
 		                        <li class="nav-item dropdown no-arrow">
 		                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
 		                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-		                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">회원 이름</span>
-		                                <img class="img-profile rounded-circle" src="">
+		                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">${ loginUser.userName }</span>
+		                                <img class="img-profile rounded-circle" src="${ loginUser.profilePic }" />
 		                            </a>
 		                            <!-- Dropdown - User Information -->
 		                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -244,7 +244,7 @@
 		                                    Activity Log
 		                                </a>
 		                                <div class="dropdown-divider"></div>
-		                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+		                                <a class="dropdown-item" href="logout.me" data-toggle="modal" data-target="#logoutModal">
 		                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
 		                                    Logout
 		                                </a>
@@ -264,5 +264,25 @@
 
                 </nav>
                 <!-- End of Topbar -->
+                
+                 <!-- Logout Modal-->
+			    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+			        aria-hidden="true">
+			        <div class="modal-dialog" role="document">
+			            <div class="modal-content">
+			                <div class="modal-header">
+			                    <h5 class="modal-title" id="exampleModalLabel">로그아웃 하시겠습니까?</h5>
+			                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+			                        <span aria-hidden="true">×</span>
+			                    </button>
+			                </div>
+			                <div class="modal-body">로그아웃을 하려면 로그아웃 버튼을 눌러주세요</div>
+			                <div class="modal-footer">
+			                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+			                    <a class="btn btn-primary" href="logout.me">Logout</a>
+			                </div>
+			            </div>
+			        </div>
+			    </div>
 </body>
 </html>
