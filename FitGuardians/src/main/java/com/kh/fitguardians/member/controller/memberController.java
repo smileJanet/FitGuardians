@@ -20,6 +20,11 @@ public class MemberController {
 	@Autowired
 	private BCryptPasswordEncoder bcryptPasswordEncoder; 
 	
+    @RequestMapping("traineeDetail.me")
+    public String memberDetailView() {
+        return "Trainer/traineeDetailInfo";
+    }
+
 	@RequestMapping("loginform.me")
 	public String loginForm() {
 		return "common/loginForm";
