@@ -27,6 +27,7 @@
     .autocomplete-item:hover {
         background-color: #f0f0f0;
     }
+
 </style>
 </head>
 <body id="page-top">
@@ -101,14 +102,26 @@
 
 <script>
     // 지도를 표시할 div
-    const mapContainer = document.getElementById('map');
-    const mapOptions = {
+    var mapContainer = document.getElementById('map');
+    var mapOptions = {
         center: new kakao.maps.LatLng(37.508091, 127.063504), // 서울 강남구 역삼동 좌표
-        level: 3 // 지도의 확대 레벨
+        level: 3, // 지도의 확대 레벨
     };
 
-    const map = new kakao.maps.Map(mapContainer, mapOptions); // 지도 생성
-    const infowindow = new kakao.maps.InfoWindow({ zIndex: 1 }); // InfoWindow 생성
+    var map = new kakao.maps.Map(mapContainer, mapOptions); // 지도 생성
+    var infowindow = new kakao.maps.InfoWindow({ zIndex: 1 }); // InfoWindow 생성
+    // 일반 지도와 스카이뷰로 지도 타입을 전환할 수 있는 지도타입 컨트롤을 생성합니다
+    var mapTypeControl = new kakao.maps.MapTypeControl();
+
+    // 지도에 컨트롤을 추가해야 지도위에 표시됩니다
+    // kakao.maps.ControlPosition은 컨트롤이 표시될 위치를 정의하는데 TOPRIGHT는 오른쪽 위를 의미합니다
+    map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
+
+    // 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
+    var zoomControl = new kakao.maps.ZoomControl();
+    map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+    
+
 
     // 가까운 헬스장 배열 초기화
     let nearbyGyms = []; // 가까운 헬스장을 저장할 배열
@@ -144,6 +157,10 @@
             }
         });
     }
+    // 헬스장 마커 이미지 커스텀
+    const markerImageSrc = '/fitguardians/resources/images/gymMarker.png';
+    const markerImageSize = new kakao.maps.Size(25,25); // 이미지 크기 설정
+    const markerImage = new kakao.maps.MarkerImage(markerImageSrc, markerImageSize);
 
     // 헬스장 검색 및 마커 표시
     function searchGyms(address) {
@@ -155,13 +172,32 @@
                 data.forEach(place => {
                     const marker = new kakao.maps.Marker({
                         map: map,
-                        position: new kakao.maps.LatLng(place.y, place.x)
+                        position: new kakao.maps.LatLng(place.y, place.x),
+                        image:markerImage // 변경된 마커 이미지
                     });
                     bounds.extend(marker.getPosition());
-                    kakao.maps.event.addListener(marker, 'click', () => {
-                        infowindow.setContent('<div style="padding:5px;font-size:12px;">' + place.place_name + '</div>');
-                        infowindow.open(map, marker);
-                    });
+                    
+                    // 마우스 호버 이벤트 추가
+                    
+					// 마커에 마우스오버 이벤트 추가
+					kakao.maps.event.addListener(marker, 'mouseover', function() {
+						infowindow.setContent(
+						        '<div style="padding: 5px; font-size: 12px; max-width: 300px; min-width: 200px; white-space: nowrap;">' + 
+						            '<strong>' + place.place_name + '</strong><br>' + 
+						            place.address_name + 
+						        '</div>'
+						);
+					    // 인포윈도우를 마커 위치에 표시
+					    infowindow.open(map, marker);
+					});
+
+
+					
+					// 마커에 마우스아웃 이벤트를 등록
+					kakao.maps.event.addListener(marker, 'mouseout', function() {
+					    infowindow.close();
+					});
+
 
                     // 가까운 헬스장 배열에 추가
                     nearbyGyms.push({
