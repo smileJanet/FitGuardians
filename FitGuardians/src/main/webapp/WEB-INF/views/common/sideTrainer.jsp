@@ -120,7 +120,7 @@ pageEncoding="UTF-8"%>
          
         <!-- Nav Item - Charts -->
         <li class="nav-item">
-          <a class="nav-link" href="charts.html">
+          <a class="nav-link" href="exercise.bo">
             <i class="fas fa-fw fa-chart-area"></i>
             <span>운동 프로그램</span></a
           >

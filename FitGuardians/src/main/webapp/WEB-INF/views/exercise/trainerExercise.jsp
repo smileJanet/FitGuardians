@@ -144,7 +144,7 @@
                                 <h4 style="margin-left:10px; font-weight:600; padding:20px; margin:20px;" align="center">AI가 추천해준 운동계획</h4>
                                 <div class="prescription aiprep">
                                   
-                                  <div class="btn btn-danger btn-circle" id="saveBtn"><i class="fas fa-check"></i></div> 
+                                  <div class="btn btn-danger btn-circle" id="saveBtn" onclick="makePdf();"><i class="fas fa-check"></i></div> 
                                     <div class="aiRecommend aiInfo">
 										<!-- 운동 정보 삽입될 예정 -->
                                     </div>
@@ -152,6 +152,91 @@
                                         <!-- 운동 프로그램 생성될 예정 -->
                                     </div>
                                 </div>
+                                <script>
+                                // 동적으로 생성된 요소에 이벤트를 거는 방법
+                                // 무조건 document.on이어야 한다. 
+                                $(document).on('click', '#saveBtn', function(){
+                                	makePdf(); // makePdf 함수 실행
+                                })
+                                
+                                function makePdf(){ // makePdf함수 정의
+                                	// 보내고 싶은 데이터를 객체에 설정
+                                	let exerciseInfo = {
+                                			// 스케줄은 객체 형태로
+                                			schedule : {
+                                				// aiInfo ul li의 0번째 인덱스의 텍스트를 :를 기준으로 쪼갰을 때(split) 2번쨰 인덱스에 담길 값
+                                				days_per_week: $('.aiInfo ul li').eq(0).text().split(':')[1],
+                                				total_weeks : $('aiInfo ul li').eq(1).text().split(':')[1],
+                                				fitness_level : $('aiInfo ul li').eq(2).text().split(':')[1],
+                                				goal : $('aiInfo ul li').eq(3).text().split(':')[1],
+                                				seo_content : $('aiInfo ul li').eq(4).text().split(':')[1],
+                                			},
+                                			// 세부 운동 내용은 배열 형태로
+                                			exercise : []
+                                	};
+                                	
+                                	// 제이쿼리 순회 메소드 each
+                                	$('.aiProgram .col').each(function(){
+                                		let day = $(this).find('.planIndex').text();
+                                		// 선택된 선택자(aiProgram col)에서 ul태그를 찾아 값을 추출함
+                                		$(this).find('ul').each(function(){
+                                			let exerciseDetails = {
+                                				day : day,
+                                				// ul객체 아래 li 객체의 0번째 인덱스의 텍스트는 xxx : xxx로 되어 있는데, 그걸 쪼개서(split) 만든 배열의 두번째 인덱스
+                                				name : $(this).find('li').eq(0).text().split(':')[1],
+                                				equipment : $(this).find('li').eq(1).text().split(':')[1],
+                                				duration : $(this).find('li').eq(2).text().split(':')[1],
+                                				repetitions : $(this).find('li').eq(3).text().split(':')[1],
+                                				sets : $(this).find('li').eq(4).text().split(':')[1],
+                                			};
+                                			// 위 exercise []배열에 exerciseDetails를 집어넣음
+                                			exerciseInfo.exercise.push(exerciseDetails);
+                                		})
+                                	})
+                                	
+                                	// 집어넣은 데이터 exerciseInfo를 갖고 데이터를 controller단의 exercisePdf.bo에 보낼 예정
+                                	$.ajax({
+                                		url :"exercisePdf.bo",
+                                		type : "post",
+                                		contentType : "application/json; charset=utf-8",
+                                		// JSON.stringify를 통해 JSON문자열로 반환
+                                		data : JSON.stringify(exerciseInfo),
+                                		// XMLHttpRequest객체에 특정속성을 설정할 수 있는 객체(ajax호출을 수행하는데 사용됨)
+                                		// 응답 유형 설정 : 응답이 PDF와 같은 파일 다운로드를 처리하는데 중요한 blob파일이 되도록 지정
+                                		xhrFields : {
+                                			responseType : "blob",
+                                		},
+                                			 // blob에는 서버에서 반환된 pdf파일이 포함되어 있다.
+                                		success : function(blob){
+                                			// 파일을 다운로드 하기 위해 사용되는 요소 a가 필요하다(a로 innerHTML하는거랑 다름)
+                                            const link = document.createElement('a');
+                                            // blob을 나타내는 임시 URL을 생성(=createObjectURL)
+                                			const url = window.URL.createObjectURL(blob);
+                                            // a태그의 href를 url(blob링크가 있는 url객체)로 설정
+                                            link.href = url;
+                                            // 사용자가 파일을 다운로드할 때 기본 파일 이름을 지정함
+                                            link.download = 'exercise_plan.pdf'; 
+                                            
+                                            // 다운로드에는 필요하지 않지만 호환성을 위해 추가되는 코드
+                                            // 링크는 문서 본문에 일시적으로 추가된다.
+                                            document.body.appendChild(link);
+                                            link.click(); // 링크를 클릭하면 다운로드 시작(트리거)
+                                            
+                                            // DOM을 깨끗하게 유지하기 위해 문서에서 링크를 제거해야 한다.
+                                            setTimeout(() => {
+                                                document.body.removeChild(link);
+                                                window.URL.revokeObjectURL(url); // blob url을 해제하여 메모리를 확보한다.
+                                            }, 100);
+                                		},
+                                		error : function(result){
+                                			console.log('pdf 생성 실패');
+                                		}
+                                	})
+                                	
+                                	
+                                };
+                                
+                                </script>
                             </div>
                         </div>
                     </div>
@@ -259,6 +344,8 @@
                 			
                 			$('.aiInfo').html(info);
                 			$('.aiProgram').html(value);
+                			
+                			makePdf();
                 			
                 		},
                 		error : function(){

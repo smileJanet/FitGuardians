@@ -1,12 +1,26 @@
 package com.kh.fitguardians.exercise.controller;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URLDecoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.io.output.ByteArrayOutputStream;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.font.PDFont;
+import org.apache.pdfbox.pdmodel.font.PDType0Font;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,11 +32,13 @@ import com.kh.fitguardians.exercise.model.vo.ExercisePlan;
 @Controller
 public class ExerciseController {
 
+	// trainerExercise로 포워딩 위한 메소드
 	@RequestMapping("exercise.bo")
 	public String showExercisePage() {
 		return "exercise/trainerExercise";
 	} // showExercisePage
 
+	// AI를 통해 운동 계획표 생성(API)
 	@ResponseBody
 	@RequestMapping(value = "exercisePlan.bo", produces = "application/json; charset=utf-8", method = RequestMethod.POST)
 	public String autoExercisePlan(@RequestBody ExercisePlan ex) throws IOException, InterruptedException {
@@ -81,5 +97,59 @@ public class ExerciseController {
 		 return response.body();
 		 
 	} // autoExercisePlan
+	
+	// PDF API를 위한 메소드
+	@RequestMapping(value="exercisePdf.bo", produces="application/json; charset=utf-8")
+	public ResponseEntity<byte[]> makePdf(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		
+		// PDF파일 하나 생성
+		// PDF문서를 메모리에 할당(doc.close() 종료 메소드 사용할 것)
+		PDDocument doc = new PDDocument();
+		
+		// 신규 PDF페이지 추가
+		PDPage page = new PDPage(PDRectangle.A4);
+		doc.addPage(page);
+		
+		// 폰트 설정 - 일반 글씨
+		// PDFont의 매개변수로는 글꼴 TTF를 type0글꼴로 로드, 처리할 PDF문서 객체를 보내준다(load(doc,나눔고딕))
+		String textPath = request.getServletContext().getRealPath("/resources/font/NanumGothic.ttf");
+		InputStream text = new FileInputStream(textPath);
+		PDFont textFont = PDType0Font.load(doc, text);
+		
+		// 굵은 글씨(Bold를 위함)
+		String boldPath = request.getServletContext().getRealPath("/resources/font/NanumGothicBold.ttf");
+		InputStream bold = new FileInputStream(boldPath);
+		PDFont boldFont = PDType0Font.load(doc, bold);
+		
+		// content를 추가할 PDF문서와 해댕 page를 매개변수로 할당함
+		PDPageContentStream contentStream = new PDPageContentStream(doc, page, PDPageContentStream.AppendMode.APPEND, true);
+		
+		// beginText를 호출해서 text를 입력할 것이라고 알림
+		contentStream.beginText();
+		
+		// 글쓰기
+		contentStream.setFont(boldFont, 25);
+		contentStream.newLineAtOffset(100,600);
+		String title = "AI가 만들어준 운동 일정표";
+		contentStream.showText(title);
+		
+		// 글쓰기 작성 종료를 알림
+		contentStream.endText();
+		
+		// 반드시 contentStream 닫을것
+		contentStream.close();
+		
+		// 파일 저장
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		doc.save(baos);
+		doc.close();
+		
+		// Return the PDF as byte array with appropriate headers
+	    return ResponseEntity.ok()
+	            .header("Content-Disposition", "attachment; filename=exercise_plan.pdf")
+	            .contentType(MediaType.APPLICATION_PDF)
+	            .body(baos.toByteArray());
+		
+	} // makePdf
 
 }
