@@ -25,6 +25,6 @@ public class Member {
 	private String status;
 	private String api;
 	private String qr;
-	private String pofilePic;
+	private String profilePic;
 	private String membership;
 }

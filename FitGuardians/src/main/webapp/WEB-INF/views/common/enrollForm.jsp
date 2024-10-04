@@ -3,19 +3,20 @@
 <%@ taglib prefix='c' uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>Enroll Form</title>
-        <link href="./resources/templates/css/sb-admin-2.css" rel="stylesheet" />
-        <!-- Bootstrap core JavaScript-->
-        <script src="./resources/templates/vendor/jquery/jquery.min.js"></script>
-        <script src="./resources/templates/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-        <!-- sweetalert2 -->
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.1/dist/sweetalert2.all.min.js"></script>
-		<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.1/dist/sweetalert2.min.css" rel="stylesheet">
-
-        <link rel="stylesheet" href="resources/css/enrollForm.css">
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <title>Enroll Form</title>
+    <link href="./resources/templates/css/sb-admin-2.css" rel="stylesheet" />
+    <!-- Bootstrap core JavaScript-->
+    <script src="./resources/templates/vendor/jquery/jquery.min.js"></script>
+    <script src="./resources/templates/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- sweetalert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.1/dist/sweetalert2.all.min.js"></script>
+	<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.1/dist/sweetalert2.min.css" rel="stylesheet">
+	<!-- 우편번호 -->
+	<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <link rel="stylesheet" href="resources/css/enrollForm.css">
+</head>
     <body>
         <div class="topLogoContainer">
             <img src="resources/images/FitGuardians로고-001.png" alt="">
@@ -24,11 +25,10 @@
             <!-- 상위 버튼 -->
             <ul class="links">
                 <li>
-                	<a href="#" id="signup">회원가입</a>
+                	<span id="signup">회원가입</span>
                 </li>
                 <li>
-                    <a href="#" id="signup">트레이너</a>
-                    <a href="#" id="signup">일반회원</a>
+                    
                 </li>
                 <li>
                     <a href="#" id="reset">초기화</a>
@@ -37,40 +37,47 @@
 
             <!-- 입력 폼 -->
             <form action="enroll.me" method="post">
+            	<div class="form-check-inline mb-3 ml-4">
+                    <label class="form-check-label" for="Male">회원분류 : 트레이너
+                        <input class="form-check-input" type="radio" name="userLevel" id="trainer" value="1"/>
+                    </label>
+                    <label class="form-check-label" for="Female">일반회원
+                        <input class="form-check-input" type="radio" name="userLevel" id="trainee" value="2" checked="checked">
+                    </label>
+                </div>
                 <!-- 아이디 -->
-                <div class="first-input input__block first-input__block">
-                    <input type="text" placeholder="영문으로 시작하는 6~20자리 아이디" class="input" id="userId" name="userId" required/>
-                    <span id="idcheck" class="btn btn-sm ml-4 mt-2" style="display:none"></span>
+                <div class="input-group mb-3 ml-4">
+                    <input type="text" placeholder="영문으로 시작하는 6~20자리 아이디" class="form-control" id="userId" name="userId" required/>
+                    <span id="idcheck" class="btn btn-sm ml-4" style="display:none"></span>
                 </div>
                 <!-- 이메일 -->
-                <div class="input__block">
-                    <input type="email" placeholder="이메일" class="input" id="email" name="email" required/>
-                    <button id="emailBtn" type="button" class="btn btn-sm ml-4 mt-2" style="display:none">인증번호 발송</button>
-					
+                <div class="input-group mb-3 ml-4">
+                    <input type="email" placeholder="이메일" class="form-control" id="email" name="email" required/>
+                    <button id="emailBtn" type="button" class="btn btn-sm ml-4" style="display:none">인증번호 발송</button>
                 </div>
                 <!-- 이메일 확인 -->
-                <div class="input__block">
-                    <input type="text" placeholder="인증번호입력" class="input" id="checkEmail" name="checkEmail"/>
+                <div class="input-group mb-3 ml-4">
+                    <input type="text" placeholder="인증번호입력" class="form-control" id="checkEmail" name="checkEmail"/>
                 </div>
                 <!-- 비밀번호 -->
-                <div class="input__block">
-                    <input type="password" placeholder="비밀번호" class="input" id="userPwd" name="userPwd" required/>
+                <div class="input-group mb-3 ml-4">
+                    <input type="password" placeholder="비밀번호" class="form-control" id="userPwd" name="userPwd" required/>
                 </div>
                 <!-- 비밀번호 확인 -->
-                <div class="input__block">
-                    <input type="password" placeholder="비밀번호 확인" class="input repeat__password" id="repeat_password"/>
-                    <span id="pwdCheck" class="btn btn-sm ml-4 mt-2" style="display:none"></span>
+                <div class="input-group mb-3 ml-4">
+                    <input type="password" placeholder="비밀번호 확인" class="form-control repeat__password" id="repeat_password"/>
+                    <span id="pwdCheck" class="btn btn-sm ml-4" style="display:none"></span>
                 </div>
                 <!-- 이름 -->
-                <div class="input__block">
-                    <input type="text" placeholder="이름" class="input" id="userName" name="userName" required/>
+                <div class="input-group mb-3 ml-4">
+                    <input type="text" placeholder="이름" class="form-control" id="userName" name="userName" required/>
                 </div>
                 <!-- 나이 -->
-                <div class="input__block">
-                    <input type="number" placeholder="나이" class="input" id="age" name="age"/>
+                <div class="input-group mb-3 ml-4">
+                    <input type="number" placeholder="나이" class="form-control" id="age" name="age"/>
                 </div>
                 <!-- 성별 -->
-                <div class="form-check-inline">
+                <div class="form-check-inline mb-3 ml-4">
                     <label class="form-check-label" for="Male">성별 : 남자
                         <input class="form-check-input" type="radio" name="gender" id="Male" value="M"/>
                     </label>
@@ -79,18 +86,29 @@
                     </label>
                 </div>
                 <!-- 전화번호 -->
-                <div class="input__block">
-                    <input type="text" placeholder="전화번호" class="input" id="phone" name="phone"/>
+                <div class="input-group mb-3 ml-4">
+                    <input type="text" placeholder="전화번호" class="form-control" id="phone" name="phone"/>
                 </div>
-            	<input type="hidden" name="userLevel" value="1">
+                <!-- 전화번호 -->
+                <div class="input-group mb-3 ml-4">
+	                    <input type="text" placeholder="우편번호" class="form-control" id="postNum" name="address"/>
+                	<div class="input-group-prepend">
+                		<button type="button" class="btn btn-sm form-control" onclick="searchPost();">검색</button>
+                	</div>
+                </div>
+                
+                <div class="input-group mb-3 ml-4">
+                    <input type="text" placeholder="상세주소" class="form-control" id="address" name="address"/>
+                </div>
+            	
                 <!-- 회원가입 버튼 -->
                 <button id="enrollBtn" class="btn-primary btn-block btn disabled" disabled>회원가입</button>
             </form>
         </div>
         
         <script>
+        	let timeBtn = $("#emailBtn");
 			$(()=>{
-				timeoutTimer(new Date(Date.now() + 180000), 1000);
 				let submit = $("#enrollBtn");
 				// 아이디 유효성
 				$("#userId").keyup(()=>{
@@ -201,7 +219,8 @@
 							      title: '이메일인증',
 							      text: "인증번호가 발송되었습니다. 이메일을 확인해 주세요",
 							    });
-						  
+						   timeoutTimer(new Date(Date.now() + 180000), 1000);
+						   
 					   },
 					   error:()=>{
 						   console.log("auth email ajax failed");
@@ -216,14 +235,13 @@
 				   if(inputNum.length > 4){
 					  
 					   if(val === inputNum){
-						   console.log("인증")
 						   Swal.fire({
 							      icon: 'success',
 							      title: '이메일인증',
 							      text: "인증이 완료 되었습니다.",
 							    });
 						   $("#checkEmail").hide();
-						   $("emainBtn").hide();
+						   timeBtn.hide();
 					   }else{
 						   Swal.fire({
 							      icon: 'warning',
@@ -236,6 +254,7 @@
 			   })
 			   
 			})
+			
 			// 쿠키 생성 분으로
 			function setCookie(name, value, time) {
 				let date = new Date();
@@ -258,22 +277,44 @@
 				  }
 				}
 			
+			// 타이머 생성
 			function timeoutTimer(endTime, timeout){
 				const now = Date.now();
 				const end = endTime.getTime();
 				const timeLeft = (end - now)/1000 ;
-				console.log(`남은시간:\${timeLeft}sec`);
 				
 				if(timeLeft <= 0){
 					console.log('타이머 종료');
 					return;
 				}
+				const minutes = Math.floor(timeLeft / 60);
+				const seconds = Math.floor(timeLeft % 60);
+				
+				const minute = String(minutes).padStart(2, '0');
+				const second = String(seconds).padStart(2, '0');
+				
+				
+				timeBtn.text(`\${minute} : \${second}`);
 				
 				setTimeout(()=>{
 					timeoutTimer(endTime, timeout);
 				}, timeout);
 			}
 			
+			// 우편번호 검색
+			function searchPost(){
+				let post = $("#postNum")
+				let detail = $("#address")
+				new daum.Postcode({
+			        oncomplete: function(data) {
+			            const address = data.address;
+			            const building = data.buildingName;
+			            const postNum = data.zonecode;
+			            post.val(postNum);
+			            detail.val(address + " " + building);
+			        }
+			    }).open();
+			}
 		</script>
 		
         <footer>

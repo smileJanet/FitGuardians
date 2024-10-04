@@ -2,6 +2,24 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
 <mapper namespace="memberMapper">
 	
+	<resultMap type="Member" id="memberResultset">
+		<result column="user_no" property="userNo"/>
+		<result column="user_id" property="userId"/>
+		<result column="user_pwd" property="userPwd"/>
+		<result column="user_name" property="userName"/>
+		<result column="email" property="email"/>
+		<result column="phone" property="phone"/>
+		<result column="gender" property="gender"/>
+		<result column="age" property="age"/>
+		<result column="address" property="address"/>
+		<result column="enroll_date" property="enrollDate"/>
+		<result column="user_level" property="userLevel"/>
+		<result column="pt" property="pt"/>
+		<result column="qr" property="qr"/>
+		<result column="profile_pic" property="profilePic"/>
+		<result column="membership" property="membership"/>
+	</resultMap>
+	
 	<select id="checkId" resultType="int">
 		select count(user_id)
 		  from member
@@ -22,6 +40,7 @@
 		     , age
 		     , address
 		     , user_level
+		     , profile_pic
 		     , qr
 		     )
         VALUES
@@ -36,7 +55,29 @@
         	 , #{age}
         	 , #{address}
         	 , #{userLevel} 
+        	 , #{profilePic}
         	 , 'qr_code_path'
         	 )
 	</insert>
+	
+	<select id="loginMember" resultMap="memberResultset">
+		select user_no
+		     , user_id
+		     , user_pwd
+		     , user_name
+		     , email
+		     , phone
+		     , gender
+		     , age
+		     , address
+		     , enroll_date
+		     , user_level
+		     , pt
+		     , qr
+		     , profile_pic
+		     , membership
+		  from member
+		 where status = 'Y'
+		   and user_id = #{userId}
+	</select>
 </mapper>
