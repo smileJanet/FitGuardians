@@ -8,6 +8,7 @@ import java.net.URLDecoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,7 +28,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.kh.fitguardians.exercise.model.vo.ExerciseDetails;
+import com.kh.fitguardians.exercise.model.vo.ExerciseInfo;
 import com.kh.fitguardians.exercise.model.vo.ExercisePlan;
+import com.kh.fitguardians.exercise.model.vo.Schedule;
 
 @Controller
 public class ExerciseController {
@@ -100,7 +104,7 @@ public class ExerciseController {
 	
 	// PDF API를 위한 메소드
 	@RequestMapping(value="exercisePdf.bo", produces="application/json; charset=utf-8")
-	public ResponseEntity<byte[]> makePdf(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public ResponseEntity<byte[]> makePdf(@RequestBody ExerciseInfo exerciseInfo, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		
 		// PDF파일 하나 생성
 		// PDF문서를 메모리에 할당(doc.close() 종료 메소드 사용할 것)
@@ -129,10 +133,63 @@ public class ExerciseController {
 		
 		// 글쓰기
 		contentStream.setFont(boldFont, 25);
-		contentStream.newLineAtOffset(100,600);
+		contentStream.newLineAtOffset(30,800);
 		String title = "AI가 만들어준 운동 일정표";
 		contentStream.showText(title);
 		
+		// 안내정보
+		contentStream.setFont(textFont, 12);
+		contentStream.newLineAtOffset(0, -30);
+		contentStream.showText("위 파일은 Rapid API 웹사이트 내 AI Workout Planner API를 이용하여 만든 운동 스케줄표 입니다.");
+		contentStream.newLineAtOffset(0, -15);
+		contentStream.showText("해당 운동 플래너는 운동용으로 참고하시고 전문적인 플랜은 반드시 전문가와 상담하여 조정하시기 바랍니다.");
+		contentStream.newLineAtOffset(0, -15);
+		
+		// 운동 스케줄 상세
+		contentStream.setFont(boldFont, 15);
+	    contentStream.newLineAtOffset(0, -15);
+		contentStream.showText("운동 스케줄 상세");
+		contentStream.newLineAtOffset(0, -15);
+		
+		Schedule schedule = exerciseInfo.getSchedule();
+		contentStream.setFont(textFont, 10);
+		
+		contentStream.showText("운동 목표: " + schedule.getGoal());
+	    contentStream.newLineAtOffset(0, -15);
+		contentStream.showText("주당 운동 일수: " + schedule.getDaysPerWeek());
+	    contentStream.newLineAtOffset(0, -15);
+	    contentStream.showText("총 주수: " + schedule.getTotalWeek());
+	    contentStream.newLineAtOffset(0, -15);
+	    contentStream.showText("운동 프로그램 난이도: " + schedule.getFitnessLevel());
+	    contentStream.newLineAtOffset(0, -15);
+	    contentStream.showText("프로그램 설명: " + schedule.getSeoContent());
+	    contentStream.newLineAtOffset(0, -30);
+		
+	    // 운동 세부정보 출력
+	    contentStream.setFont(boldFont, 15);
+	    contentStream.showText("운동 세부사항");
+	    contentStream.newLineAtOffset(0, -15);
+
+	    ArrayList<ExerciseDetails> exercises = exerciseInfo.getExercise();
+	    contentStream.setFont(textFont, 12);
+
+	    for (ExerciseDetails exercise : exercises) {
+	        
+	        contentStream.showText("일자: " + exercise.getDay());
+	        contentStream.newLineAtOffset(0, -15);
+	        contentStream.showText("운동명: " + exercise.getName());
+	        contentStream.newLineAtOffset(0, -15);
+	        contentStream.showText("장비: " + exercise.getEquipment());
+	        contentStream.newLineAtOffset(0, -15);
+	        contentStream.showText("소요 시간: " + exercise.getDuration());
+	        contentStream.newLineAtOffset(0, -15);
+	        contentStream.showText("반복 수: " + exercise.getRepetitions());
+	        contentStream.newLineAtOffset(0, -15);
+	        contentStream.showText("세트 수: " + exercise.getSets());
+	        contentStream.newLineAtOffset(0, -15); // Extra space between exercises
+	      
+	    }
+
 		// 글쓰기 작성 종료를 알림
 		contentStream.endText();
 		

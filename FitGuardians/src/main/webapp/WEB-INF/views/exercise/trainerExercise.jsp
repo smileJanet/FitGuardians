@@ -165,11 +165,11 @@
                                 			// 스케줄은 객체 형태로
                                 			schedule : {
                                 				// aiInfo ul li의 0번째 인덱스의 텍스트를 :를 기준으로 쪼갰을 때(split) 2번쨰 인덱스에 담길 값
-                                				days_per_week: $('.aiInfo ul li').eq(0).text().split(':')[1],
-                                				total_weeks : $('aiInfo ul li').eq(1).text().split(':')[1],
-                                				fitness_level : $('aiInfo ul li').eq(2).text().split(':')[1],
-                                				goal : $('aiInfo ul li').eq(3).text().split(':')[1],
-                                				seo_content : $('aiInfo ul li').eq(4).text().split(':')[1],
+                                				days_per_week: $('.aiInfo ul li').eq(0).text().split(':')[1].trim(),
+                                				total_weeks : $('.aiInfo ul li').eq(1).text().split(':')[1].trim(),
+                                				fitness_level : $('.aiInfo ul li').eq(2).text().split(':')[1].trim(),
+                                				goal : $('.aiInfo ul li').eq(3).text().split(':')[1].trim(),
+                                				seo_content : $('.aiInfo ul li').eq(4).text().split(':')[1].trim(),
                                 			},
                                 			// 세부 운동 내용은 배열 형태로
                                 			exercise : []
@@ -344,8 +344,6 @@
                 			
                 			$('.aiInfo').html(info);
                 			$('.aiProgram').html(value);
-                			
-                			makePdf();
                 			
                 		},
                 		error : function(){
