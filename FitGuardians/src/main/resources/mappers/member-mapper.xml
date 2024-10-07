@@ -105,4 +105,11 @@
 		 where status = 'Y'
 		   and user_id = #{userId}
 	</select>
+	
+	<select id="getTrainee" resultMap="memberResultset">
+		select * 
+		  from member 
+		 where pt = #{userId}
+		   and user_level = 2
+	</select>
 </mapper>
