@@ -9,9 +9,12 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -27,14 +30,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
+import com.google.gson.Gson;
 import com.kh.fitguardians.exercise.model.service.ExerciseServiceImpl;
 import com.kh.fitguardians.exercise.model.vo.ExerciseDesc;
 import com.kh.fitguardians.exercise.model.vo.ExerciseDetails;
 import com.kh.fitguardians.exercise.model.vo.ExerciseInfo;
 import com.kh.fitguardians.exercise.model.vo.ExercisePlan;
 import com.kh.fitguardians.exercise.model.vo.Workout;
+import com.kh.fitguardians.member.model.vo.Member;
 
 @Controller
 public class ExerciseController {
@@ -44,8 +51,14 @@ public class ExerciseController {
 
 	// trainerExercise로 포워딩 위한 메소드
 	@RequestMapping("exercise.bo")
-	public String showExercisePage() {
-		return "exercise/trainerExercise";
+	public ModelAndView showExercisePage(HttpSession session, ModelAndView mv) {
+		String userId = ((Member)session.getAttribute("loginUser")).getUserId();
+		// 1. 페이지가 로드 되자마자 트레이너의 담당 회원이 조회되야 한다.
+		ArrayList<Member> list = eService.getTrainee(userId);
+		
+		mv.addObject("list", list).setViewName("exercise/trainerExercise");;
+		
+		return mv;
 	} // showExercisePage
 
 	// AI를 통해 운동 계획표 생성(API)
@@ -215,10 +228,44 @@ public class ExerciseController {
 		
 	} // makePdf
 	
-	@RequestMapping("addExercise.bo")
-	public void addExercise(Workout workout) {
+	@ResponseBody
+	@RequestMapping(value="addExercise.bo", produces="application/json; charset=utf-8")
+	public Map<String, Object> addExercise(@RequestBody Workout workout) {
+		
 		int result = eService.addExercise(workout);
 		
-	}
+		// JSON형태로 값을 주고받는 것이 아닐 경우 이렇게 써도 되지만
+		// return result > 0 ? "success" : "error";
+		
+		// 지금은 JSON형태로 값을 주고받고 있으므로 
+		// String responseMessage = result > 0 ? "success" : "error";
+	    // return ResponseEntity.ok(responseMessage); // JSON 형태로 반환하는 이 형식을 써야 한다
+		
+		Map<String, Object> response = new HashMap<>();
+		response.put("result", result > 0 ? "success" : "error");
+		return response;
+		
+	} //addExercise
+	
+	@ResponseBody
+	@RequestMapping(value="selectWorkout.ex", produces = "application/json; charset=utf-8")
+	public String selectWorkout(@RequestParam String userId) {
+		// System.out.println("userId가 없나 : " + userId);
+		
+		ArrayList<Workout> list = eService.selectWorkoutList(userId);
+		// 이런식으로 HashMap을 사용해도 되지만, Gson을 사용해보자
+		
+		//HashMap<String, Object> response = new HashMap<>();
+		//response.put("workouts", list);
+		
+		// 삼항 연산자로 문자열 반환도 가능하지만 JSON응답을 요구하는 경우 적절한 형태로 변환해야 한다.
+		// JSON형태 없이 일반적으로 한다면 ?
+		//  String responseMessage = result > 0 ? "success" : "error";
+		
+		// -> Gson을 사용해 값을 String형으로 반환해보기
+		return new Gson().toJson(list);
+		// 아주 잘됨을 확인!
+		
+	}//selectWorkout
 
 }
