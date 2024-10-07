@@ -13,7 +13,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Schedule {
+public class ExerciseDesc {
 	
 	// PDF 전용 메소드
 	

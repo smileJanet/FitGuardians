@@ -244,40 +244,144 @@
                     <div class="col-md-2" style="display:inline;">
                         <div class="card shadow mb-4">
                             <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">뫅두팔님 운동 등록</h6>
+                                <h6 class="m-0 font-weight-bold text-primary">뫅두팔님의 스케줄 등록</h6>
                             </div>
                             <div class="card-body" id='calendar'>
-                                
+                                <!-- 캘린더 들어오는 자리 -->
                             </div>
                         </div>
                     </div>
+                    
+                       <!-- modal 추가 -->
+				    <div class="modal fade" id="calendarModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+				        aria-hidden="true">
+				        <div class="modal-dialog" role="document">
+				            <div class="modal-content">
+				                <div class="modal-header">
+				                    <h5 class="modal-title" id="exampleModalLabel">회원 스케줄 등록</h5>
+				                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				                        <span aria-hidden="true">&times;</span>
+				                    </button>
+				                </div>
+				                <div class="modal-body">
+								    <div class="form-group">
+								        <label for="taskId" class="col-form-label">일정 제목</label>
+								        <input type="text" class="form-control" id="calendar_title" name="calendar_title">
+								        
+								        <label for="taskId" class="col-form-label">난이도</label>
+								        <div style="display:flex;">
+								            <label><input type="checkbox" class="difficulty" value="H">어려움(H)</label>
+								            <label><input type="checkbox" class="difficulty" value="M">보통(M)</label>
+								            <label><input type="checkbox" class="difficulty" value="L">쉬움(L)</label>
+								        </div>
+								        
+								        <label for="taskId" class="col-form-label">운동 부위</label>
+								        <div style="display:flex;">
+								            <label><input type="checkbox" class="target" value="UE">상체</label>
+								            <label><input type="checkbox" class="target" value="ABS">복부</label>
+								            <label><input type="checkbox" class="target" value="LE">하체</label>
+								        </div>
+								        
+								        <label for="taskId" class="col-form-label">운동일</label>
+								        <input type="date" class="form-control" id="calendar_date" name="calendar_date">
+								        
+								        <label for="taskId" class="col-form-label">운동 내용</label>
+								        <textarea class="form-control" id="calendar_description" name="calendar_description" style="height:200px;"></textarea>
+
+								    </div>
+								</div>
+				                <div class="modal-footer">
+				                    <button type="button" class="btn btn-warning" id="addCalendar">추가</button>
+				                    <button type="button" class="btn btn-secondary" data-dismiss="modal"
+				                        id="sprintSettingModalClose">취소</button>
+				                </div>
+				    
+				            </div>
+				        </div>
+				    </div>
 
                     <script>
-
                     document.addEventListener('DOMContentLoaded', function() {
-                    const calendarEl = document.getElementById('calendar')
-                    const calendar = new FullCalendar.Calendar(calendarEl, {
-                    	themeSystem: 'bootstrap5',
-                        height:'600px',
-                    	initialView: 'dayGridWeek',
-                        navLinks : true,
-                        editable: true,
-                        nowIndicator: true,
-                        dayMaxEvents : true,
-                        selectable: true,
-                        weekNumbers:true,
-                        headerToolbar: {
-                            start: 'dayGridMonth,dayGridWeek,dayGridDay',
-                            center: 'title',
-                            end: 'today prev,next' 
-                        },
-                        locale: 'ko',
-                    })
-                    calendar.render();
-                    })
-            
-                </script>
-
+				    const calendarEl = document.getElementById('calendar');
+				    const calendar = new FullCalendar.Calendar(calendarEl, {
+				        themeSystem: 'bootstrap5',
+				        height: '600px',
+				        initialView: 'dayGridMonth',
+				        navLinks: true,
+				        editable: true,
+				        nowIndicator: true,
+				        dayMaxEvents: true,
+				        selectable: true,
+				        weekNumbers: true,
+				        displayEventTime: false,
+				        headerToolbar: {
+				            start: 'dayGridMonth,dayGridWeek,dayGridDay',
+				            center: 'title',
+				            end: 'today prev,next,addEventButton'
+				        },
+				        locale: 'ko',
+				        events: [{ title: '뫅두팔님 1일차 수업', start: '2024-10-08', end: '2024-11-08' }],
+				        customButtons: {
+				            addEventButton: {
+				                text: '일정 추가',
+				                click: function() {
+				                    $("#calendarModal").modal("show");
+				                }
+				            }
+				        }
+				    });
+				
+				    $("#addCalendar").on("click", function() {
+				        let title = $("#calendar_title").val();
+				        let difficulty = $(".difficulty:checked").val();
+				        let date = $("#calendar_date").val();
+				        let selectTarget = $(".target:checked").val();
+				        let description = $("#calendar_description").val();
+				
+				        if (!title) { // 정규화
+				            alert("일정 제목을 입력하세요.");
+				        } else if (!difficulty) {
+				            alert("난이도를 선택하세요.");
+				        } else if (!date) {
+				            alert("일자를 선택하세요.");
+				        } else if (!description) {
+				            alert("설명을 작성하세요.");
+				        } else if (!selectTarget) {
+				            alert("표적 부위를 선택하세요.");
+				        } else {
+				        	// 여기에 ajax 시전
+				        	$.ajax({
+				        		url : "addExercise.bo",
+				        		method : "post",
+				        		data : {
+				        			title: title,
+				        			difficulty : difficulty,
+				        			date : date,
+				        			description : description,
+				        			selectTarget : selectTarget,
+				        		},
+				        		succeess: function(result){
+				        			alert("운동 계획이 성공적으로 추가되었습니다.");
+				        			console.log(result);
+				        			
+				        			// 값 초기화
+				        			$("#calendarModal").modal("hide");
+				        			$("#calendar_title").val("");
+				        			$("#calendar_description").val("");
+				        			$("#calendar_date").val("");
+				        			$("input[type='checkbox']").prop('checked', false);
+				        			
+				        		},
+				        		error : function(){
+				        			console.log("추가 실패");
+				        		},
+				        	});
+				        }
+				    });
+				
+				    calendar.render();
+				});
+				</script>
                 </div>
                 
                 <script>

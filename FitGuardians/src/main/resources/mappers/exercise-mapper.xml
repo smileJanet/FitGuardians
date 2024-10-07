@@ -30,7 +30,29 @@
  	<result column="kcal" property="kcal"/>
  </resultMap>
  
- 
+ <insert id="addSchedule">
+	 INSERT INTO SCHEDULE (
+	    SCHEDULE_NO, 
+	    USER_ID, 
+	    TRAINER_ID, 
+	    SCHEDULE_TITLE, 
+	    SCHEDULE_CONTENT, 
+	    START_DATE, 
+	    TOTAL_WEEKS, 
+	    DAYS, 
+	    CREATE_DATE
+	) VALUES (
+	     SEQ_SCHEDULE_NO,                             
+	     #{userId},                   
+	     #{trainerId},                  
+	     #{scheduleTitle},             
+	     #{scheduleContent},         
+	     #{startDate},
+	     #{totalWeeks},                             
+	     #{days},     
+	     SYSDATE                        
+	);
+ </insert>
  
  
  

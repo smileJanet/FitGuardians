@@ -15,7 +15,8 @@ import lombok.ToString;
 @ToString
 public class ExerciseInfo {
 	
-	private Schedule schedule;
+	//PDF전용 메소드
+	private ExerciseDesc exerciseDesc;
     private ArrayList<ExerciseDetails> exercise;
 	
 	

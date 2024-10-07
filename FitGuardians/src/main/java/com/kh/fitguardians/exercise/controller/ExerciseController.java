@@ -20,6 +20,7 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -28,13 +29,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.kh.fitguardians.exercise.model.service.ExerciseServiceImpl;
+import com.kh.fitguardians.exercise.model.vo.ExerciseDesc;
 import com.kh.fitguardians.exercise.model.vo.ExerciseDetails;
 import com.kh.fitguardians.exercise.model.vo.ExerciseInfo;
 import com.kh.fitguardians.exercise.model.vo.ExercisePlan;
-import com.kh.fitguardians.exercise.model.vo.Schedule;
+import com.kh.fitguardians.exercise.model.vo.Workout;
 
 @Controller
 public class ExerciseController {
+	
+	@Autowired
+	private ExerciseServiceImpl eService;
 
 	// trainerExercise로 포워딩 위한 메소드
 	@RequestMapping("exercise.bo")
@@ -151,7 +157,7 @@ public class ExerciseController {
 		contentStream.showText("운동 스케줄 상세");
 		contentStream.newLineAtOffset(0, -15);
 		
-		Schedule schedule = exerciseInfo.getSchedule();
+		ExerciseDesc schedule = exerciseInfo.getExerciseDesc();
 		contentStream.setFont(textFont, 10);
 		
 		contentStream.showText("운동 목표: " + schedule.getGoal());
@@ -208,5 +214,11 @@ public class ExerciseController {
 	            .body(baos.toByteArray());
 		
 	} // makePdf
+	
+	@RequestMapping("addExercise.bo")
+	public void addExercise(Workout workout) {
+		int result = eService.addExercise(workout);
+		
+	}
 
 }

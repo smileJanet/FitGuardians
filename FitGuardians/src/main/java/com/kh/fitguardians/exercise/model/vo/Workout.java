@@ -21,9 +21,6 @@ public class Workout {
 	private String workoutCategory;
 	private String difficulty;
 	private String description;
-	private String targetMuscle;
-	private String tmImage;
-	private int kcal;
-	
+
 	
 }
