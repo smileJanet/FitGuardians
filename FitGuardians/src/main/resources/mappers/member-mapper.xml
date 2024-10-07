@@ -27,7 +27,7 @@
 		   and status = 'Y'
 	</select>
 
-	<insert id="insertMember">
+	<insert id="insertMember" parameterType="Member">
 		INSERT 
 		  INTO member 
 		     ( user_no
@@ -58,6 +58,31 @@
         	 , #{profilePic}
         	 , 'qr_code_path'
         	 )
+	</insert>
+	
+	<select id="selectUserNo" resultType="int">
+	    SELECT seq_mno.currval 
+	      FROM dual
+	</select>
+	
+	<insert id="insertMemberInfo" parameterType="MemberInfo">
+		INSERT 
+		  INTO MEMBER_INFO
+		     (
+		       user_no
+		     , height
+		     , weight
+		     , disease
+		     , goal
+		     )
+		VALUES
+		     (
+		       #{userNo}
+		     , #{height}
+		     , #{weight}
+		     , #{disease}
+		     , #{goal}
+		     )
 	</insert>
 	
 	<select id="loginMember" resultMap="memberResultset">

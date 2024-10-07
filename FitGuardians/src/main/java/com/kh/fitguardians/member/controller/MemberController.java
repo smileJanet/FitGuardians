@@ -9,8 +9,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.google.gson.Gson;
 import com.kh.fitguardians.member.model.service.MemberServiceImpl;
 import com.kh.fitguardians.member.model.vo.Member;
+import com.kh.fitguardians.member.model.vo.MemberInfo;
 
 @Controller
 public class MemberController {
@@ -54,34 +56,61 @@ public class MemberController {
 	}
 	
 	
-	@RequestMapping("enroll.me")
-	public String memberEnroll(Member m, HttpServletRequest request) {
+	@RequestMapping(value = "enroll.me", produces = "text/html; charset=UTF-8")
+	public String memberEnroll(Member m, String memberInfo, HttpServletRequest request) {
 		String encPwd = bcryptPasswordEncoder.encode(m.getUserPwd());
 		m.setUserPwd(encPwd);
-		String profile = "";
-		String gender = m.getGender();
-		if(m.getProfilePic() == null) {
-			switch (gender) {
-			case "F":
-				System.out.println("여자");
-				profile = "resources/profilePic/gymW.png";
-				break;
-			default:
-				System.out.println("남자");
-				profile = "resources/profilePic/gymM.png";
-				break;
-			}
-		}
+		// 현재 사용불가
+		// String profile = "";
+		// String gender = m.getGender();
+		// if(m.getProfilePic() == null) {
+		// 		switch (gender) {
+		//		case "F":
+		//			System.out.println("여자");
+		//			profile = "resources/profilePic/gymW.png";
+		//			break;
+		//		default:
+		//			System.out.println("남자");
+		//			profile = "resources/profilePic/gymM.png";
+		//			break;
+		//		}
+		//	}
+		// m.setProfilePic(profile);
 		
-		m.setProfilePic(profile);
-		 int result = mService.insertMember(m);
-		 if(result > 0) { 
-			 request.getSession().setAttribute("alertMsg","회원가입되었습니다. 환영합니다!"); 
-			 return "Trainee/traineeDashboard"; 
-		 }else { 
-			 
-			 return "common/loginForm"; 
-		 }
+		// 기본 프로필 사진 설정
+        String profile = m.getProfilePic() == null ? 
+            (m.getGender().equals("F") ? "resources/profilePic/gymW.png" : "resources/profilePic/gymM.png") : 
+            m.getProfilePic();
+        m.setProfilePic(profile);
+		
+		// 회원 추가 정보가 있는지 확인
+        if (memberInfo != null && !memberInfo.isEmpty()) {
+            // 추가 정보가 있으면 추가 정보 저장
+            MemberInfo info = new Gson().fromJson(memberInfo, MemberInfo.class);
+            int result = mService.insertMemberWithInfo(m, info);
+            if (result > 0) {
+                request.getSession().setAttribute("alertMsg", "회원가입이 완료되었습니다. 환영합니다!");
+                return "Trainee/traineeDashboard";
+            }
+        } else {
+            // 추가 정보가 없으면 기존 방식대로 회원가입 처리
+            int result = mService.insertMember(m);
+            if (result > 0) {
+                request.getSession().setAttribute("alertMsg", "회원가입이 완료되었습니다. 환영합니다!");
+                return "Trainee/traineeDashboard";
+            }
+        }
+        request.getSession().setAttribute("errorMsg", "회원가입에 실패했습니다.");
+        return "common/loginForm";
+		 
+        // 사용 노노
+		// if(result > 0) { 
+		// 		 request.getSession().setAttribute("alertMsg","회원가입되었습니다. 환영합니다!"); 
+		// 		 return "Trainee/traineeDashboard"; 
+		// }else { 
+		//	 	
+		//	 	 return "common/loginForm"; 
+		// }
 	}
 	
 	@RequestMapping("login.me")
