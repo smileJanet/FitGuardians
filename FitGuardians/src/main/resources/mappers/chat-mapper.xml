@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+
+<mapper namespace="ChatMapper">
+	
+	<!-- resultMap 작성 -->
+	<resultMap id="messageResult" type="Message">
+		<result column="MSG_NO" property="msgNo"/>
+	    <result column="MSG_CONTENT" property="msgContent"/>
+	    <result column="SEND_DATE" property="sendDate"/>
+	    <result column="CH_NO" property="chNo"/>
+	    <result column="SENDER_NO" property="senderNo"/>
+	    <result column="RECEIVER_NO" property="receiverNo"/>
+	    <result column="MSG_STATUS" property="msgStatus"/>
+	</resultMap>
+	
+	<!-- 메시지 전송 -->
+	<insert id="sendMessage">
+	    INSERT
+	      INTO MESSAGE
+	         (
+	           MSG_NO
+	         , MSG_CONTENT
+	         , SEND_DATE
+	         , CH_NO
+	         , SENDER_NO
+	         , RECEIVER_NO
+	         , MSG_STATUS
+	 	     )
+	    VALUES
+	         (
+	           SEQ_MESSAGE_NO.NEXTVAL
+	         , #{msgContent}
+	         , SYSDATE
+	         , #{chNo}
+	         , #{senderNo}
+	         , #{receiverNo}
+	         , #{msgStatus}
+	    )
+	</insert>
+	
+	<!-- 특정 채팅방 메시지 조회 -->
+	<select id="getMessages" resultMap="messageResult" parameterType="_int">
+		select *
+		  from message
+		 where ch_no = #{chNo}
+		 order
+		    by send_date
+	</select>
+	
+	<!-- 메시지 상태 업데이트 -->
+	<update id="updateMessageStatus" parameterType="map">
+		update message
+		   set msg_status = #{status}
+		 where msg_no = #{msgNo}
+	</update>
+
+</mapper>

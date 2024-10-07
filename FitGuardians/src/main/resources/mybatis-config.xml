@@ -9,11 +9,14 @@
 	<typeAliases>
 		<typeAlias type="com.kh.fitguardians.gym.model.vo.Gym" alias="Gym"/>
 		<typeAlias alias="Member" type="com.kh.fitguardians.member.model.vo.Member"/>
+		<typeAlias type="com.kh.fitguardians.chat.model.vo.ChatRoom" alias="ChatRoom"/>
+		<typeAlias type="com.kh.fitguardians.chat.model.vo.Message" alias="Message"/>
 	</typeAliases>
 	
 	<mappers>
 		<mapper resource="/mappers/gym-mapper.xml"/>
 		<mapper resource="/mappers/member-mapper.xml"/>
+		<mapper resource="/mappers/chat-mapper.xml"/>
 	</mappers>
 
 </configuration>
