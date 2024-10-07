@@ -37,7 +37,21 @@
     	
 	<!-- Page Wrapper -->
     <div id="wrapper">
-     <jsp:include page="../common/sideTrainee.jsp" />
+     <c:choose>
+    	<c:when test="${ not empty loginUser }">
+    		<c:choose>
+    			<c:when test="${ loginUser.userLevel == 2 }">
+			     	<jsp:include page="../common/sideTrainee.jsp" />
+    			</c:when>
+    			<c:otherwise>
+    				<jsp:include page="../common/sideTrainer.jsp" />
+    			</c:otherwise>
+    		</c:choose>
+    	</c:when>
+	    <c:otherwise>
+	    	<jsp:include page="../common/sideTrainee.jsp" />
+	    </c:otherwise>
+    </c:choose>
      <div id="content-wrapper" class="d-flex flex-column">
      <!-- Main Content -->
      	<div id="content">
