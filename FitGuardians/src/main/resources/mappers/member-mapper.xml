@@ -20,6 +20,17 @@
 		<result column="membership" property="membership"/>
 	</resultMap>
 	
+	<resultMap type="Schedule" id="scheduleResult">
+		<result column="schedule_no" property="scheduleNo"/>
+		<result column="user_no" property="userNo"/>
+		<result column="schedule_title" property="scheduleTitle"/>
+		<result column="schedule_des" property="scheduleDes"/>
+		<result column="start_date" property="startDate"/>
+		<result column="end_date" property="endDate"/>
+		<result column="dow" property="dow"/>
+		<result column="back_color" property="backColor"/>
+	</resultMap>
+	
 	<select id="checkId" resultType="int">
 		select count(user_id)
 		  from member
@@ -80,4 +91,45 @@
 		 where status = 'Y'
 		   and user_id = #{userId}
 	</select>
+	
+	<insert id="insertTrainerCalendar">
+		insert 
+		  into schedule
+		     (
+		       schedule_no
+		     , user_no
+		     , schedule_title
+		     , start_date
+		     , end_date
+		     , back_color
+		     )
+		values
+		     (
+		       seq_cno.nextval
+		     , #{userNo}
+		     , #{scheduleTitle}
+		     , #{startDate}
+		     , #{endDate}
+		     , #{backColor}
+		     )
+	</insert>
+	
+	<select id="selectSchedule" resultMap="scheduleResult">
+		select schedule_no
+		     , schedule_title
+		     , start_date
+		     , end_date
+		     , back_color
+		  from schedule
+		 where user_no = #{userNo}
+	</select>
+	
+	<select id="findDuplicate" resultType="int">
+		select count(schedule_no)
+		  from schedule
+		 where schedule_title = #{scheduleTitle}
+		   and start_date = #{startDate}
+	</select>
+	
+	
 </mapper>

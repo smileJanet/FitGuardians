@@ -52,6 +52,25 @@ COMMENT ON COLUMN member.profile_pic IS '회원 프로필 사진';
 
 COMMENT ON COLUMN member.membership IS '회원이 소유한 회원권';
 
-create sequence seq_mno start with 4 NOCACHE;
 drop SEQUENCE seq_mno;
+create sequence seq_mno start with 4 NOCACHE;
+
+drop table schedule;
+CREATE TABLE SCHEDULE (
+    SCHEDULE_NO NUMBER NOT NULL,                 -- 스케줄 고유번호
+    USER_NO NUMBER NOT NULL references member(user_no) ,                     -- 스케줄 보유회원아이디
+    SCHEDULE_TITLE VARCHAR2(100),                -- 스케줄이름
+    SCHEDULE_DES VARCHAR2(3000),                 -- 스케줄 내용
+    START_DATE varchar2(100),             
+    END_DATE varchar2(100),                               -- 종료날짜
+    DOW VARCHAR2(30),                             -- 요일
+    bgc varchar2(30),
+    back_color varchar2(30)
+);
+
+
+
+create sequence seq_cno nocache;
+
+
 

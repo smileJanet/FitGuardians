@@ -106,7 +106,7 @@ pageEncoding="UTF-8"%>
             data-parent="#accordionSidebar"
           >
             <div class="bg-white py-2 collapse-inner rounded">
-              <a class="collapse-item" href="utilities-color.html">내 스케쥴 설정</a>
+              <a class="collapse-item" href="calendar.tr">내 스케쥴 설정</a>
               <a class="collapse-item" href="utilities-border.html">회원 스케쥴 설정</a>
             </div>
           </div>

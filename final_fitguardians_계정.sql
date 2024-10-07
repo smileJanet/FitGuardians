@@ -35,3 +35,16 @@ INSERT
         	 , #{userLevel} 
         	 , 'qr_code_path_1'
         	 )
+             ;
+select schedule_no
+		     , schedule_title
+		     , start_date
+		     , end_date
+		  from schedule
+		 where user_no = 4;             
+         
+select count(schedule_no)
+		  from schedule
+		 where schedule_title = '일정추가'
+		   or start_date = '2024-10-15T04:21:00.000Z'
+           ;

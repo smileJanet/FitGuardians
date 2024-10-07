@@ -9,6 +9,7 @@
 	<typeAliases>
 		<typeAlias type="com.kh.fitguardians.gym.model.vo.Gym" alias="Gym"/>
 		<typeAlias alias="Member" type="com.kh.fitguardians.member.model.vo.Member"/>
+		<typeAlias alias="Schedule" type="com.kh.fitguardians.member.model.vo.Schedule"/>
 	</typeAliases>
 	
 	<mappers>
