@@ -48,3 +48,26 @@ select count(schedule_no)
 		 where schedule_title = '일정추가'
 		   or start_date = '2024-10-15T04:21:00.000Z'
            ;
+select count(qr_no)
+		  from qrinfo
+		 where status = 'Y'
+		   and id = 'qrtest01'
+           and to_timestamp(created_at, 'YYYY-MM-DD"T"HH24:MI:SS.FF') between
+           to_timestamp('2024-10-08T16:40:43.6181094', 'YYYY-MM-DD"T"HH24:MI:SS.FF') and
+           to_timestamp('2025-10-08T16:40:43.6191067', 'YYYY-MM-DD"T"HH24:MI:SS.FF')
+           ;
+           
+select qr_no
+		     , id
+		     , type
+		     , created_at
+		     , valid_date
+		     , attendance
+		     , att_status
+		  from qrinfo
+		 where status = 'Y'
+		   and id = 'qrtest01'
+           and to_timestamp(created_at, 'YYYY-MM-DD"T"HH24:MI:SS.FF') between
+           to_timestamp('2024-10-08T16:40:43.6181094', 'YYYY-MM-DD"T"HH24:MI:SS.FF') and
+           to_timestamp('2025-10-08T16:40:43.6181094', 'YYYY-MM-DD"T"HH24:MI:SS.FF')
+           ;

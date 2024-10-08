@@ -6,6 +6,7 @@ import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 
+import com.kh.fitguardians.common.model.vo.QrInfo;
 import com.kh.fitguardians.member.model.dao.MemberDao;
 import com.kh.fitguardians.member.model.vo.Member;
 
@@ -44,11 +45,28 @@ public class MemberServiceImpl implements MemberService{
 	public int insertMember(Member m) {
 		return mDao.insertMember(sqlSession, m);
 	}
+	
+	@Override
+	public int insertQrInfo(QrInfo qr) {
+		return mDao.insertQrInfo(sqlSession, qr);
+	}
 
 	@Override
 	public Member loginMember(Member m) {
 		return mDao.loginMember(sqlSession, m);
 	}
+
+	@Override
+	public QrInfo qrCheck(QrInfo qr) {
+		return mDao.qrCheck(sqlSession, qr);
+	}
+
+	@Override
+	public int updateAttendance(QrInfo qr) {
+		return mDao.updateAttendance(sqlSession, qr);
+	}
+
+	
 
 	
 	
