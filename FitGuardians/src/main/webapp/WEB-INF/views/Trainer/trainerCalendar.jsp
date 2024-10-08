@@ -79,6 +79,19 @@
 											color: event.backColor,
 										}))
 										
+										
+										$("input[id=allday]").on('change', ()=>{
+											if($("input[id=allday]").is(":checked")){
+												// 체크 됐을 때
+												$("#calendar_start_time").val("00:00");
+												$("#calendar_end_time").val("00:00");
+											}else{
+												// 체크 해제 했을 때
+												$("#calendar_start_time").val("");
+												$("#calendar_end_time").val("");
+											}
+										})
+										
 										const calendarEl = document.getElementById('calendar');
 										const calendar = new FullCalendar.Calendar(calendarEl,
 											{
@@ -151,14 +164,19 @@
 											let end_date = $("#calendar_end_date").val();
 											let start_time = $("#calendar_start_time").val();
 											let end_time = $("#calendar_end_time").val();
-											console.log($("#color").val())
+											let allday = $("input[id=allday]").is(":checked");
+											
+											
+											
 											var eventData = {
 													title: $("#calendar_content").val(),
 													start: new Date(start_date + "T" + start_time),
 													end: new Date(end_date + "T" + end_time),
 													color: $("#color").val(),
+													allday: allday,
 											}
 											
+											console.log(eventData);
 											
 											if(eventData.title === null || eventData.title === ""){
 												Swal.fire({icon: 'warning', text: "내용을 입력해주세요"});
@@ -220,7 +238,8 @@
 											<input type="time" class="form-control" name="calendar_start_time" id="calendar_start_time">
 											<label for="taskId" class="col-form-label">종료 시간</label>
 											<input type="time" class="form-control" name="calendar_end_time" id="calendar_end_time">
-											
+											<label for="taskId" class="col-form-label">하루종일</label>
+											<input type="checkbox" id="allday" name="allday"/> 
 										</div>
 									</div>
 									<div class="modal-footer">

@@ -65,9 +65,11 @@ CREATE TABLE SCHEDULE (
     END_DATE varchar2(100),                               -- 종료날짜
     DOW VARCHAR2(30),                             -- 요일
     bgc varchar2(30),
-    back_color varchar2(30)
+    back_color varchar2(30),
+    allday varchar2(10)
 );
 
+alter table schedule add allday varchar2(10) ;
 
 
 create sequence seq_cno nocache;
