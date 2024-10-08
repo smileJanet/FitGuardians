@@ -139,4 +139,17 @@ public class MemberController {
 		return "redirect:/";
 	}
 	
+	@RequestMapping("traineeList.me")
+	public String traineeList() {
+		return "Trainer/traineeManagement";
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
