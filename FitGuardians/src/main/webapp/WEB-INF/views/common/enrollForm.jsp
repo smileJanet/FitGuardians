@@ -335,6 +335,7 @@
 						
 						<select id="disease" name="disease" class="custom-select">
 							<option value="" hidden selected disabled>기저질환</option>
+							<option value="없음">없음</option>
 							<option value="혈압조절장애">혈압조절장애(고혈압, 저혈압)</option>
 							<option value="고지혈증">고지혈증</option>
 							<option value="당뇨">당뇨</option>

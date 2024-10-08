@@ -56,7 +56,7 @@ public class MemberController {
     }
 
 	@RequestMapping("loginform.me")
-	public String loginForm() {
+	public String loginForm() throws IOException {
 		return "common/loginForm";
 	}
 	
@@ -115,6 +115,12 @@ public class MemberController {
         if (memberInfo != null && !memberInfo.isEmpty()) {
             // 추가 정보가 있으면 추가 정보 저장
             MemberInfo info = new Gson().fromJson(memberInfo, MemberInfo.class);
+            
+            // 추가 정보중에서 기저질환이 없으면 값을 비게 만들기
+            if(info.getDisease().equals("없음")) {
+            	info.setDisease("");
+            }
+            
             int result = mService.insertMemberWithInfo(m, info);
             if (result > 0) {
                 request.getSession().setAttribute("alertMsg", "회원가입이 완료되었습니다. 환영합니다!");
