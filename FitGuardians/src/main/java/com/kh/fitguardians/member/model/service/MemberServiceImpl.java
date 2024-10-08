@@ -1,5 +1,7 @@
 package com.kh.fitguardians.member.model.service;
 
+import java.util.ArrayList;
+
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailSender;
@@ -7,6 +9,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 
 import com.kh.fitguardians.member.model.dao.MemberDao;
+import com.kh.fitguardians.member.model.vo.BodyInfo;
 import com.kh.fitguardians.member.model.vo.Member;
 import com.kh.fitguardians.member.model.vo.MemberInfo;
 
@@ -66,7 +69,28 @@ public class MemberServiceImpl implements MemberService{
 		return mDao.loginMember(sqlSession, m);
 	}
 
+	@Override
+	public ArrayList<Member> getTraineeList(String userId) {
+		return mDao.getTraineeList(sqlSession, userId);
+	}
+
+	@Override
+	public Member getTraineeDetails(String userId) {
+		return mDao.getTraineeDetails(sqlSession, userId);
+	}
+
+	@Override
+	public ArrayList<BodyInfo> getTraineeBodyInfo(String userId) {
+		return mDao.getTraineeBodyInfo(sqlSession, userId);
+	}
+
+	@Override
+	public MemberInfo getTraineeInfo(int userNo) {
+		return mDao.getTraineeInfo(sqlSession, userNo);
+	}
+
 	
+
 
 	
 	

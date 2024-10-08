@@ -1,0 +1,27 @@
+package com.kh.fitguardians.member.model.vo;
+
+import java.util.Date;
+
+import lombok.Setter;
+import lombok.ToString;
+import lombok.Getter;
+
+import lombok.AllArgsConstructor;
+
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@ToString
+public class BodyInfo {
+	
+	private int bodyInfoNo;
+	private String userId;
+	private Date measureDate;
+	private double bmi;
+	private double fat;
+	private double smm;
+
+}

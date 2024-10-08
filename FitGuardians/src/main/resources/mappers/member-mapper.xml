@@ -18,7 +18,38 @@
 		<result column="qr" property="qr"/>
 		<result column="profile_pic" property="profilePic"/>
 		<result column="membership" property="membership"/>
+		<!-- memberInfo -->
+		<result column="height" property="height" />
+		<result column="weight" property="weight" />
+		<result column="disease" property="disease" />
+		<result column="goal" property="goal" />
+		<!-- bodyInfo -->
+		<result column="body_info_no" property="bodyInfoNo" />
+		<result column="measure_date" property="measureDate" />
+		<result column="bmi" property="bmi" />
+		<result column="fat" property="fat" />
+		<result column="smm" property="smm" />
 	</resultMap>
+	
+	<!-- member추가정보 -->
+	<resultMap type="MemberInfo" id="memberInfoResultset">
+		<result column="user_no" property="userNo"/>
+		<result column="height" property="height"/>
+		<result column="weight" property="weight"/>
+		<result column="disease" property="disease"/>
+		<result column="goal" property="goal"/>
+	</resultMap>
+	
+	<!-- member신체정보 -->
+	<resultMap type="BodyInfo" id="BodyInfoResultset">
+		<result column="body_info_no" property="bodyInfoNo"/>
+		<result column="user_id" property="userId"/>
+		<result column="measure_date" property="measureDate"/>
+		<result column="bmi" property="bmi"/>
+		<result column="fat" property="fat"/>
+		<result column="smm" property="smm"/>
+	</resultMap>
+	
 	
 	<select id="checkId" resultType="int">
 		select count(user_id)
@@ -112,4 +143,42 @@
 		 where pt = #{userId}
 		   and user_level = 2
 	</select>
+	
+	<select id="getTraineeList" resultMap="memberResultset">
+		SELECT *
+		  FROM MEMBER
+		  JOIN BODY_INFO USING (USER_ID)
+		  JOIN MEMBER_INFO USING (USER_NO)
+		  WHERE (USER_ID, MEASURE_DATE) IN (
+		      SELECT USER_ID, MAX(MEASURE_DATE)
+		      FROM BODY_INFO
+		      WHERE USER_ID IN (
+		          SELECT USER_ID 
+		            FROM MEMBER
+		           WHERE PT = #{userId}
+		      )
+		      GROUP BY USER_ID
+		  )
+		  ORDER BY MEASURE_DATE DESC
+	</select>
+	
+	<select id="getTraineeDetails" resultMap="memberResultset">
+		SELECT * 
+	    FROM MEMBER  
+	    WHERE USER_ID = #{userId} 
+	</select>
+	
+	<select id="getTraineeBodyInfo" resultMap="BodyInfoResultset">
+		SELECT *
+		  FROM BODY_INFO
+		 WHERE USER_ID = #{userId}
+	</select>
+	
+	<select id="getTraineeInfo" resultMap="memberInfoResultset">
+		SELECT * 
+		  FROM MEMBER_INFO
+		 WHERE USER_NO = #{userNo}
+	</select>
+
+	
 </mapper>

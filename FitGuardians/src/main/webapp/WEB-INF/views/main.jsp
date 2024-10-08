@@ -8,7 +8,7 @@
 </head>
 <body>
 
-<jsp:forward page="common/loginForm.jsp" />
+<jsp:forward page="Trainee/traineeDashboard.jsp" />
 
 </body>
 </html>

@@ -1,8 +1,11 @@
 package com.kh.fitguardians.member.model.dao;
 
+import java.util.ArrayList;
+
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.kh.fitguardians.member.model.vo.BodyInfo;
 import com.kh.fitguardians.member.model.vo.Member;
 import com.kh.fitguardians.member.model.vo.MemberInfo;
 
@@ -28,5 +31,23 @@ public class MemberDao {
 	public Member loginMember(SqlSessionTemplate sqlSession, Member m) {
 		return sqlSession.selectOne("memberMapper.loginMember", m);
 	}
+
+	public ArrayList<Member> getTraineeList(SqlSessionTemplate sqlSession, String userId) {
+		return (ArrayList)sqlSession.selectList("memberMapper.getTraineeList", userId);
+	}
+
+	public Member getTraineeDetails(SqlSessionTemplate sqlSession, String userId) {
+		return sqlSession.selectOne("memberMapper.getTraineeDetails", userId);
+	}
+
+	public ArrayList<BodyInfo> getTraineeBodyInfo(SqlSessionTemplate sqlSession, String userId) {
+		return (ArrayList)sqlSession.selectList("memberMapper.getTraineeBodyInfo", userId);
+	}
+
+	public MemberInfo getTraineeInfo(SqlSessionTemplate sqlSession, int userNo) {
+		return sqlSession.selectOne("memberMapper.getTraineeInfo", userNo);
+	}
+	
+	
 
 }

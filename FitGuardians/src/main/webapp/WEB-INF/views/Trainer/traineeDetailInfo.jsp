@@ -11,7 +11,6 @@
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
 
-    
     <!-- FullCalendar cdn -->
     <script src="
     https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js
@@ -36,7 +35,7 @@
                     <div class="container-fluid">
                         
                 <!-- Page Heading -->
-                <h1 class="h3 mb-4 text-gray-800" style="font-weight:600;"> 뫅두팔님 관리페이지</h1>
+                <h1 class="h3 mb-4 text-gray-800" style="font-weight:600;"> ${m.userName}님 관리페이지</h1>
 
                 <div class="row">
 
@@ -50,12 +49,12 @@
                                    </div>
                                </div>
                                <div style="margin-left:30px;">
-                                   <div class = "traineeName">뫅두팔</div>
+                                   <div class = "traineeName">${m.userName}</div>
                                    <br/>
-                                   <span>나이 : 30살</span> &nbsp;&nbsp;&nbsp;&nbsp; <span>성별: 남성</span> <br/>
-                                   <span>키 : 175cm</span> &nbsp;&nbsp;&nbsp;&nbsp; <span>몸무게 : 100kg</span> <br/>
-                                   <span>골격근량 : 2%</span> &nbsp;&nbsp;&nbsp;&nbsp; <span>BMI(체질량지수) : 88%</span> &nbsp;&nbsp;&nbsp;&nbsp; <span>체지방량 :85%</span> <br/>
-                                   <span>운동 목표 : 개돼지에서 벗어나고 차은우로 다시태어나기</span> <br/>
+                                   <span>나이 : ${m.age}살</span> &nbsp;&nbsp;&nbsp;&nbsp; <span>성별: ${m.gender}</span> <br/>
+                                   <span>키 : ${mi.height} cm</span> &nbsp;&nbsp;&nbsp;&nbsp; <span>몸무게 : ${mi.weight}kg</span> <br/>
+                                   <span>골격근량 : ${lastSmm}&#37;</span> &nbsp;&nbsp;&nbsp;&nbsp; <span>BMI(체질량지수) : ${lastBmi}&#37;</span> &nbsp;&nbsp;&nbsp;&nbsp; <span>체지방량 :${lastFat} &#37;</span> <br/>
+                                   <span>운동 목표 : ${mi.goal} </span> <br/>
                                </div>
                            </div>
                        </div>
@@ -63,7 +62,7 @@
                     <!-- 운동, 식단 플래너 -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">뫅두팔님의 운동, 식단 플래너</h6>
+                            <h6 class="m-0 font-weight-bold text-primary">${m.userName}님의 운동, 식단 플래너</h6>
                         </div>
                         <div class="card-body">
                             <div style="height:165px;">
@@ -108,7 +107,7 @@
                    <div class="col-lg-6" style="display:inline;">
                        <div class="card shadow mb-4">
                            <div class="card-header py-3">
-                               <h6 class="m-0 font-weight-bold text-primary">뫅두팔님의 스케줄</h6>
+                               <h6 class="m-0 font-weight-bold text-primary">${m.userName}님의 스케줄</h6>
                            </div>
                            <div class="card-body" id='calendar'>
                               
@@ -135,17 +134,8 @@
                    <!-- Card Header - Dropdown -->
                    <div
                        class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                       <h6 class="m-0 font-weight-bold text-primary">뫅두팔님의 신체정보 관리</h6>
-                       <div class="dropdown no-arrow">
-                           <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                               <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                           </a>
-                           <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                               aria-labelledby="dropdownMenuLink">
-                               <a class="dropdown-item" href="#">정보수정</a>
-                           </div>
-                       </div>
+                       <h6 class="m-0 font-weight-bold text-primary">${m.userName}님의 신체정보 관리</h6>
+                  	  <button class="btn btn-info btn-circle" data-toggle="modal" data-target="#updateModal"><i class="fas fa-info-circle"></i></button>
                    </div>
                    <!-- Card Body -->
                    <div class="card-body">
@@ -161,6 +151,106 @@
 
                    </div>
                </div>
+               
+               <!-- 키, 몸무게 입력 모달창 -->
+               <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true" >
+				    <div class="modal-dialog">
+				        <div class="modal-content">
+				            <div class="modal-header">
+				                <h5 class="modal-title" id="updateModalLabel">측정하기</h5>
+				                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				                    <span aria-hidden="true">&times;</span>
+				                </button>
+				            </div>
+				            <div class="modal-body">
+				                <form id="updateForm">
+				                    <div class="form-group">
+				                        <label for="height">키 (cm)</label>
+				                        <input type="number" class="form-control" id="height" placeholder="키를 입력하세요">
+				                    </div>
+				                    <div class="form-group">
+				                        <label for="weight">몸무게 (kg)</label>
+				                        <input type="number" class="form-control" id="weight" placeholder="몸무게를 입력하세요">
+				                    </div>
+				                  <div class="bodyResult">
+				                  
+				                  </div>
+				                </form>
+				            </div>
+				            <div class="modal-footer">
+				                <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+				                <button type="button" class="btn btn-primary" id="saveButton">측정하기</button>
+				            </div>
+				        </div>
+				    </div>
+				</div>
+				
+				<!-- 모달창 띄우기 스크립트 -->
+				<script>
+				
+				$(document).ready(function(){
+					
+					// 데이터 출력하는 메소드
+					$("#saveButton").on("click",function(){
+						
+						let traineeName = '${m.userName}';
+						let traineeGender = '${m.gender}';
+						let traineeAge = ${m.age};
+						
+						let height = $("#height").val();
+						let heightMeter = height/100;
+						let weight = $("#weight").val();
+						
+						
+						console.log('키:', height);
+						console.log('몸무게:', weight);
+						
+						if(traineeGender == 'F'){ // 여자 측정
+							// smm - 골격근량
+							let smm = 0.252 * weight + 0.473 * height - 48.3;
+							// bmi - 체질량지수
+							let bmi = weight / (heightMeter ** 2);
+							// fat - 체지방량
+							let fat = 1.20 * bmi + 0.23 * traineeAge - 5.4;
+							
+							let value = traineeName + "의 측정 결과입니다. <br />"
+								       + "<span class='result' style='margin:10px'> · 골격근량 : </span> <span>" + smm.toFixed(1) + " </span> <br/> "
+								       + "<span class='result' style='margin:10px'> · BMI(체질량지수) : </span> <span>" + bmi.toFixed(1) + " </span> <br/>"
+								       + "<span class='result' style='margin:10px'> · 체지방량 : </span> <span>" + fat.toFixed(1) + " </span> ";
+									   
+							$('.bodyResult').attr('id', 'bodyResult');
+							$('#bodyResult').html(value);
+							$('#saveButton').text('저장하기');
+							
+							
+						}else{ // 남자 측정
+							// smm - 골격근량
+							let smm = 0.407 * weight + 0.267 * height - 19.2;
+							// bmi - 체질량지수
+							let bmi = weight / (height ** 2);
+							// fat - 체지방량
+							let fat = 1.20 * bmi + 0.23 * traineeAge - 16.2;
+
+							let value = traineeName + "의 측정 결과입니다. <br />"
+								       + "<span class='result' style='margin:10px'> · 골격근량 : </span> <span>" + smm.toFixed(1) + " </span> <br/> "
+								       + "<span class='result' style='margin:10px'> · BMI(체질량지수) : </span> <span>" + bmi.toFixed(1) + " </span> <br/>"
+								       + "<span class='result' style='margin:10px'> · 체지방량 : </span> <span>" + fat.toFixed(1) + " </span> ";
+									   
+							$('.bodyResult').attr('id', 'bodyResult');
+							$('#bodyResult').html(value);
+							$('#saveButton').text('저장하기');
+							
+						}
+						
+					});
+					
+					// 데이터 DB에 저장하는 ajax
+					
+					
+					
+				})
+				
+				</script>
 
                </div>
              
