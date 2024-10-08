@@ -3,57 +3,53 @@
 <mapper namespace="exerciseMapper">
     <!-- ai플랜, 트레이너 플랜 작성 -->
     
-    <!-- ai 플랜 -->
- <resultMap type="Exercise" id="exerciseResult">
-  	<result column="ai_exercise_no" property="aiExerciseNo"/>
- 	<result column="user_no" property="userNo"/>
- 	<result column="exercise_goal" property="exerciseGoal"/>
- 	<result column="fitness_level" property="fitnessLevel"/>
- 	<result column="exercise_type" property="exerciseType"/>
- 	<result column="equipment" property="equpment"/>
- 	<result column="health_condition" property="healthCondition"/>
- 	<result column="days_per_week" property="daysPerWeek"/>
- 	<result column="duration" property="duration"/>
- 	<result column="plan_duration_week" property="planDurationWeek"/>
- </resultMap>
- 
      <!-- 트레이너 플랜 -->
- <resultMap type="Workout" id="workoutResult">
+ <resultMap type="Workout" id="workoutResultset">
   	<result column="ex_no" property="exerciseNo"/>
- 	<result column="user_no" property="userNo"/>
+ 	<result column="user_id" property="userId"/>
+ 	<result column="workout_title" property="workoutTitle"/>
  	<result column="workout_date" property="workoutDate"/>
  	<result column="workout_category" property="workoutCategory"/>
  	<result column="difficulty" property="difficulty"/>
  	<result column="description" property="description"/>
- 	<result column="targetmuscle" property="targetMuscle"/>
- 	<result column="tmimage" property="tmImage"/>
- 	<result column="kcal" property="kcal"/>
  </resultMap>
  
- <insert id="addSchedule">
-	 INSERT INTO SCHEDULE (
-	    SCHEDULE_NO, 
-	    USER_ID, 
-	    TRAINER_ID, 
-	    SCHEDULE_TITLE, 
-	    SCHEDULE_CONTENT, 
-	    START_DATE, 
-	    TOTAL_WEEKS, 
-	    DAYS, 
-	    CREATE_DATE
-	) VALUES (
-	     SEQ_SCHEDULE_NO,                             
-	     #{userId},                   
-	     #{trainerId},                  
-	     #{scheduleTitle},             
-	     #{scheduleContent},         
-	     #{startDate},
-	     #{totalWeeks},                             
-	     #{days},     
-	     SYSDATE                        
-	);
+ <insert id="addExercise">
+	INSERT 
+	  INTO WORKOUT 
+	     (
+           EX_NO
+         , USER_ID
+         , WORKOUT_TITLE
+         , WORKOUT_DATE
+         , WORKOUT_CATEGORY
+         , DIFFICULTY
+         , DESCRIPTION
+         ) 
+	VALUES 
+	     (
+    	   SEQ_WORKOUT_EX_NO.NEXTVAL
+    	 , #{userId}
+    	 , #{workoutTitle}
+    	 , TO_DATE (#{workoutDate}, 'YYYY-MM-DD')
+    	 , #{workoutCategory}
+    	 , #{difficulty}
+    	 , #{description}
+		)
  </insert>
  
+ <select id="selectWorkoutList" resultMap="workoutResultset">
+	select 
+	       ex_no
+	     , user_id
+	     , workout_title
+	     , workout_date
+	     , workout_category
+	     , difficulty
+	     , description
+	  from workout
+	 where user_id = #{userId}
+ </select>
  
  
 </mapper>

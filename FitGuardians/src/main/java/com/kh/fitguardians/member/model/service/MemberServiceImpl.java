@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.kh.fitguardians.member.model.dao.MemberDao;
 import com.kh.fitguardians.member.model.vo.Member;
+import com.kh.fitguardians.member.model.vo.MemberInfo;
 
 @Service
 public class MemberServiceImpl implements MemberService{
@@ -44,11 +45,28 @@ public class MemberServiceImpl implements MemberService{
 	public int insertMember(Member m) {
 		return mDao.insertMember(sqlSession, m);
 	}
+	
+	@Override
+	public int insertMemberWithInfo(Member m, MemberInfo info) {
+		// MEMBER 테이블에 데이터 삽입 및 userNo 반환
+	    int result1 = mDao.insertMember(sqlSession, m);
+	    
+	    if (result1 > 0) {
+	        int userNo = mDao.selectUserNo(sqlSession); // 새로 생성된 userNo 조회
+	        info.setUserNo(userNo); // MemberInfo에 userNo 설정
+	        int result2 = mDao.insertMemberInfo(sqlSession, info); // MEMBER_INFO에 데이터 삽입
+	        return (result2 > 0) ? 1 : 0;
+	    }
+	    
+	    return 0;
+	}
 
 	@Override
 	public Member loginMember(Member m) {
 		return mDao.loginMember(sqlSession, m);
 	}
+
+	
 
 	
 	
