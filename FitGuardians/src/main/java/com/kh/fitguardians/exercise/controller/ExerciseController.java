@@ -267,5 +267,14 @@ public class ExerciseController {
 		// 아주 잘됨을 확인!
 		
 	}//selectWorkout
+	
+	@RequestMapping("deleteExercise.ex")
+	public String deleteExercise(int exerciseNo) {
+		
+		int result = eService.deleteExercise(exerciseNo);
+		
+		return result>0?"success":"error";
+		
+	}// deleteExercise
 
 }

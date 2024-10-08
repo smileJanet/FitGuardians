@@ -32,5 +32,9 @@ public class ExerciseServiceImpl {
 		return eDao.selectWorkoutList(sqlSession, userId);
 	}
 
+	public int deleteExercise(int exerciseNo) {
+		return eDao.deleteExercise(sqlSession, exerciseNo);
+	}
+
 	
 }

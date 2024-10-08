@@ -63,17 +63,48 @@
 						                </button>
 						            </div>
 						            <div class="modal-body">
+						            	<p id="modalExerciseNo" style="display:none;"></p>
 						                <p id="modalWorkoutTitle"></p>
 						                <p id="modalWorkoutCategory"></p>
 						                <p id="modalDifficulty"></p>
 						                <p id="modalDescription"></p>
 						            </div>
 						            <div class="modal-footer">
-						                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+						                <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="deleteExercise();">삭제</button>
 						            </div>
 						        </div>
 						    </div>
 						</div>
+						
+						<!-- 모달 내용 수정, 삭제 스크립트-->
+						<script>
+							function deleteExercise(){
+								
+								let exerciseNo = $('#modalExerciseNo').text();
+								
+								if(confirm("정말로 삭제하시겠습니까?")){
+									$.ajax({
+										url : 'deleteExercise.ex',
+										data : {exerciseNo : exerciseNo},
+										success : function(result){
+											if(result ==="success"){
+												console.log("성공구리");
+											}else{
+												console.log("DB이상함구리");
+											}
+										},
+										error : function(){
+											console.log('실패구리');
+										},
+										
+									})
+									alert("성공적으로 삭제하였습니다.");
+								}
+								
+							}
+						
+						</script>
+						
 						
 						<div style="display: flex;">
 							<div class="card mb-3 py-2 border-bottom-info"

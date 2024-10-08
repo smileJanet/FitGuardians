@@ -55,5 +55,12 @@
 	   and workout_status = 'Y'
  </select>
  
+ <update id="deleteExercise">
+ 	update
+ 	       workout
+ 	   set workout_status = 'N'
+ 	 where ex_no = #{exerciseNo}    
+ </update>
+ 
  
 </mapper>

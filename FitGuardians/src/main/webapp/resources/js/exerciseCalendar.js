@@ -24,8 +24,8 @@
                         // @RequestParam 사용
                         data : {userId : userId},
                         success: function(response){
-                            console.log("조회 성공");
-                            console.log(response);
+                            //console.log("조회 성공");
+                            //console.log(response);
                             showWorkouts(response);
                             
                         },
@@ -68,8 +68,8 @@
         },
         eventClick: function(info) {
             
-            const plan = info.event;
-            
+            let plan = info.event;
+           
             // 난이도에 대한 switch문 
             switch (plan.extendedProps.difficulty) {
             case 'M':
@@ -100,7 +100,8 @@
                 category = '없음';
             }
             
-            // Populate the modal with the event details
+            // 값 찍기
+            $('#modalExerciseNo').text(plan.extendedProps.exerciseNo);
             $('#modalWorkoutTitle').text('제목: ' + plan.title);
             $('#modalWorkoutCategory').text(' 운동 표적: '+ category);
             $('#modalDifficulty').text('운동 난이도: ' + difficultyLabel);
@@ -193,24 +194,22 @@
     // 삽입한 캘린더 값으로부터 결과 조회하고 캘린더에 표시하기
     function showWorkouts(response){
 
-        if (Array.isArray(response) && response.length > 0) {
-            response.forEach(event => {
+        if (Array.isArray(response) && response.length > 0) { // response가 실제로 Array이고, 배열값이 0 이상이라면
+            response.forEach(event => { 
                 
-                // console.log("Adding event:", event.workoutTitle);
-                    
-                // Extract values from each event object
-                let eventDate = event.workoutDate; // Get workoutDate
-                let eventStart = eventDate; // Using the same date for start
-                let eventEnd = eventDate; // Adjust if you need a specific duration
+                let eventDate = event.workoutDate; // 날짜 받기
+                let eventStart = eventDate; // 날짜를 하루만 설정하려면 startDate와 endDate가 같아야 한다.
+                let eventEnd = eventDate; 
                 
                 // Add each event to the calendar
                 calendar.addEvent({
                     title: event.workoutTitle,
-                    start: new Date(event.workoutDate), // Ensure this is a Date object
+                    start: new Date(event.workoutDate), // Date 객체로 하기
                     extendedProps: {
                         difficulty: event.difficulty,
                         workoutCategory: event.workoutCategory,
                         description: event.description,
+                        exerciseNo : event.exerciseNo,
                     }
                 });
                 

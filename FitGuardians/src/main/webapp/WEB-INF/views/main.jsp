@@ -7,9 +7,8 @@
 <title>Fit Guardians</title>
 </head>
 <body>
-Main
 
-<jsp:forward page="exercise/trainerExercise.jsp" />
+<jsp:forward page="common/loginForm.jsp" />
 
 </body>
 </html>
