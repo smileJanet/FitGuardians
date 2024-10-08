@@ -61,7 +61,7 @@ select qr_no
 		     , id
 		     , type
 		     , created_at
-		     , valid_date
+		     , valid_until
 		     , attendance
 		     , att_status
 		  from qrinfo
