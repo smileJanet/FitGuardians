@@ -246,4 +246,9 @@ public class MemberController {
 		}
 	}
 	
+	@RequestMapping("mypage.me")
+	public String myPage() {
+		return "common/myPage";
+	}
+	
 }
