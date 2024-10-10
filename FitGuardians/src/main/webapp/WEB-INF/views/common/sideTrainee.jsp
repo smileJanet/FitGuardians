@@ -60,9 +60,9 @@ pageEncoding="UTF-8"%>
 
       <!-- Nav Item - Dashboard -->
       <li class="nav-item active">
-        <a class="nav-link" href="qrForm.me">
+        <a class="nav-link" href="main.co">
           <i class="fas fa-fw fa-tachometer-alt"></i>
-          <span>출석체크</span></a
+          <span>메인화면</span></a
         >
       </li>
 

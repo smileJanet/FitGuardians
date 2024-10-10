@@ -10,9 +10,10 @@
             <title>Trainer Calendar</title>
             <!-- calendar -->
             <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
-			<!-- bootstrap -->
+			<!-- bootstrap	
 			<link href='https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.css' rel='stylesheet'>
 			<link href='https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13.1/css/all.css' rel='stylesheet'>
+			-->
         </head>
         <body>
             <c:if test="${ not empty alertMsg }">
@@ -51,8 +52,7 @@
                         <!-- Begin Page Content -->
                         <div class="container-fluid">
 						<!-- Page Heading -->
-							<h1 class="h3 mb-4 text-gray-800">calendar Page</h1>
-							<%-- <c:if test="${ not empty schedule }"> --%>
+							<h1 class="h3 mb-4 text-gray-800">calendar</h1>
 							
 							<script>
 								var sch = []

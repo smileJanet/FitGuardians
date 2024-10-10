@@ -24,4 +24,6 @@ public interface MemberService {
 	
 	public int updateAttendance(QrInfo qr);
 	
+	public int updateAttStatus(QrInfo qr);
+	
 }

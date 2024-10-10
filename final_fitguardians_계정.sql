@@ -74,3 +74,25 @@ select qr_no
            to_timestamp('2024-10-08T16:40:43.6181094', 'YYYY-MM-DD"T"HH24:MI:SS.FF') and
            to_timestamp('2025-10-08T16:40:43.6181094', 'YYYY-MM-DD"T"HH24:MI:SS.FF')
            ;
+
+update qrinfo
+   set attendance = to_timestamp(sysdate,'YYYY-MM-DD"T"HH24:MI:SS.FF')
+     , att_status = '√‚ºÆ'
+ where id = 'qrtest02'
+ ;
+ 
+ commit;
+ 
+select qr_no
+		     , id
+		     , type
+		     , created_at
+		     , valid_until
+		     , attendance
+		     , att_status
+		  from qrinfo
+		 where status = 'Y'
+		   and id = 'qrtest01'
+           and to_timestamp('2024-10-08T16:40:43.6181094', 'YYYY-MM-DD"T"HH24:MI:SS.FF') between
+           to_timestamp('2024-10-08T16:40:43.6181094', 'YYYY-MM-DD"T"HH24:MI:SS.FF') and
+           to_timestamp('2025-10-08T16:40:43.6191067', 'YYYY-MM-DD"T"HH24:MI:SS.FF') 

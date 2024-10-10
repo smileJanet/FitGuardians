@@ -138,16 +138,48 @@
                                         outputMessage.hidden = true;
                                         outputData.parentElement.hidden = false;
                                         // QR코드 메시지 출력
-                                        outputData.innerHTML = code.data
-										// {"id":"qrtest01","type":"trainee","createdAt":"2024-10-08T15:26:06.6683597","validUntil":"2025-10-08T15:26:06.6693572"}
+                                        // outputData.innerHTML = code.data
                                         // return을 써서 함수를 빠져나가면 QR코드 프로그램이 종료된다. return;
 										$.ajax({
 											url:"qrCheck.me",
 											data: JSON.stringify({"qr" :code.data}),
 											method: "POST",
 											contentType: "application/json",
-											success:()=>{
-												
+											success:(result)=>{
+												if(result === 'YYYQ'){ // qr 찍을때 attendance 생성 
+													Swal.fire({
+														icon: 'success', 
+														title: '성공', 
+														text: "QR 인증 되었습니다!",
+														
+													}).then((result)=>{
+														if(result.isConfirmed){
+															location.reload();
+														}
+													})
+													
+													//location.reload();
+												}else if(result === 'YYQQ'){ // qr 확인 후 출석되었을때 
+													Swal.fire({
+														icon: 'success',
+														title: '성공',
+														text: "출석 처리가 완료 되었습니다!",
+													}).then((result)=>{
+														if(result.isConfirmed){
+															location.reload();
+														}
+													})
+												}else if(result === 'NNQQ'){ // qr 출석 안될 때
+													Swal.fire({
+														icon: 'error',
+														title: '실패', 
+														text: "출석 처리가 되지 않았습니다.",
+													}).then((result)=>{
+														if(result.isConfirmed){
+															location.reload();
+														}
+													})
+												}
 											},
 											error:()=>{
 												console.log("qrcheck ajax failed");

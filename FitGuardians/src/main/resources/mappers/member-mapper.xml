@@ -180,7 +180,29 @@
 	<update id="updateAttendance">
 		update qrinfo
 		   set attendance = #{attendance}
-		     , att_status = '결석'
+		   <choose>
+		   		<when test="type == 'trainee'">
+				     , att_status = '결석'
+		   		</when>
+		   		<otherwise>
+		   			, att_status = '출근'
+		   		</otherwise>
+		   </choose>
 		  where qr_no = #{qrNo}
 	</update>
+	
+	<update id="updateAttStatus">
+		update qrinfo
+		   set attendance = null
+		   <choose>
+		   		<when test="type == 'trainee'">
+				     , att_status = '출석'
+		   		</when>
+		   		<otherwise>
+		   			, att_status = '퇴근'
+		   		</otherwise>
+		   </choose>
+		 where qr_no = #{qrNo}
+	</update>
+	
 </mapper>

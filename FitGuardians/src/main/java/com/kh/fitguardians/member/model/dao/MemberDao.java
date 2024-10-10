@@ -33,4 +33,8 @@ public class MemberDao {
 		return sqlSession.update("memberMapper.updateAttendance", qr);
 	}
 
+	public int updateAttStatus(SqlSessionTemplate sqlSession, QrInfo qrResult) {
+		return sqlSession.update("memberMapper.updateAttStatus", qrResult);
+	}
+
 }

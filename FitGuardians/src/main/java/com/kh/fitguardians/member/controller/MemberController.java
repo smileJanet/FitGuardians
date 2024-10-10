@@ -44,6 +44,11 @@ public class MemberController {
 	@Autowired
 	private ServletContext servletContext;
 	
+	@RequestMapping("main.co")
+	public String goMain() {
+		return "main";
+	}
+	
     @RequestMapping("traineeDetail.me")
     public String memberDetailView() {
         return "Trainer/traineeDetailInfo";
@@ -168,39 +173,56 @@ public class MemberController {
 		return "common/checkQr";
 	}
 	
+	@ResponseBody
 	@RequestMapping("qrCheck.me")
 	public String MemberQrCheck(@RequestBody Map<String, String> request) {
 		ObjectMapper objectMapper = new ObjectMapper();
 		String qrData = request.get("qr");
 		QrInfo qrInfo = null;
+		int result1 = 0;
+		int result2 = 0;
 		try {
 			qrInfo = objectMapper.readValue(qrData, QrInfo.class);
 				// qr 일치 확인
 				QrInfo qrResult = mService.qrCheck(qrInfo);
-				System.out.println(qrResult);
 				LocalDateTime now = LocalDateTime.now();
+				
 				if(qrResult != null) {
 					// 출석
 					if(qrResult.getAttendance() == null) {
 						qrResult.setAttendance(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME));
 						int upResult = mService.updateAttendance(qrResult);
+						return "YYYQ";
 					}else {
+						
 						LocalDateTime attendanceTime = LocalDateTime.parse(qrResult.getAttendance(), DateTimeFormatter.ISO_DATE_TIME); 
 						Duration duration = Duration.between(attendanceTime, now);
 						long hours = duration.toHours();
 						System.out.println(hours);
-						if(hours > 1) {
-							
+						
+						
+						if(qrResult.getType().equals("trainee") && hours >= 1) {
+							qrResult.setAttendance(now.toString());
+							result1 = mService.updateAttStatus(qrResult);
+						}else if(qrResult.getType().equals("trainer") && hours >= 6) {
+							qrResult.setAttendance(now.toString());
+							result2 = mService.updateAttStatus(qrResult);
 						}
+						
+						
 					}
 				}
 				
-	            
-	            
+				
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
-		return "main";
+		
+		if(result1 > 0 || result2 > 0) {
+			return "YYQQ";
+		}else {
+			return "NNQQ";
+		}
 	}
 	
 }

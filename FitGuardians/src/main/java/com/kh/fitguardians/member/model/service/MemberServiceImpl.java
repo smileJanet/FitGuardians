@@ -66,6 +66,14 @@ public class MemberServiceImpl implements MemberService{
 		return mDao.updateAttendance(sqlSession, qr);
 	}
 
+	@Override
+	public int updateAttStatus(QrInfo qr) {
+		return mDao.updateAttStatus(sqlSession, qr);
+	}
+
+
+	
+
 	
 
 	
