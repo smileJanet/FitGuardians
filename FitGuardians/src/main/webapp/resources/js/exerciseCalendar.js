@@ -1,4 +1,4 @@
-    let calendar;
+   let calendar;
 
     // 캘린더 데이터 관리
     document.addEventListener('DOMContentLoaded', function() {

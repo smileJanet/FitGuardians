@@ -32,28 +32,26 @@
 		<result column="bi_status" property="biStatus" />
 	</resultMap>
 	
-	<resultMap type="Schedule" id="scheduleResult">
-		<result column="schedule_no" property="scheduleNo"/>
+	<!-- member추가정보 -->
+	<resultMap type="MemberInfo" id="memberInfoResultset">
 		<result column="user_no" property="userNo"/>
-		<result column="schedule_title" property="scheduleTitle"/>
-		<result column="schedule_des" property="scheduleDes"/>
-		<result column="start_date" property="startDate"/>
-		<result column="end_date" property="endDate"/>
-		<result column="dow" property="dow"/>
-		<result column="back_color" property="backColor"/>
+		<result column="height" property="height"/>
+		<result column="weight" property="weight"/>
+		<result column="disease" property="disease"/>
+		<result column="goal" property="goal"/>
 	</resultMap>
 	
-	<resultMap type="QrInfo" id="qrInfoResult">
-		<result column="qr_no" property="qrNo"/> 
-		<result column="id" property="id"/>
-		<result column="type" property="type"/>
-		<result column="created_at" property="createdAt"/>
-		<result column="valid_date" property="validUntil"/>
-		<result column="attendance" property="attendance"/>
-		<result column="att_status" property="attStatus"/>
+	<!-- member신체정보 -->
+	<resultMap type="BodyInfo" id="BodyInfoResultset">
+		<result column="body_info_no" property="bodyInfoNo"/>
+		<result column="user_id" property="userId"/>
+		<result column="measure_date" property="measureDate"/>
+		<result column="bmi" property="bmi"/>
+		<result column="fat" property="fat"/>
+		<result column="smm" property="smm"/>
+		<result column="bi_status" property="biStatus" />
 	</resultMap>
-	
-	
+
 	<resultMap type="Schedule" id="scheduleResult">
 		<result column="schedule_no" property="scheduleNo"/>
 		<result column="user_no" property="userNo"/>
