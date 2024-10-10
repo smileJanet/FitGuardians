@@ -3,6 +3,7 @@ package com.kh.fitguardians.member.model.dao;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.kh.fitguardians.common.model.vo.QrInfo;
 import com.kh.fitguardians.member.model.vo.Member;
 import com.kh.fitguardians.member.model.vo.MemberInfo;
 
@@ -27,6 +28,22 @@ public class MemberDao {
 	
 	public Member loginMember(SqlSessionTemplate sqlSession, Member m) {
 		return sqlSession.selectOne("memberMapper.loginMember", m);
+	}
+
+	public int insertQrInfo(SqlSessionTemplate sqlSession, QrInfo qr) {
+		return sqlSession.insert("memberMapper.insertQrInfo", qr);
+	}
+
+	public QrInfo qrCheck(SqlSessionTemplate sqlSession, QrInfo qr) {
+		return sqlSession.selectOne("memberMapper.qrCheck", qr);
+	}
+
+	public int updateAttendance(SqlSessionTemplate sqlSession, QrInfo qr) {
+		return sqlSession.update("memberMapper.updateAttendance", qr);
+	}
+
+	public int updateAttStatus(SqlSessionTemplate sqlSession, QrInfo qrResult) {
+		return sqlSession.update("memberMapper.updateAttStatus", qrResult);
 	}
 
 }

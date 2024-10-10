@@ -6,6 +6,7 @@ import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 
+import com.kh.fitguardians.common.model.vo.QrInfo;
 import com.kh.fitguardians.member.model.dao.MemberDao;
 import com.kh.fitguardians.member.model.vo.Member;
 import com.kh.fitguardians.member.model.vo.MemberInfo;
@@ -47,6 +48,11 @@ public class MemberServiceImpl implements MemberService{
 	}
 	
 	@Override
+	public int insertQrInfo(QrInfo qr) {
+		return mDao.insertQrInfo(sqlSession, qr);
+	}
+	
+	@Override
 	public int insertMemberWithInfo(Member m, MemberInfo info) {
 		// MEMBER 테이블에 데이터 삽입 및 userNo 반환
 	    int result1 = mDao.insertMember(sqlSession, m);
@@ -65,6 +71,24 @@ public class MemberServiceImpl implements MemberService{
 	public Member loginMember(Member m) {
 		return mDao.loginMember(sqlSession, m);
 	}
+
+	@Override
+	public QrInfo qrCheck(QrInfo qr) {
+		return mDao.qrCheck(sqlSession, qr);
+	}
+
+	@Override
+	public int updateAttendance(QrInfo qr) {
+		return mDao.updateAttendance(sqlSession, qr);
+	}
+
+	@Override
+	public int updateAttStatus(QrInfo qr) {
+		return mDao.updateAttStatus(sqlSession, qr);
+	}
+
+
+	
 
 	
 

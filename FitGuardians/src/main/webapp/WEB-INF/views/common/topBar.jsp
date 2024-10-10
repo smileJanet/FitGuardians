@@ -6,6 +6,10 @@
 <head>
 <meta charset="UTF-8">
 <title>Top Bar</title>
+<!-- sweetalert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.1/dist/sweetalert2.all.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.1/dist/sweetalert2.min.css" rel="stylesheet">
+
 </head>
 <body>
 <!-- Topbar -->

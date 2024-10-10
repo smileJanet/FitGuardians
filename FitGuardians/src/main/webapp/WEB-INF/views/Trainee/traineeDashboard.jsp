@@ -23,7 +23,6 @@
 </head>
 
 <body id="page-top">
-
 	<c:if test="${ not empty alertMsg }">
     		<script>
 		   		 Swal.fire({
@@ -34,20 +33,19 @@
     		</script>
     		<c:remove var="alertMsg" scope="session"/>
    	</c:if>
-    	
 	<!-- Page Wrapper -->
     <div id="wrapper">
      <c:choose>
-    	<c:when test="${ not empty loginUser }">
-    		<c:choose>
-    			<c:when test="${ loginUser.userLevel == 2 }">
-			     	<jsp:include page="../common/sideTrainee.jsp" />
-    			</c:when>
-    			<c:otherwise>
-    				<jsp:include page="../common/sideTrainer.jsp" />
-    			</c:otherwise>
-    		</c:choose>
-    	</c:when>
+	    <c:when test="${ not empty loginUser }">
+	    	<c:choose>
+	    		<c:when test="${ loginUser.userLevel == 2 }">
+				     <jsp:include page="../common/sideTrainee.jsp" />
+	    		</c:when>
+	    		<c:otherwise>
+	    			<jsp:include page="../common/sideTrainer.jsp" />
+	    		</c:otherwise>
+	    	</c:choose>
+	    </c:when>	
 	    <c:otherwise>
 	    	<jsp:include page="../common/sideTrainee.jsp" />
 	    </c:otherwise>

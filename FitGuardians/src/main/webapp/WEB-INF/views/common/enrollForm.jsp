@@ -5,7 +5,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Enroll Form</title>
+    <title>회원가입</title>
     <link href="./resources/templates/css/sb-admin-2.css" rel="stylesheet" />
     <!-- Bootstrap core JavaScript-->
     <script src="./resources/templates/vendor/jquery/jquery.min.js"></script>
@@ -18,9 +18,9 @@
     <link rel="stylesheet" href="resources/css/enrollForm.css">
 </head>
     <body>
-        <div class="topLogoContainer">
+        <a class="topLogoContainer" href="main.co">
             <img src="resources/images/FitGuardians로고-001.png" alt="">
-        </div>
+		</a>
         <div class="container">
             <!-- 상위 버튼 -->
             <ul class="links">
@@ -110,7 +110,7 @@
             	<input type="hidden" id="memberInfo" name="memberInfo">
             	
                 <!-- 회원가입 버튼 -->
-                <button id="enrollBtn" class="btn-primary btn-block btn disabled" disabled>회원가입</button>
+                <button id="enrollBtn" class="btn-primary btn-block btn disabled mb-3 ml-4" disabled>회원가입</button>
             </form>
         </div>
         
