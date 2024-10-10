@@ -1,9 +1,12 @@
 package com.kh.fitguardians.member.model.dao;
 
+import java.util.ArrayList;
+
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.kh.fitguardians.common.model.vo.QrInfo;
+import com.kh.fitguardians.member.model.vo.BodyInfo;
 import com.kh.fitguardians.member.model.vo.Member;
 import com.kh.fitguardians.member.model.vo.MemberInfo;
 
@@ -45,5 +48,37 @@ public class MemberDao {
 	public int updateAttStatus(SqlSessionTemplate sqlSession, QrInfo qrResult) {
 		return sqlSession.update("memberMapper.updateAttStatus", qrResult);
 	}
+
+	public ArrayList<Member> getTraineeList(SqlSessionTemplate sqlSession, String userId) {
+		ArrayList<Member> m = (ArrayList)sqlSession.selectList("memberMapper.getTraineeList", userId);
+		//System.out.println("m의 값" + m);
+		return m;
+	}
+
+	public Member getTraineeDetails(SqlSessionTemplate sqlSession, String userId) {
+		return sqlSession.selectOne("memberMapper.getTraineeDetails", userId);
+	}
+
+	public ArrayList<BodyInfo> getTraineeBodyInfo(SqlSessionTemplate sqlSession, String userId) {
+		return (ArrayList)sqlSession.selectList("memberMapper.getTraineeBodyInfo", userId);
+	}
+
+	public MemberInfo getTraineeInfo(SqlSessionTemplate sqlSession, int userNo) {
+		return sqlSession.selectOne("memberMapper.getTraineeInfo", userNo);
+	}
+
+	public int saveBodyInfo(SqlSessionTemplate sqlSession, BodyInfo bi) {
+		return sqlSession.insert("memberMapper.saveBodyInfo", bi);
+	}
+
+	public int deleteBodyInfo(SqlSessionTemplate sqlSession, int bodyInfoNo) {
+		return sqlSession.update("memberMapper.deleteBodyInfo", bodyInfoNo);
+	}
+
+	public ArrayList<BodyInfo> getRecentInfo(SqlSessionTemplate sqlSession, String userId) {
+		return (ArrayList)sqlSession.selectList("memberMapper.getRecentInfo", userId);
+	}
+	
+	
 
 }

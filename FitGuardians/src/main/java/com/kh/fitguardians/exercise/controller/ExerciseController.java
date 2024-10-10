@@ -52,12 +52,14 @@ public class ExerciseController {
 	// trainerExercise로 포워딩 위한 메소드
 	@RequestMapping("exercise.bo")
 	public ModelAndView showExercisePage(HttpSession session, ModelAndView mv) {
+		// 트레이너의 아이디로 회원 조회
 		String userId = ((Member)session.getAttribute("loginUser")).getUserId();
 		// 1. 페이지가 로드 되자마자 트레이너의 담당 회원이 조회되야 한다.
 		ArrayList<Member> list = eService.getTrainee(userId);
 		
-		mv.addObject("list", list).setViewName("exercise/trainerExercise");;
-		
+		mv.addObject("list", list)
+		  .setViewName("exercise/trainerExercise");
+	
 		return mv;
 	} // showExercisePage
 
@@ -267,5 +269,14 @@ public class ExerciseController {
 		// 아주 잘됨을 확인!
 		
 	}//selectWorkout
+	
+	@RequestMapping("deleteExercise.ex")
+	public String deleteExercise(int exerciseNo) {
+		
+		int result = eService.deleteExercise(exerciseNo);
+		
+		return result>0?"success":"error";
+		
+	}// deleteExercise
 
 }

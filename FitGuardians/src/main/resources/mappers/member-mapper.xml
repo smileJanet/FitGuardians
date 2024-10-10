@@ -18,7 +18,41 @@
 		<result column="qr" property="qr"/>
 		<result column="profile_pic" property="profilePic"/>
 		<result column="membership" property="membership"/>
+		<!-- memberInfo -->
+		<result column="height" property="height" />
+		<result column="weight" property="weight" />
+		<result column="disease" property="disease" />
+		<result column="goal" property="goal" />
+		<!-- bodyInfo -->
+		<result column="body_info_no" property="bodyInfoNo" />
+		<result column="measure_date" property="measureDate" />
+		<result column="bmi" property="bmi" />
+		<result column="fat" property="fat" />
+		<result column="smm" property="smm" />
+		<result column="bi_status" property="biStatus" />
 	</resultMap>
+	
+	<resultMap type="Schedule" id="scheduleResult">
+		<result column="schedule_no" property="scheduleNo"/>
+		<result column="user_no" property="userNo"/>
+		<result column="schedule_title" property="scheduleTitle"/>
+		<result column="schedule_des" property="scheduleDes"/>
+		<result column="start_date" property="startDate"/>
+		<result column="end_date" property="endDate"/>
+		<result column="dow" property="dow"/>
+		<result column="back_color" property="backColor"/>
+	</resultMap>
+	
+	<resultMap type="QrInfo" id="qrInfoResult">
+		<result column="qr_no" property="qrNo"/> 
+		<result column="id" property="id"/>
+		<result column="type" property="type"/>
+		<result column="created_at" property="createdAt"/>
+		<result column="valid_date" property="validUntil"/>
+		<result column="attendance" property="attendance"/>
+		<result column="att_status" property="attStatus"/>
+	</resultMap>
+	
 	
 	<resultMap type="Schedule" id="scheduleResult">
 		<result column="schedule_no" property="scheduleNo"/>
@@ -237,4 +271,89 @@
 		 where pt = #{userId}
 		   and user_level = 2
 	</select>
+	
+	<select id="getTraineeList" resultMap="memberResultset">
+		SELECT *FROM MEMBER m
+			JOIN BODY_INFO b ON m.USER_ID = b.USER_ID
+			JOIN MEMBER_INFO mi ON m.USER_NO = mi.USER_NO
+			WHERE m.STATUS = 'Y'
+			  AND b.BI_STATUS = 'Y'
+			  AND m.PT = #{userId}
+			  AND b.MEASURE_DATE = (
+			      SELECT MAX(MEASURE_DATE)
+			      FROM BODY_INFO
+			      WHERE USER_ID = m.USER_ID
+			        AND BI_STATUS = 'Y'
+			  )
+	</select>
+	
+	<select id="getTraineeDetails" resultMap="memberResultset">
+		SELECT * 
+	    FROM MEMBER  
+	    WHERE USER_ID = #{userId} 
+	</select>
+	
+	<select id="getTraineeBodyInfo" resultMap="BodyInfoResultset">
+		SELECT *
+		  FROM BODY_INFO
+		 WHERE USER_ID = #{userId}
+		   AND BI_STATUS = 'Y'
+	</select>
+	
+	<select id="getTraineeInfo" resultMap="memberInfoResultset">
+		SELECT * 
+		  FROM MEMBER_INFO
+		 WHERE USER_NO = #{userNo}
+	</select>
+
+	<insert id="saveBodyInfo">
+	insert 
+	  into body_info
+	     (
+	       body_info_no
+	     , user_id
+	     , measure_date
+	     , bmi
+	     , fat
+	     , smm
+	     , bi_status
+	     )
+	values
+	     (
+	       seq_bf_no.nextval
+	     , #{userId}
+	     , sysdate
+	     , #{bmi}
+	     , #{fat}
+	     , #{smm}
+	     , 'Y'
+	     )
+	</insert>
+	
+	<update id="deleteBodyInfo">
+	update body_info
+	   set bi_status = 'N'
+	 where body_info_no = #{bodyInfoNo}
+	</update>
+	
+	<select id="getRecentInfo" resultMap="BodyInfoResultset">
+	select *
+	  from (
+	  		select
+	  				body_info_no
+	  			  , user_id
+	  			  , measure_date
+	  			  , bmi
+	  			  , fat
+	  			  , smm
+	  			  , bi_status
+	  		  from  body_info
+	  		 where  user_id = #{userId}
+	  		   and  bi_status = 'Y'
+	  		 order
+	  		    by  measure_date desc
+	  )
+	 where rownum &lt;= 6
+	</select>
+	
 </mapper>

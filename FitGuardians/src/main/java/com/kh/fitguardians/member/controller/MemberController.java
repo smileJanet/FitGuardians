@@ -24,6 +24,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -37,6 +38,7 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import com.kh.fitguardians.common.model.vo.QrInfo;
 import com.google.gson.Gson;
 import com.kh.fitguardians.member.model.service.MemberServiceImpl;
+import com.kh.fitguardians.member.model.vo.BodyInfo;
 import com.kh.fitguardians.member.model.vo.Member;
 import com.kh.fitguardians.member.model.vo.MemberInfo;
 
@@ -56,8 +58,35 @@ public class MemberController {
 	}
 	
     @RequestMapping("traineeDetail.me")
-    public String memberDetailView() {
-        return "Trainer/traineeDetailInfo";
+    public ModelAndView memberDetailView(@RequestParam("userId") String userId, ModelAndView mv) {
+
+    	Member m = mService.getTraineeDetails(userId);
+    	ArrayList<BodyInfo> bi = mService.getTraineeBodyInfo(userId);
+    	MemberInfo mi = mService.getTraineeInfo(m.getUserNo());
+    	// 최근 6개 데이터 조회문
+    	ArrayList<BodyInfo> recentBi = mService.getRecentInfo(userId);
+    	
+    	// 가장 최근 1개 데이터 조회문
+    	BodyInfo lastBodyInfo = null;
+    	
+    	for (BodyInfo bodyInfo : bi) {
+    	    lastBodyInfo = bodyInfo;
+    	}
+    	double lastSmm = lastBodyInfo.getSmm();
+    	double lastFat = lastBodyInfo.getFat();
+    	double lastBmi = lastBodyInfo.getBmi();
+    	
+    	mv.addObject("m" , m);
+    	mv.addObject("bi" , bi);
+    	mv.addObject("mi", mi);
+    	mv.addObject("lastSmm", String.format("%.1f", lastSmm));
+    	mv.addObject("lastFat", String.format("%.1f", lastFat));
+    	mv.addObject("lastBmi", String.format("%.1f", lastBmi));
+    	mv.addObject("recentBi", recentBi);
+    	
+    	mv.setViewName("Trainer/traineeDetailInfo");
+    	
+        return mv;
     }
 
 	@RequestMapping("loginform.me")
@@ -188,6 +217,38 @@ public class MemberController {
 		request.getSession().invalidate();
 		return "redirect:/";
 	}
+	
+	@RequestMapping("traineeList.me")
+	public ModelAndView traineeList(HttpSession session, ModelAndView mv) {
+		// 페이지가 로드되자마자 트레이너의 담당 회원이 조회되야 한다.
+		String userId = ((Member)session.getAttribute("loginUser")).getUserId();
+		ArrayList<Member> list = mService.getTraineeList(userId);
+		//System.out.println("userId :" + userId);
+		
+		//System.out.println(list);
+		mv.addObject("list", list)
+		  .setViewName("Trainer/traineeManagement");
+		
+		return mv;
+	}
+	
+	@ResponseBody
+	@RequestMapping("saveBodyInfo.me")
+	public String saveBodyInfo(BodyInfo bi){
+		
+		int result = mService.saveBodyInfo(bi);
+		///System.out.println(result);
+		return result>0?"success":"error";
+		
+	}
+	
+	@ResponseBody
+	@RequestMapping("deleteBodyInfo.me")
+	public String deleteBodyInfo(int bodyInfoNo) {
+		int result = mService.deleteBodyInfo(bodyInfoNo);
+		return result >0?"success":"error";
+	}
+
 	
 	@RequestMapping("qrForm.me")
 	public String qrCheckForm() {
