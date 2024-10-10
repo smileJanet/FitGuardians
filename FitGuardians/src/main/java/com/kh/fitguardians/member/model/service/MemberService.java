@@ -35,4 +35,13 @@ public interface MemberService {
 	// 회원 추가정보 조회
 	public MemberInfo getTraineeInfo(int userNo);
 	
+	// 회원 신체정보 삽입
+	public int saveBodyInfo(BodyInfo bi);
+	
+	// 회원 신체정보 데이터 삭제
+	public int deleteBodyInfo(int bodyInfoNo);
+
+	// 최근 6개 신체정보 조회(차트용)
+	ArrayList<BodyInfo> getRecentInfo(String userId);
+	
 }

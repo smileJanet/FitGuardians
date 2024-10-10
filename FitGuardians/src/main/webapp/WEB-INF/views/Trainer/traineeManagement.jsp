@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri ="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -58,7 +60,7 @@
                                                 <br/>
                                                 <span>나이 : ${m.age}살</span> &nbsp;&nbsp;&nbsp;&nbsp; <span>성별: ${m.gender}</span> <br/>
                                                 <span>키 : ${m.height}cm</span> &nbsp;&nbsp;&nbsp;&nbsp; <span>몸무게 : ${m.weight}kg</span> <br/>
-                                                <span>골격근량 : ${m.smm} &#37;</span> &nbsp;&nbsp;&nbsp;&nbsp; <span>BMI(체질량지수) : ${m.bmi} &#37;</span> &nbsp;&nbsp;&nbsp;&nbsp; <span>체지방량 :85%</span> <br/>
+                                                <span>골격근량 : <fmt:formatNumber value="${m.smm}" pattern="#.#" /> &#37;</span> &nbsp;&nbsp;&nbsp;&nbsp; <span>BMI(체질량지수) :  <fmt:formatNumber value="${m.bmi}" pattern="#.#" /> &#37;</span> &nbsp;&nbsp;&nbsp;&nbsp; <span>체지방량 : <fmt:formatNumber value="${m.fat}" pattern="#.#" /> &#37;</span> <br/>
                                                 <span>운동 목표 : ${m.goal}</span> <br/>
                                             </div>
                                         </div>

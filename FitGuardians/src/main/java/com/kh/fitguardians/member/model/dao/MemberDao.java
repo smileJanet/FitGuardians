@@ -33,7 +33,9 @@ public class MemberDao {
 	}
 
 	public ArrayList<Member> getTraineeList(SqlSessionTemplate sqlSession, String userId) {
-		return (ArrayList)sqlSession.selectList("memberMapper.getTraineeList", userId);
+		ArrayList<Member> m = (ArrayList)sqlSession.selectList("memberMapper.getTraineeList", userId);
+		//System.out.println("m의 값" + m);
+		return m;
 	}
 
 	public Member getTraineeDetails(SqlSessionTemplate sqlSession, String userId) {
@@ -46,6 +48,18 @@ public class MemberDao {
 
 	public MemberInfo getTraineeInfo(SqlSessionTemplate sqlSession, int userNo) {
 		return sqlSession.selectOne("memberMapper.getTraineeInfo", userNo);
+	}
+
+	public int saveBodyInfo(SqlSessionTemplate sqlSession, BodyInfo bi) {
+		return sqlSession.insert("memberMapper.saveBodyInfo", bi);
+	}
+
+	public int deleteBodyInfo(SqlSessionTemplate sqlSession, int bodyInfoNo) {
+		return sqlSession.update("memberMapper.deleteBodyInfo", bodyInfoNo);
+	}
+
+	public ArrayList<BodyInfo> getRecentInfo(SqlSessionTemplate sqlSession, String userId) {
+		return (ArrayList)sqlSession.selectList("memberMapper.getRecentInfo", userId);
 	}
 	
 	

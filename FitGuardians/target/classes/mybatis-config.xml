@@ -14,7 +14,6 @@
 		<typeAlias type="com.kh.fitguardians.chat.model.vo.Message" alias="Message"/>
 		<typeAlias alias="Exercise" type="com.kh.fitguardians.exercise.model.vo.ExercisePlan"/>
 		<typeAlias alias="Workout" type="com.kh.fitguardians.exercise.model.vo.Workout"/>
-	    <typeAlias alias="MemberInfo" type="com.kh.fitguardians.member.model.vo.MemberInfo"/>
 		<typeAlias alias="BodyInfo" type="com.kh.fitguardians.member.model.vo.BodyInfo"/>
 	</typeAliases>
 	

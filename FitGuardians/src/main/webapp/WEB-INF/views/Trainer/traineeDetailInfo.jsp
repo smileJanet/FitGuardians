@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,6 +20,9 @@
 
     <!-- 외부 css -->
     <link href="resources/css/traineeDetailInfo.css" rel="stylesheet" type="text/css">
+
+    <!-- 외부 자바스크립트 파일 : 캘린더 -->
+    <script defer src ="./resources/js/exerciseCalendar.js"></script>
 
 </head>
 
@@ -107,13 +112,34 @@
                    <div class="col-lg-6" style="display:inline;">
                        <div class="card shadow mb-4">
                            <div class="card-header py-3">
-                               <h6 class="m-0 font-weight-bold text-primary">${m.userName}님의 스케줄</h6>
+                               <h6 class="m-0 font-weight-bold text-primary">${m.userName}님의 운동 일정 조회하기</h6>
                            </div>
-                           <div class="card-body" id='calendar'>
+                           <div class="card-body detail-view" id='calendar'>
                               
                            </div>
                        </div>
                    </div>
+
+                    <!-- 모달 - 스케줄 세부사항 -->
+                    <div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="eventModalLabel">운동 세부일정표</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p id="modalExerciseNo" style="display:none;"></p>
+                                    <p id="modalWorkoutTitle"></p>
+                                    <p id="modalWorkoutCategory"></p>
+                                    <p id="modalDifficulty"></p>
+                                    <p id="modalDescription"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                    <script>
 
@@ -125,6 +151,23 @@
                       calendar.render()
                     })
               
+
+                    $(document).ready(function() {
+                        let userId = '${m.userId}';
+                        if (userId) {
+                            $.ajax({
+                                url: "selectWorkout.ex",
+                                method: "post",
+                                data: { userId: userId },
+                                success: function(response) {
+                                    showWorkouts(response); 
+                                },
+                                error: function() {
+                                    console.log("조회 실패");
+                                },
+                            });
+                        }
+                    });
                   </script>
 
                </div>
@@ -135,19 +178,28 @@
                    <div
                        class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                        <h6 class="m-0 font-weight-bold text-primary">${m.userName}님의 신체정보 관리</h6>
-                  	  <button class="btn btn-info btn-circle" data-toggle="modal" data-target="#updateModal"><i class="fas fa-info-circle"></i></button>
-                   </div>
-                   <!-- Card Body -->
+                       <div style="display:flex;">
+	                  	  <button style="margin:5px;" class="btn btn-info btn-circle" data-toggle="modal" data-target="#updateModal"><i class="fas fa-info-circle"></i></button>
+	                      <button style="margin:5px;" class="btn btn-warning btn-circle" data-toggle="modal" data-target="#deleteModal"><i class="fas fa-exclamation-triangle"></i></button>
+                      </div>
+                    </div>
+                   <!-- 차트 삽입 예정-->
                    <div class="card-body">
                        
                        <div class="info-title">골격근량</div>
-                       <div style="height:165px;"></div>
-
+                       <div style="height:250px;" class="chart-area">
+                            <canvas id="smmChart"></canvas>
+                       </div>
+                       <br />
                        <div class="info-title">BMI(체질량지수) </div>
-                       <div style="height:165px;"></div>
-
+                       <div style="height:250px;"  class="chart-area">
+                            <canvas id="bmiChart"></canvas>
+                       </div>
+                       <br />
                        <div class="info-title">체지방량</div>
-                       <div style="height:165px;"></div>
+                       <div style="height:250px;"  class="chart-area">
+                            <canvas id="fatChart"></canvas> 
+                       </div>
 
                    </div>
                </div>
@@ -184,73 +236,54 @@
 				        </div>
 				    </div>
 				</div>
-				
-				<!-- 모달창 띄우기 스크립트 -->
-				<script>
-				
-				$(document).ready(function(){
-					
-					// 데이터 출력하는 메소드
-					$("#saveButton").on("click",function(){
-						
-						let traineeName = '${m.userName}';
-						let traineeGender = '${m.gender}';
-						let traineeAge = ${m.age};
-						
-						let height = $("#height").val();
-						let heightMeter = height/100;
-						let weight = $("#weight").val();
-						
-						
-						console.log('키:', height);
-						console.log('몸무게:', weight);
-						
-						if(traineeGender == 'F'){ // 여자 측정
-							// smm - 골격근량
-							let smm = 0.252 * weight + 0.473 * height - 48.3;
-							// bmi - 체질량지수
-							let bmi = weight / (heightMeter ** 2);
-							// fat - 체지방량
-							let fat = 1.20 * bmi + 0.23 * traineeAge - 5.4;
-							
-							let value = traineeName + "의 측정 결과입니다. <br />"
-								       + "<span class='result' style='margin:10px'> · 골격근량 : </span> <span>" + smm.toFixed(1) + " </span> <br/> "
-								       + "<span class='result' style='margin:10px'> · BMI(체질량지수) : </span> <span>" + bmi.toFixed(1) + " </span> <br/>"
-								       + "<span class='result' style='margin:10px'> · 체지방량 : </span> <span>" + fat.toFixed(1) + " </span> ";
-									   
-							$('.bodyResult').attr('id', 'bodyResult');
-							$('#bodyResult').html(value);
-							$('#saveButton').text('저장하기');
-							
-							
-						}else{ // 남자 측정
-							// smm - 골격근량
-							let smm = 0.407 * weight + 0.267 * height - 19.2;
-							// bmi - 체질량지수
-							let bmi = weight / (height ** 2);
-							// fat - 체지방량
-							let fat = 1.20 * bmi + 0.23 * traineeAge - 16.2;
 
-							let value = traineeName + "의 측정 결과입니다. <br />"
-								       + "<span class='result' style='margin:10px'> · 골격근량 : </span> <span>" + smm.toFixed(1) + " </span> <br/> "
-								       + "<span class='result' style='margin:10px'> · BMI(체질량지수) : </span> <span>" + bmi.toFixed(1) + " </span> <br/>"
-								       + "<span class='result' style='margin:10px'> · 체지방량 : </span> <span>" + fat.toFixed(1) + " </span> ";
-									   
-							$('.bodyResult').attr('id', 'bodyResult');
-							$('#bodyResult').html(value);
-							$('#saveButton').text('저장하기');
-							
-						}
-						
-					});
-					
-					// 데이터 DB에 저장하는 ajax
-					
-					
-					
-				})
+                <!-- 신체정보 조회, 삭제 모달창 -->
+               <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true" >
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteModalLabel">기록 조회</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="delteForm">
+                                <div class="bodyResult">
+                                  <c:forEach var="b" items="${bi}">
+									    <div class="btn btn-light" style="display:flex;">
+									        <p style="font-weight:600;">측정일 <br /> <fmt:formatDate value="${b.measureDate}" pattern="yy/MM/dd" /></p> <br />
+									        <p>골격근량  ${b.smm}</p><br />
+									        <p>체질량지수(BMI)  ${b.bmi}</p><br />
+									        <p>체지방량  ${b.fat}</p>
+									        <div class="btn btn-danger btn-circle btn-sm deleteButton" data-body-info-no="${b.bodyInfoNo}"><i class="fas fa-trash"></i></div>
+									    </div>
+									    <br />
+									</c:forEach>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 				
+				<!-- 모달창 스크립트 : 외부로 빼냄 -->
+				<script>
+					// 회원 정보 데이터 조회하는 메소드
+					let traineeData = {
+						id : '${m.userId}',
+						name: '${m.userName}', // el구문은 자바스크립트 내에서 사용할 수 없지만, 변수에 담아서 사용할 수 있다.
+				        gender: '${m.gender}', // 외부 자바스크립트에서 el 구문을 사용할 수 없지만, 객체에 담아서 외부 자바스크립트로 데이터를 전송할 수 있다.
+				        age: ${m.age}, // 숫자에는 ''태그를 쓰지 않아도 되고, 이름이나 성별같은 문자열에는 ''를 씌워야 한다.
+					};
+					
+                    let recentBi = "${recentBi}"; // 서버에서 넘어온 배열을 문자열로 반환
+	
 				</script>
+				<script src="resources/js/traineeDetailInfo.js"></script>
 
                </div>
              

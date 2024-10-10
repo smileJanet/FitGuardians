@@ -1,5 +1,6 @@
 package com.kh.fitguardians.member.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,7 +34,10 @@ public class MemberController {
     	Member m = mService.getTraineeDetails(userId);
     	ArrayList<BodyInfo> bi = mService.getTraineeBodyInfo(userId);
     	MemberInfo mi = mService.getTraineeInfo(m.getUserNo());
+    	// 최근 6개 데이터 조회문
+    	ArrayList<BodyInfo> recentBi = mService.getRecentInfo(userId);
     	
+    	// 가장 최근 1개 데이터 조회문
     	BodyInfo lastBodyInfo = null;
     	
     	for (BodyInfo bodyInfo : bi) {
@@ -42,13 +46,14 @@ public class MemberController {
     	double lastSmm = lastBodyInfo.getSmm();
     	double lastFat = lastBodyInfo.getFat();
     	double lastBmi = lastBodyInfo.getBmi();
-
+    	
     	mv.addObject("m" , m);
     	mv.addObject("bi" , bi);
     	mv.addObject("mi", mi);
-    	mv.addObject("lastSmm", lastSmm);
-    	mv.addObject("lastFat", lastFat);
-    	mv.addObject("lastBmi", lastBmi);
+    	mv.addObject("lastSmm", String.format("%.1f", lastSmm));
+    	mv.addObject("lastFat", String.format("%.1f", lastFat));
+    	mv.addObject("lastBmi", String.format("%.1f", lastBmi));
+    	mv.addObject("recentBi", recentBi);
     	
     	mv.setViewName("Trainer/traineeDetailInfo");
     	
@@ -178,17 +183,31 @@ public class MemberController {
 		// 페이지가 로드되자마자 트레이너의 담당 회원이 조회되야 한다.
 		String userId = ((Member)session.getAttribute("loginUser")).getUserId();
 		ArrayList<Member> list = mService.getTraineeList(userId);
+		//System.out.println("userId :" + userId);
 		
+		//System.out.println(list);
 		mv.addObject("list", list)
 		  .setViewName("Trainer/traineeManagement");
 		
 		return mv;
 	}
 	
+	@ResponseBody
+	@RequestMapping("saveBodyInfo.me")
+	public String saveBodyInfo(BodyInfo bi){
+		
+		int result = mService.saveBodyInfo(bi);
+		///System.out.println(result);
+		return result>0?"success":"error";
+		
+	}
 	
-	
-	
-	
+	@ResponseBody
+	@RequestMapping("deleteBodyInfo.me")
+	public String deleteBodyInfo(int bodyInfoNo) {
+		int result = mService.deleteBodyInfo(bodyInfoNo);
+		return result >0?"success":"error";
+	}
 	
 	
 	

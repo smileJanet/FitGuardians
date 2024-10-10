@@ -1,46 +1,12 @@
+    let calendar;
+
     // 캘린더 데이터 관리
     document.addEventListener('DOMContentLoaded', function() {
-        
-        // 캘린더 값 조회 (원래 위에 있었는데 도저히 안되서 이사옴)
-        $(document).ready(function(){
-            
-            $('.selectTrainee').change(function(){
-                let userName = $(this).find('option:selected').text(); // 선택된 회원의 이름 표시. val()은 회원의 아이디 표시
-                let userId = $(this).find('option:selected').val(); // 선택된 회원의 아이디
-
-                $('#trainee').text(userName + "님의 운동 계획하기");
-                $('#addExerciseList').text(userName + "님의 스케줄 등록하기");
-                
-                // 트레이너가 선택한 회원의 모든 운동 스케줄 조회
-                // 전달값이 userId 하나이므로
-                // 2) String 문자열로 값 보내고 받기
-                if(userId !== "none"){
-                    $.ajax({
-                        url: "selectWorkout.ex",
-                        method : "post",
-                        // contentType:"application/json; charset=utf-8", // 이것만으론 JSON 문자열임을 알릴 수 없다. contentType + JSON.stringify()로 변환해야 한다.
-                        // JSON.stringify를 사용하지 않는다면?
-                        // 이 경우 컨트롤러에서 request.getParameter 방식으로 userId를 가져와야 한다.
-                        // @RequestParam 사용
-                        data : {userId : userId},
-                        success: function(response){
-                            //console.log("조회 성공");
-                            //console.log(response);
-                            showWorkouts(response);
-                            
-                        },
-                        error : function(){
-                            console.log("조회 실패");
-                        },
-                    })
-                }
-            })
-            
-        })
-        
+ 
     // 캘린더 설정화면	
     const calendarEl = document.getElementById('calendar');
-    const calendar = new FullCalendar.Calendar(calendarEl, {
+    const isDetailView = document.querySelector('.detail-view') !== null;
+        calendar = new FullCalendar.Calendar(calendarEl, {
         themeSystem: 'bootstrap5',
         height: '600px',
         initialView: 'dayGridMonth',
@@ -54,7 +20,7 @@
         headerToolbar: {
             start: 'dayGridMonth,dayGridWeek,dayGridDay',
             center: 'title',
-            end: 'today prev,next,addEventButton'
+            end: 'today prev,next'+(isDetailView?'': ',addEventButton')
         },
         locale: 'ko',
         events: [], // 조회 시 추가됨
@@ -111,6 +77,40 @@
             $('#eventModal').modal('show');
         },
     }); // calendar 로드 스크립트
+
+    calendar.render();
+
+    $('.selectTrainee').change(function(){
+        let userName = $(this).find('option:selected').text(); // 선택된 회원의 이름 표시. val()은 회원의 아이디 표시
+        let userId = $(this).find('option:selected').val(); // 선택된 회원의 아이디
+
+        $('#trainee').text(userName + "님의 운동 계획하기");
+        $('#addExerciseList').text(userName + "님의 운동 플랜 등록하기");
+        
+        // 트레이너가 선택한 회원의 모든 운동 스케줄 조회
+        // 전달값이 userId 하나이므로
+        // 2) String 문자열로 값 보내고 받기
+        if(userId !== "none"){
+            $.ajax({
+                url: "selectWorkout.ex",
+                method : "post",
+                // contentType:"application/json; charset=utf-8", // 이것만으론 JSON 문자열임을 알릴 수 없다. contentType + JSON.stringify()로 변환해야 한다.
+                // JSON.stringify를 사용하지 않는다면?
+                // 이 경우 컨트롤러에서 request.getParameter 방식으로 userId를 가져와야 한다.
+                // @RequestParam 사용
+                data : {userId : userId},
+                success: function(response){
+                    //console.log("조회 성공");
+                    //console.log(response);
+                    showWorkouts(response);
+                    
+                },
+                error : function(){
+                    console.log("조회 실패");
+                },
+            })
+        }
+    })
     
     
     // 캘린더에 데이터 추가할 값 받기
@@ -188,38 +188,36 @@
         }
     });// 캘린더에 값 넣기(insert문)
     
-    // 캘린더 렌더링
-    calendar.render();
-    
-    // 삽입한 캘린더 값으로부터 결과 조회하고 캘린더에 표시하기
-    function showWorkouts(response){
-
-        if (Array.isArray(response) && response.length > 0) { // response가 실제로 Array이고, 배열값이 0 이상이라면
-            response.forEach(event => { 
-                
-                let eventDate = event.workoutDate; // 날짜 받기
-                let eventStart = eventDate; // 날짜를 하루만 설정하려면 startDate와 endDate가 같아야 한다.
-                let eventEnd = eventDate; 
-                
-                // Add each event to the calendar
-                calendar.addEvent({
-                    title: event.workoutTitle,
-                    start: new Date(event.workoutDate), // Date 객체로 하기
-                    extendedProps: {
-                        difficulty: event.difficulty,
-                        workoutCategory: event.workoutCategory,
-                        description: event.description,
-                        exerciseNo : event.exerciseNo,
-                    }
-                });
-                
-            });
-
-            calendar.render();
-        } else {
-            console.error("이벤트 삽입이 안되용");
-        }
-        
-    } // showWorkouts
     
 });// document.addEventListener('DOMContentLoaded', function
+
+// 삽입한 캘린더 값으로부터 결과 조회하고 캘린더에 표시하기
+function showWorkouts(response){
+
+    if (Array.isArray(response) && response.length > 0) { // response가 실제로 Array이고, 배열값이 0 이상이라면
+        response.forEach(event => { 
+            
+            let eventDate = event.workoutDate; // 날짜 받기
+            let eventStart = eventDate; // 날짜를 하루만 설정하려면 startDate와 endDate가 같아야 한다.
+            let eventEnd = eventDate; 
+            
+            // Add each event to the calendar
+            calendar.addEvent({
+                title: event.workoutTitle,
+                start: new Date(event.workoutDate), // Date 객체로 하기
+                extendedProps: {
+                    difficulty: event.difficulty,
+                    workoutCategory: event.workoutCategory,
+                    description: event.description,
+                    exerciseNo : event.exerciseNo,
+                }
+            });
+            
+        });
+
+        calendar.render();
+    } else {
+        console.error("이벤트 삽입이 안되용");
+    }
+    
+} // showWorkouts

@@ -29,6 +29,7 @@
 		<result column="bmi" property="bmi" />
 		<result column="fat" property="fat" />
 		<result column="smm" property="smm" />
+		<result column="bi_status" property="biStatus" />
 	</resultMap>
 	
 	<!-- member추가정보 -->
@@ -48,6 +49,7 @@
 		<result column="bmi" property="bmi"/>
 		<result column="fat" property="fat"/>
 		<result column="smm" property="smm"/>
+		<result column="bi_status" property="biStatus" />
 	</resultMap>
 	
 	
@@ -145,21 +147,18 @@
 	</select>
 	
 	<select id="getTraineeList" resultMap="memberResultset">
-		SELECT *
-		  FROM MEMBER
-		  JOIN BODY_INFO USING (USER_ID)
-		  JOIN MEMBER_INFO USING (USER_NO)
-		  WHERE (USER_ID, MEASURE_DATE) IN (
-		      SELECT USER_ID, MAX(MEASURE_DATE)
-		      FROM BODY_INFO
-		      WHERE USER_ID IN (
-		          SELECT USER_ID 
-		            FROM MEMBER
-		           WHERE PT = #{userId}
-		      )
-		      GROUP BY USER_ID
-		  )
-		  ORDER BY MEASURE_DATE DESC
+		SELECT *FROM MEMBER m
+			JOIN BODY_INFO b ON m.USER_ID = b.USER_ID
+			JOIN MEMBER_INFO mi ON m.USER_NO = mi.USER_NO
+			WHERE m.STATUS = 'Y'
+			  AND b.BI_STATUS = 'Y'
+			  AND m.PT = #{userId}
+			  AND b.MEASURE_DATE = (
+			      SELECT MAX(MEASURE_DATE)
+			      FROM BODY_INFO
+			      WHERE USER_ID = m.USER_ID
+			        AND BI_STATUS = 'Y'
+			  )
 	</select>
 	
 	<select id="getTraineeDetails" resultMap="memberResultset">
@@ -172,6 +171,7 @@
 		SELECT *
 		  FROM BODY_INFO
 		 WHERE USER_ID = #{userId}
+		   AND BI_STATUS = 'Y'
 	</select>
 	
 	<select id="getTraineeInfo" resultMap="memberInfoResultset">
@@ -180,5 +180,54 @@
 		 WHERE USER_NO = #{userNo}
 	</select>
 
+	<insert id="saveBodyInfo">
+	insert 
+	  into body_info
+	     (
+	       body_info_no
+	     , user_id
+	     , measure_date
+	     , bmi
+	     , fat
+	     , smm
+	     , bi_status
+	     )
+	values
+	     (
+	       seq_bf_no.nextval
+	     , #{userId}
+	     , sysdate
+	     , #{bmi}
+	     , #{fat}
+	     , #{smm}
+	     , 'Y'
+	     )
+	</insert>
+	
+	<update id="deleteBodyInfo">
+	update body_info
+	   set bi_status = 'N'
+	 where body_info_no = #{bodyInfoNo}
+	</update>
+	
+	<select id="getRecentInfo" resultMap="BodyInfoResultset">
+	select *
+	  from (
+	  		select
+	  				body_info_no
+	  			  , user_id
+	  			  , measure_date
+	  			  , bmi
+	  			  , fat
+	  			  , smm
+	  			  , bi_status
+	  		  from  body_info
+	  		 where  user_id = #{userId}
+	  		   and  bi_status = 'Y'
+	  		 order
+	  		    by  measure_date desc
+	  )
+	 where rownum &lt;= 6
+	</select>
 	
 </mapper>

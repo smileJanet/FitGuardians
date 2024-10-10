@@ -89,6 +89,21 @@ public class MemberServiceImpl implements MemberService{
 		return mDao.getTraineeInfo(sqlSession, userNo);
 	}
 
+	@Override
+	public int saveBodyInfo(BodyInfo bi) {
+		return mDao.saveBodyInfo(sqlSession, bi);
+	}
+
+	@Override
+	public int deleteBodyInfo(int bodyInfoNo) {
+		return mDao.deleteBodyInfo(sqlSession, bodyInfoNo);
+	}
+
+	@Override
+	public ArrayList<BodyInfo> getRecentInfo(String userId) {
+		return mDao.getRecentInfo(sqlSession, userId);
+	}
+
 	
 
 

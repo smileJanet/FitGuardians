@@ -321,7 +321,7 @@
 						<div class="card shadow mb-4">
 							<div class="card-header py-3">
 								<h6 class="m-0 font-weight-bold text-primary"
-									id="addExerciseList">스케줄 등록</h6>
+									id="addExerciseList">운동 플랜 등록하기</h6>
 							</div>
 							<div class="card-body" id='calendar'>
 								<!-- 캘린더 들어오는 자리 -->
@@ -368,7 +368,15 @@
 											name="calendar_date"> <label for="taskId"
 											class="col-form-label">운동 내용</label>
 										<textarea class="form-control" id="calendar_description"
-											name="calendar_description" style="height: 200px;"></textarea>
+											name="calendar_description" style="height: 200px;">(이름입력)님, 안녕하세요! 
+금일 운동 스케줄을 알려드립니다.
+
+
+
+
+오늘도 좋은 운동이 되시길 바랍니다. 감사합니다.
+FitGuardians팀 트레이너
+										</textarea>
 
 									</div>
 								</div>

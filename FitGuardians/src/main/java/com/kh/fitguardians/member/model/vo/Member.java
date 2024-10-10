@@ -43,5 +43,6 @@ public class Member {
 	private double bmi;
 	private double fat;
 	private double smm;
+	private String biStatus;
 	
 }

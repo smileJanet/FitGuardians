@@ -2,13 +2,11 @@ package com.kh.fitguardians.member.model.vo;
 
 import java.util.Date;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.Getter;
-
-import lombok.AllArgsConstructor;
-
-import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -23,5 +21,6 @@ public class BodyInfo {
 	private double bmi;
 	private double fat;
 	private double smm;
+	private String biStatus;
 
 }
