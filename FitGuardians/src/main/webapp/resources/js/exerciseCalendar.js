@@ -126,23 +126,35 @@
 
         // 정규화
         if (!userId || userId === "none") {
-            alert("회원을 먼저 선택해 주세요.");
-            return;
+        Swal.fire({
+		  title: "회원을 먼저 선택해주세요.",
+		  icon: "warning",
+		});
         } else if (!title) {
-            alert("제목을 입력하세요.");
-            return;
+        Swal.fire({
+		  title: "제목을 입력하세요",
+		  icon: "warning",
+		});
         } else if (!difficulty) {
-            alert("난이도를 선택하세요.");
-            return;
+        Swal.fire({
+		  title: "난이도를 선택하세요.",
+		  icon: "warning",
+		});
         } else if (!date) {
-            alert("일자를 선택하세요.");
-            return;
+        Swal.fire({
+		  title: "일자를 선택하세요.",
+		  icon: "warning",
+		});
         } else if (!description) {
-            alert("설명을 작성하세요.");
-            return;
+        Swal.fire({
+		  title: "설명을 작성하세요.",
+		  icon: "warning",
+		});
         } else if (!selectTarget) {
-            alert("표적 부위를 선택하세요.");
-            return;
+        Swal.fire({
+		  title: "표적 부위를 선택하세요.",
+		  icon: "warning",
+		});
         } else {
             
             // 여기에 ajax 시전
@@ -169,7 +181,10 @@
                     // Controller에서 삼항 연산자로 성공하면 "success"가 나오게, 실패하면 "error"가 나오게 설정했다.
                     // response가 success라는 단어로 나온다면
                     if(response.result === "success"){
-                        alert("운동 계획이 성공적으로 추가되었습니다.");
+                    Swal.fire({
+						  title: "운동 계획이 성공적으로 추가되었습니다.",
+						  icon: "success",
+						});
                         
                         // 값 초기화
                         $("#calendarModal").modal("hide");
@@ -182,7 +197,7 @@
                 
                 },
                 error : function(){
-                    console.log("추가 실패");
+                    //console.log("추가 실패");
                 },
             });
         }
@@ -193,6 +208,9 @@
 
 // 삽입한 캘린더 값으로부터 결과 조회하고 캘린더에 표시하기
 function showWorkouts(response){
+
+	 calendar.removeAllEvents(); // 첫번째로 선택했던 회원의 스케줄 지우기 
+	 							 // 설정하지 않으면 선택한 회원들의 스케줄이 누적되서 나온다. 주의!
 
     if (Array.isArray(response) && response.length > 0) { // response가 실제로 Array이고, 배열값이 0 이상이라면
         response.forEach(event => { 
@@ -217,7 +235,11 @@ function showWorkouts(response){
 
         calendar.render();
     } else {
-        console.error("이벤트 삽입이 안되용");
+         Swal.fire({
+            title: "운동 스케줄이 없습니다.",
+            text: "선택한 회원의 운동 계획이 없습니다.",
+            icon: "info",
+        });
     }
     
 } // showWorkouts

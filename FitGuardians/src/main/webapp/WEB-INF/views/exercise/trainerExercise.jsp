@@ -24,6 +24,10 @@
 <!-- 외부 자바스크립트 파일 : 캘린더 -->
 <script defer src ="resources/js/exerciseCalendar.js"></script>
 
+ <!-- sweetalert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.1/dist/sweetalert2.all.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.1/dist/sweetalert2.min.css" rel="stylesheet">
+
 </head>
 
 <body id="page-top">
@@ -78,31 +82,40 @@
 						
 						<!-- 모달 내용 수정, 삭제 스크립트-->
 						<script>
-							function deleteExercise(){
-								
-								let exerciseNo = $('#modalExerciseNo').text();
-								
-								if(confirm("정말로 삭제하시겠습니까?")){
-									$.ajax({
-										url : 'deleteExercise.ex',
-										data : {exerciseNo : exerciseNo},
-										success : function(result){
-											if(result ==="success"){
-												console.log("성공구리");
-											}else{
-												console.log("DB이상함구리");
-											}
-										},
-										error : function(){
-											console.log('실패구리');
-										},
-										
-									})
-									alert("성공적으로 삭제하였습니다.");
-								}
-								
-							}
-						
+					
+						// 삭제 함수 정의
+						function deleteExercise() {
+						    let exerciseNo = $('#modalExerciseNo').text();
+						    let isConfirm = Swal.fire({
+						        title: "정말로 삭제하시겠습니까?",
+						        icon: "question",
+						        showDenyButton: true,
+						        confirmButtonText: "삭제",
+						        denyButtonText: "취소",
+						    }).then((result) => {
+						        if (result.isConfirmed) {
+						            $.ajax({
+						                url: 'deleteExercise.ex',
+						                method: 'POST', // POST 메소드 명시
+						                data: { exerciseNo: exerciseNo },
+						                success: function(response) {
+						                    if (response === "success") {
+						                        Swal.fire("성공적으로 삭제하였습니다.", "", "success").then(() => {
+						                            $('#eventModal').modal('hide'); // 모달 닫기
+						                            $('#eventModal').attr('aria-hidden', 'true'); // aria-hidden 속성 변경
+						                        });
+						                    } else {
+						                        Swal.fire("삭제에 실패했습니다.", "DB 오류가 발생했습니다.", "error");
+						                    }
+						                },
+						                error: function() {
+						                    Swal.fire("삭제에 실패했습니다.", "서버 오류가 발생했습니다.", "error");
+						                },
+						            });
+						        }
+						    });
+						}
+
 						</script>
 						
 						

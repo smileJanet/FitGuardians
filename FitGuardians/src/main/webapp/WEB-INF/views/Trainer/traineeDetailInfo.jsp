@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -23,6 +24,10 @@
 
     <!-- 외부 자바스크립트 파일 : 캘린더 -->
     <script defer src ="./resources/js/exerciseCalendar.js"></script>
+    
+    <!-- sweetalert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.1/dist/sweetalert2.all.min.js"></script>
+	<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.1/dist/sweetalert2.min.css" rel="stylesheet">
 
 </head>
 
@@ -253,9 +258,9 @@
                                   <c:forEach var="b" items="${bi}">
 									    <div class="btn btn-light" style="display:flex;">
 									        <p style="font-weight:600;">측정일 <br /> <fmt:formatDate value="${b.measureDate}" pattern="yy/MM/dd" /></p> <br />
-									        <p>골격근량  ${b.smm}</p><br />
-									        <p>체질량지수(BMI)  ${b.bmi}</p><br />
-									        <p>체지방량  ${b.fat}</p>
+									        <p>골격근량  <fmt:formatNumber value="${b.smm}" pattern="0.0" /> </p><br />
+									        <p>체질량지수(BMI)  <fmt:formatNumber value="${b.bmi}" pattern="0.0" /></p><br />
+									        <p>체지방량  <fmt:formatNumber value="${b.fat}" pattern="0.0" /></p>
 									        <div class="btn btn-danger btn-circle btn-sm deleteButton" data-body-info-no="${b.bodyInfoNo}"><i class="fas fa-trash"></i></div>
 									    </div>
 									    <br />

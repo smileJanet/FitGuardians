@@ -270,6 +270,7 @@ public class ExerciseController {
 		
 	}//selectWorkout
 	
+	@ResponseBody
 	@RequestMapping("deleteExercise.ex")
 	public String deleteExercise(int exerciseNo) {
 		
