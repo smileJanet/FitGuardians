@@ -90,7 +90,7 @@ public class MemberController {
 	
 	
 	@RequestMapping(value = "enroll.me", produces = "text/html; charset=UTF-8")
-	public String memberEnroll(Member m, String memberInfo, HttpServletRequest request) {
+	public String memberEnroll(Member m, String memberInfo, HttpServletRequest request) throws IOException {
 		String encPwd = bcryptPasswordEncoder.encode(m.getUserPwd());
 		m.setUserPwd(encPwd);
 		
@@ -125,7 +125,6 @@ public class MemberController {
 			}
 		}
 		
-		m.setProfilePic(profile);
 		int result2 = mService.insertQrInfo(qr);
 		int result1 = mService.insertMember(m);
 		
