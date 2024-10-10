@@ -242,6 +242,7 @@
 		    <artifactId>javase</artifactId>
 		    <version>3.4.1</version>
 		</dependency>
+		<!-- jacjson라이브러리 -->
 		<dependency>
 		    <groupId>com.fasterxml.jackson.core</groupId>
 		    <artifactId>jackson-databind</artifactId>
