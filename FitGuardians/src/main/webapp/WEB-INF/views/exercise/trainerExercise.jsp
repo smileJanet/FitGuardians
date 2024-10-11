@@ -42,11 +42,102 @@
 				<div class="container-fluid">
 					<h1 class="h3 mb-4 text-gray-800" style="font-weight: 600;">
 						운동 플래너</h1>
+						
+					<!-- 운동 검색창 -->	
+					<div class = "card mb-4 py-3 border-bottom-warning">
+					<div style="font-weight:700; font-size:20px; margin:10px;">운동 검색창</div>
+					
+						 <div class="card mb-4 py-3 border-bottom-info" style="margin:20px;">
+					        <form id="exerciseSearchForm" action="searchEx.ex" method="get">
+					            <div class="mb-3 searchEx">
+					                <label for="exerciseType" class="form-label">운동 종류</label>
+					                <select id="exerciseType" class="form-select" name="type">
+					                    <option value="none">선택하세요</option>
+					                    <option value="cardio">유산소</option>
+					                    <option value="stretching">스트레칭</option>
+					                    <option value="strength">근력운동</option>
+					                    <option value="powerlifting">파워리프팅</option>
+					                    <option value="plyometrics">플라이오메트릭스</option>
+					                </select>
+					            </div>
+					
+					            <div class="mb-3 searchEx">
+					                <label for="muscleGroup" class="form-label">타겟 근육</label>
+					                <select id="muscleGroup" class="form-select" name="muscle">
+					                    <option value="none">선택하세요</option>
+					                    <option value="neck">목근</option>
+					                    <option value="biceps">이두근</option>
+					                    <option value="triceps">삼두근</option>
+					                    <option value="chest">가슴근</option>
+					                    <option value="forearms">팔꿈치 아래근</option>
+					                    <option value="traps">승모근</option>
+					                    <option value="abdominals">복근</option>
+					                    <option value="lats">광배근</option>
+					                    <option value="middle_back">중간 등근</option>
+					                    <option value="lower_back">하부 등근</option>
+					                    <option value="glutes">엉덩이근</option>
+					                    <option value="quadriceps">사두근</option>
+					                    <option value="hamstrings">햄스트링근</option>
+					                    <option value="abductors">외전근</option>
+					                    <option value="adductors">내전근</option>
+					                    <option value="calves">종아리근</option>
+					                </select>
+					            </div>
+					
+					            <div class="mb-3 searchEx">
+					                <label for="difficulty" class="form-label">난이도</label>
+					                <select id="difficulty" class="form-select" name="difficulty">
+					                    <option value="none">선택하세요</option>
+					                    <option value="beginner">쉬움</option>
+					                    <option value="intermediate">중간</option>
+					                    <option value="expert">어려움</option>
+					                </select>
+					            </div>
+					
+					            <button type="submit" class="btn btn-info searchExercise">검색</button>
+					        </form>
+					    </div>
+					    <div class="card mb-4 py-3 border-bottom-primary" style="margin:20px; padding:20px;">
+							    <c:if test="${not empty exercises}">
+								    <div class="container mt-5">
+								      <h4>운동 목록</h4>
+							            <c:forEach var="ex" items="${exercises}">
+									        <table class="table table-bordered exerciseTable">
+									            <thead class="thead-light">
+									                <tr>
+									                    <th>운동 이름</th>
+									                    <th>운동 종류</th>
+									                    <th>타겟 근육</th>
+									                    <th>장비</th>
+									                    <th>난이도</th>
+									                    <th>설명</th>
+									                </tr>
+									            </thead>
+									            <tbody>
+									                <tr>
+									                    <td>${ex.name}</td>
+									                    <td>${ex.type}</td>
+									                    <td>${ex.muscle}</td>
+									                    <td>${ex.equipment}</td>
+									                    <td>${ex.difficulty}</td>
+									                    <td>${ex.instructions}</td>
+									                </tr>
+									            </tbody>
+									        </table>
+							            </c:forEach>
+								    </div>
+							    </c:if>
+							    <c:if test="${empty exercises}">
+							        <p>운동이 없습니다.</p>
+							    </c:if>
+					    </div>
+					</div>
+					
 
 					<div class="card mb-4 py-3 border-bottom-warning">
+						<div style="font-weight:700; font-size:20px; margin:10px;">AI 운동플래너</div>
 						<div style="display: flex;">
-							&nbsp; &nbsp; &nbsp;
-							<p>회원 선택 :</p>
+							&nbsp; &nbsp; &nbsp; <p>회원 선택 :</p>
 							&nbsp; &nbsp; &nbsp; <select name="traineeExercise"
 								class="selectTrainee" style="width: 130px; height: 25px;">
 								<option value="none" autofocus>회원 선택하기</option>
@@ -349,7 +440,7 @@
 						<div class="modal-dialog" role="document">
 							<div class="modal-content">
 								<div class="modal-header">
-									<h5 class="modal-title" id="exampleModalLabel">회원 스케줄 등록</h5>
+									<h5 class="modal-title" id="exampleModalLabel">회원 운동 플랜 등록</h5>
 									<button type="button" class="close" data-dismiss="modal"
 										aria-label="Close">
 										<span aria-hidden="true">&times;</span>
@@ -388,7 +479,7 @@
 
 
 오늘도 좋은 운동이 되시길 바랍니다. 감사합니다.
-FitGuardians팀 트레이너
+FitGuardians팀 트레이너 (트레이너 이름)
 										</textarea>
 
 									</div>

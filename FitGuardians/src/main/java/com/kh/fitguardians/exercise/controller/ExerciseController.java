@@ -3,7 +3,9 @@ package com.kh.fitguardians.exercise.controller;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URI;
+import java.net.URL;
 import java.net.URLDecoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -27,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -34,6 +37,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.deepl.api.DeepLException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.kh.fitguardians.exercise.model.service.ExerciseServiceImpl;
 import com.kh.fitguardians.exercise.model.vo.ExerciseDesc;
@@ -279,5 +285,63 @@ public class ExerciseController {
 		return result>0?"success":"error";
 		
 	}// deleteExercise
+	
+	
+	// 운동 목록리스트 조회 (Ninja API)
+	@RequestMapping(value="searchEx.ex", method = RequestMethod.GET)
+	public String searchExercise(String type, 
+							   String muscle, 
+							   String difficulty, 
+							   Model model) throws IOException, DeepLException, InterruptedException {
+		
+		// url생성
+		String requestUrl = "https://api.api-ninjas.com/v1/exercises";
+		requestUrl += "?type=" + type;
+		requestUrl += "&muscle=" + muscle;
+		requestUrl += "&difficulty=" + difficulty;
+		
+		// 헤더 (api에게 요청하기)
+		URL url = new URL(requestUrl);
+		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+		connection.setRequestProperty("accept", "application/json");
+		connection.setRequestProperty("X-Api-Key", "ljeQSKuX7wMOTquATCEBKA==yBuEhHgyJG8KGiyq");
+		
+		// 응답을 요청받기
+		InputStream responseStream = connection.getInputStream();
+		// ObjectMapper : json을 읽기, 쓰기, 변환 기능을 제공하는 객체
+		ObjectMapper mapper = new ObjectMapper();
+		// Jackson라이브러리 : Json을 Java Object로 변환하거나 Java Object를 Json으로 변환하게 해주는 Java 라이브러리
+		// JsonNode : 잭슨 라이브러리에서 제공하는 객체
+		// 자바에서 json데이터를 파싱해서 jsonNode 객체려 변환하고 있다.
+		// readTree : 주어진 InputStream에서 JSON데이터를 읽어들이고, 이를 JSON트리 구조로 나타내준다(= json데이터를 동적으로 다룸)
+		JsonNode root = mapper.readTree(responseStream);
+		
+		// root = JsonNode객체, 그걸 toString()으로 문자열화 한것.
+		System.out.println(root.toString());
+		
+		// jsp에서 JsonNode를 사용할 수 없기 때문에 c태그를 사용하고 싶으면 여기서 배열로 만들어야 한다.
+		// [key-value, key-value, key-value]형태
+		ArrayList<Map<String,Object>> exercises = new ArrayList<>();
+		if(root.isArray()) { // root가 array인지 확인 유무
+			for(JsonNode node : root) {
+				Map<String, Object> ex = new HashMap<>();
+				//put: hashmap에서 값 삽입 시 사용하는 메소드
+				// node.path().asText(): JsonNode에서 값을 가져오는 메소드
+				ex.put("name", node.path("name").asText());
+				ex.put("type", node.path("type").asText());
+				ex.put("muscle", node.path("muscle").asText());
+				ex.put("equipment", node.path("equipment").asText());
+				ex.put("difficulty", node.path("difficulty").asText());
+				ex.put("instructions", node.path("instructions").asText());
+				exercises.add(ex); //ex를 exercises 배열에 집어넣음
+			}
+		}
+		
+		model.addAttribute("exercises", exercises);
+		// 값 jsp에 전달하기
+		return "exercise/trainerExercise";
+	
+	}// searchExercise
+
 
 }
