@@ -126,6 +126,22 @@ public class MemberServiceImpl implements MemberService{
 	}
 
 	
+	@Override
+	public Member getTrainerInfo(String trainerId) {
+		return mDao.getTrainerInfo(sqlSession, trainerId);
+	}
+
+	@Override
+	public MemberInfo getMemberInfo(int userNo) {
+		return mDao.getMemberInfo(sqlSession, userNo);
+	}
+
+	@Override
+	public BodyInfo getBodyInfo(String userId) {
+		return mDao.getBodyInfo(sqlSession, userId);
+	}
+
+	
 
 
 	

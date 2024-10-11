@@ -48,7 +48,7 @@
 					<div style="font-weight:700; font-size:20px; margin:10px;">운동 검색창</div>
 					
 						 <div class="card mb-4 py-3 border-bottom-info" style="margin:20px;">
-					        <form id="exerciseSearchForm" action="searchEx.ex" method="get">
+					        <div id="exerciseSearchForm" >
 					            <div class="mb-3 searchEx">
 					                <label for="exerciseType" class="form-label">운동 종류</label>
 					                <select id="exerciseType" class="form-select" name="type">
@@ -94,42 +94,79 @@
 					                </select>
 					            </div>
 					
-					            <button type="submit" class="btn btn-info searchExercise">검색</button>
-					        </form>
+					            <button type="button" class="btn btn-info searchExercise" id="searchExercise">검색</button>
+					        </div>
 					    </div>
+					    
+					    <script>
+					    $(document).ready(function(){
+					    	$('#searchExercise').click(()=>{
+					    		let type = $('#exerciseType').val();
+					    		let muscle = $('#muscleGroup').val();
+					    		let difficulty = $('#difficulty').val();
+					    		
+					    		console.log(type);
+					    		console.log(muscle);
+					    		console.log(difficulty);
+					    		
+					    		$.ajax({
+					    			url:'searchEx.ex',
+					    			type:'get',
+					    			data :{
+					    				type:type,
+					    				muscle:muscle,
+					    				difficulty:difficulty,
+					    			},
+					    			success : (result)=>{
+					    				console.log("성공쓰");
+					    				
+					    				$('.exerciseTable tbody').empty();
+					    				let value = '';
+					    				
+					    				$.each(result, function(index, ex){
+					    					value += '<tr>'
+					    					       + '<td>' + ex.name + '</td>'
+					    					       + '<td>' + ex.type + '</td>'
+					    					       + '<td>' + ex.muscle + '</td>'
+					    					       + '<td>' + ex.equipment + '</td>'
+					    					       + '<td>' + ex.difficulty + '</td>'
+					    					       + '<td>' + ex.instructions + '</td>'
+					    					       + '</tr>'
+					    				})
+					    				
+					    				$('.exerciseTable tbody').html(value);
+					    				
+					    			},
+					    			error : ()=>{
+					    				console.log("실패해부러쓰");
+					    			},
+					    			
+					    		})
+					    		
+					    	})
+					    	
+					    })
+					    
+					    </script>
 					    <div class="card mb-4 py-3 border-bottom-primary" style="margin:20px; padding:20px;">
-							    <c:if test="${not empty exercises}">
-								    <div class="container mt-5">
-								      <h4>운동 목록</h4>
-							            <c:forEach var="ex" items="${exercises}">
-									        <table class="table table-bordered exerciseTable">
-									            <thead class="thead-light">
-									                <tr>
-									                    <th>운동 이름</th>
-									                    <th>운동 종류</th>
-									                    <th>타겟 근육</th>
-									                    <th>장비</th>
-									                    <th>난이도</th>
-									                    <th>설명</th>
-									                </tr>
-									            </thead>
-									            <tbody>
-									                <tr>
-									                    <td>${ex.name}</td>
-									                    <td>${ex.type}</td>
-									                    <td>${ex.muscle}</td>
-									                    <td>${ex.equipment}</td>
-									                    <td>${ex.difficulty}</td>
-									                    <td>${ex.instructions}</td>
-									                </tr>
-									            </tbody>
-									        </table>
-							            </c:forEach>
-								    </div>
-							    </c:if>
-							    <c:if test="${empty exercises}">
-							        <p>운동이 없습니다.</p>
-							    </c:if>
+							  <div class="container mt-5">
+								 <h4>운동 목록</h4>
+							        <table class="table table-bordered exerciseTable">
+							            <thead class="thead-light">
+							                <tr>
+							                    <th>운동 이름</th>
+							                    <th>운동 종류</th>
+							                    <th>타겟 근육</th>
+							                    <th>장비</th>
+							                    <th>난이도</th>
+							                    <th>설명</th>
+							                </tr>
+							            </thead>
+							            <tbody>
+							               <!-- 여기에 값 들어올 예정 -->
+							            </tbody>
+							        </table>
+							  </div>
 					    </div>
 					</div>
 					

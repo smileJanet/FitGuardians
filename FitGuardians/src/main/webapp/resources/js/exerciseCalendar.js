@@ -211,18 +211,27 @@ function showWorkouts(response){
 
 	 calendar.removeAllEvents(); // 첫번째로 선택했던 회원의 스케줄 지우기 
 	 							 // 설정하지 않으면 선택한 회원들의 스케줄이 누적되서 나온다. 주의!
+     let value = '';
+
+     // 오늘 날짜
+     let today = new Date();
+     let todayString = today.toISOString().split('T')[0]; //YYYY-MM-DD형식
+
+     let hasEventToday = false; // 오류 고칠것
 
     if (Array.isArray(response) && response.length > 0) { // response가 실제로 Array이고, 배열값이 0 이상이라면
         response.forEach(event => { 
             
             let eventDate = event.workoutDate; // 날짜 받기
+            let eventDateObj = new Date(event.workoutDate);
             let eventStart = eventDate; // 날짜를 하루만 설정하려면 startDate와 endDate가 같아야 한다.
             let eventEnd = eventDate; 
+            let eventDateString = eventDateObj.toISOString().split('T')[0]; //YYYY-MM-DD형식
             
             // Add each event to the calendar
             calendar.addEvent({
                 title: event.workoutTitle,
-                start: new Date(event.workoutDate), // Date 객체로 하기
+                start: eventDateObj, // Date 객체로 하기
                 extendedProps: {
                     difficulty: event.difficulty,
                     workoutCategory: event.workoutCategory,
@@ -230,8 +239,22 @@ function showWorkouts(response){
                     exerciseNo : event.exerciseNo,
                 }
             });
-            
-        });
+
+            if(todayString === eventDateString) {
+                hasEventToday = true;
+             
+            value += '<tr>'
+                   + '<td>' + event.exerciseNo + '</td>'
+                   + '<td>' + event.workoutTitle + '</td>'
+                   + '<td>' + eventDateObj + '</td>'
+                   + '<td>' + event.difficulty + '</td>'
+                   + '<td>' + event.description + '</td>'
+                   + '</tr>';
+  
+                }
+            });
+
+            $('#exercisePlanTable tbody').html(value);
 
         calendar.render();
     } else {

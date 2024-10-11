@@ -8,7 +8,7 @@
 <head>
 <meta charset="UTF-8">
 <title>회원 정보</title>
-<!-- Custom fonts for this template-->
+    <!-- Custom fonts for this template-->
     <link href="resources/templates/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
@@ -188,7 +188,7 @@
 	                      <button style="margin:5px;" class="btn btn-warning btn-circle" data-toggle="modal" data-target="#deleteModal"><i class="fas fa-exclamation-triangle"></i></button>
                       </div>
                     </div>
-                   <!-- 차트 삽입 예정-->
+                   <!-- 차트 -->
                    <div class="card-body">
                        
                        <div class="info-title">골격근량</div>

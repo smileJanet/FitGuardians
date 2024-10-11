@@ -2,8 +2,8 @@ package com.kh.fitguardians.member.model.service;
 
 import java.util.ArrayList;
 
-import com.kh.fitguardians.member.model.vo.BodyInfo;
 import com.kh.fitguardians.common.model.vo.QrInfo;
+import com.kh.fitguardians.member.model.vo.BodyInfo;
 import com.kh.fitguardians.member.model.vo.Member;
 import com.kh.fitguardians.member.model.vo.MemberInfo;
 
@@ -53,5 +53,14 @@ public interface MemberService {
 	public int updateAttendance(QrInfo qr);
 	
 	public int updateAttStatus(QrInfo qr);
+
+	// 트레이너 정보 알아오기
+	Member getTrainerInfo(String trainerId);
+
+	// 회원 추가정보
+	MemberInfo getMemberInfo(int userNo);
+
+	// 회원 신체정보
+	BodyInfo getBodyInfo(String userId);
 	
 }

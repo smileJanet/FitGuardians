@@ -29,7 +29,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -288,17 +287,21 @@ public class ExerciseController {
 	
 	
 	// 운동 목록리스트 조회 (Ninja API)
+	@ResponseBody
 	@RequestMapping(value="searchEx.ex", method = RequestMethod.GET)
-	public String searchExercise(String type, 
+	public ArrayList<Map<String, Object>> searchExercise(String type, 
 							   String muscle, 
-							   String difficulty, 
-							   Model model) throws IOException, DeepLException, InterruptedException {
+							   String difficulty) throws IOException, DeepLException, InterruptedException {
 		
 		// url생성
 		String requestUrl = "https://api.api-ninjas.com/v1/exercises";
 		requestUrl += "?type=" + type;
 		requestUrl += "&muscle=" + muscle;
 		requestUrl += "&difficulty=" + difficulty;
+		
+		System.out.println(" type : " +  type);
+		System.out.println(" muscle : " +  muscle);
+		System.out.println(" difficulty : " +  difficulty);
 		
 		// 헤더 (api에게 요청하기)
 		URL url = new URL(requestUrl);
@@ -337,9 +340,8 @@ public class ExerciseController {
 			}
 		}
 		
-		model.addAttribute("exercises", exercises);
 		// 값 jsp에 전달하기
-		return "exercise/trainerExercise";
+		return exercises;
 	
 	}// searchExercise
 

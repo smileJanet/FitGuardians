@@ -354,4 +354,28 @@
 	 where rownum &lt;= 6
 	</select>
 	
+	<select id="getTrainerInfo" resultMap="memberResultset">
+	select *
+	  from member
+	 where user_id = #{trainerId}
+	</select>
+	
+	<select id="getMemberInfo" resultMap="memberInfoResultset">
+	select *
+	  from member_info
+	 where user_no = #{userNo}
+	</select>
+	
+	<select id="getBodyInfo" resultMap="BodyInfoResultset">
+	    select *
+	      from (
+	    select *
+		  from body_info
+		 where user_id = #{userId}
+		 order 
+		    by measure_date desc
+	         )
+	     where rownum = 1
+	</select>
+	
 </mapper>

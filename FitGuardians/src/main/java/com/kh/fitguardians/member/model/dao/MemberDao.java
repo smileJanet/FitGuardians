@@ -78,6 +78,18 @@ public class MemberDao {
 	public ArrayList<BodyInfo> getRecentInfo(SqlSessionTemplate sqlSession, String userId) {
 		return (ArrayList)sqlSession.selectList("memberMapper.getRecentInfo", userId);
 	}
+
+	public Member getTrainerInfo(SqlSessionTemplate sqlSession, String trainerId) {
+		return sqlSession.selectOne("memberMapper.getTrainerInfo", trainerId);
+	}
+
+	public MemberInfo getMemberInfo(SqlSessionTemplate sqlSession, int userNo) {
+		return sqlSession.selectOne("memberMapper.getMemberInfo", userNo);
+	}
+
+	public BodyInfo getBodyInfo(SqlSessionTemplate sqlSession, String userId) {
+		return sqlSession.selectOne("memberMapper.getBodyInfo", userId);
+	}
 	
 	
 
