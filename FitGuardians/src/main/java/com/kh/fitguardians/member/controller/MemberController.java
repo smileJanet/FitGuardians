@@ -136,6 +136,7 @@ public class MemberController {
             m.getProfilePic();
         m.setProfilePic(profile);
 		
+        System.out.println(memberInfo);
 		// 회원 추가 정보가 있는지 확인
         if (memberInfo != null && !memberInfo.isEmpty()) {
             // 추가 정보가 있으면 추가 정보 저장
@@ -143,7 +144,7 @@ public class MemberController {
             
             // 추가 정보중에서 기저질환이 없으면 값을 비게 만들기
             if(info.getDisease().equals("없음")) {
-            	info.setDisease("");
+            	info.setDisease(null);
             }
             
             int result = mService.insertMemberWithInfo(m, info);
@@ -246,9 +247,32 @@ public class MemberController {
 		}
 	}
 	
+	// mypage 관련
 	@RequestMapping("mypage.me")
-	public String myPage() {
+	public String myPage(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		Member m = (Member) session.getAttribute("loginUser");
+		MemberInfo mInfo = mService.selectMemberInfo(m.getUserNo());
+		Gson gson = new Gson();
+		String diseaseJson = gson.toJson(mInfo.getDisease());
+		
+		request.setAttribute("memberInfo", mInfo);
+		request.setAttribute("disease", diseaseJson);
+		
 		return "common/myPage";
 	}
+	
+	@ResponseBody
+	@RequestMapping("changeDisease.me")
+	public String updateDisease(MemberInfo mInfo) {
+		
+		int result = mService.updateDisease(mInfo);
+		if(result > 0) {
+			return "DDDY";
+		}else {
+			return "DDDN";
+		}
+	}
+	
 	
 }

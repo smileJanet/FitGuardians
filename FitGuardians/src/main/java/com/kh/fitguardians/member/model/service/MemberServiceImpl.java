@@ -87,6 +87,16 @@ public class MemberServiceImpl implements MemberService{
 		return mDao.updateAttStatus(sqlSession, qr);
 	}
 
+	@Override
+	public MemberInfo selectMemberInfo(int userNo) {
+		return mDao.selectMemberInfo(sqlSession, userNo);
+	}
+
+	@Override
+	public int updateDisease(MemberInfo mInfo) {
+		return mDao.updateDisease(sqlSession, mInfo);
+	}
+
 
 	
 

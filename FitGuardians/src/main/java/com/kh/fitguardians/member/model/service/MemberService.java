@@ -30,4 +30,7 @@ public interface MemberService {
 	
 	public int updateAttStatus(QrInfo qr);
 	
+	public MemberInfo selectMemberInfo(int userNo);
+	
+	public int updateDisease(MemberInfo mInfo);	
 }

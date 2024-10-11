@@ -281,31 +281,31 @@
 									<div class="card-body" id="disease-card">
 									<form action="">
 										<div class="input-group mb-3">
-											<input type="number" id="height" name="height" class="form-control" placeholder="키 (cm)">
-			            					<input type="number" id="weight" name="weight" class="form-control" placeholder="몸무게 (kg)">
+											<input type="number" id="height" name="height" class="form-control" placeholder="키 (cm)" value="${ memberInfo.height }" required>
+			            					<input type="number" id="weight" name="weight" class="form-control" placeholder="몸무게 (kg)" value="${ memberInfo.weight }" required>
 										</div>
 										<select id="disease" name="disease" class="mb-3 sumoselect_multiple" multiple="multiple">
 											<option value="없음">없음</option>
-											<option value="혈압조절장애">혈압조절장애(고혈압, 저혈압)</option>
-											<option value="고지혈증">고지혈증</option>
-											<option value="당뇨">당뇨</option>
-											<option value="대사증후군">대사증후군</option>
-											<option value="디스크">디스크(목, 허리)</option>
-											<option value="천식">천식</option>
-											<option value="심혈관_질환">심혈관 질환</option>
-											<option value="골다공증">골다공증</option>
-											<option value="관절염">관절염(류마티스 등)</option>
-											<option value="편두통_혹은_만성두통">편두통 혹은 만성두통</option>
-											<option value="갑상선_장애">디스크(목, 허리)</option>
+											<option value="혈압조절장애" <c:if test="${memberInfo.disease.contains('혈압조절장애(고혈압, 저혈압)')}">selected</c:if>>혈압조절장애(고혈압, 저혈압)</option>
+											<option value="고지혈증" <c:if test="${memberInfo.disease.contains('고지혈증')}">selected</c:if>>고지혈증</option>
+											<option value="당뇨" <c:if test="${memberInfo.disease.contains('당뇨')}">selected</c:if>>당뇨</option>
+											<option value="대사증후군" <c:if test="${memberInfo.disease.contains('대사증후군')}">selected</c:if>>대사증후군</option>
+											<option value="디스크(허리)" <c:if test="${memberInfo.disease.contains('디스크(허리)')}">selected</c:if>>디스크(허리)</option>
+											<option value="천식" <c:if test="${memberInfo.disease.contains('천식')}">selected</c:if>>천식</option>
+											<option value="심혈관 질환" <c:if test="${memberInfo.disease.contains('심혈관 질환')}">selected</c:if>>심혈관 질환</option>
+											<option value="골다골증" <c:if test="${memberInfo.disease.contains('골다골증')}">selected</c:if>>골다골증</option>
+											<option value="관절염" <c:if test="${memberInfo.disease.contains('관절염')}">selected</c:if>>관절염(류마티스 등)</option>
+											<option value="편두통 혹은 만성두통" <c:if test="${memberInfo.disease.contains('편두통 혹은 만성두통')}">selected</c:if>>편두통 혹은 만성두통</option>
+											<option value="갑상선장애" <c:if test="${memberInfo.disease.contains('갑상선장애')}">selected</c:if>>갑상선 장애</option>
 										</select>
-										<select id="goal" name="goal" class="custom-select mb-2">
-											<option selected>운동 목표</option>
-											<option value="체중_감량">체중 감량</option>
-											<option value="근력_증가">근력 증가</option>
-											<option value="수술_후_재활">수술 후 재활</option>
-											<option value="유연성_운동">유연성 운동</option>
-											<option value="균형_증가">균형 증가</option>
-											<option value="심혈관_기능증진">심혈관 기능증진</option>
+										<select id="goal" name="goal" class="custom-select mb-2" >
+											<option value="없음">운동 목표</option>
+											<option value="체중 감량" <c:if test="${memberInfo.goal.contains('체중 감량')}">selected</c:if>>체중 감량</option>
+											<option value="근력 증가" <c:if test="${memberInfo.goal.contains('근력 증가')}">selected</c:if>>근력 증가</option>
+											<option value="수술 후 재활" <c:if test="${memberInfo.goal.contains('수술 후 재활')}">selected</c:if>>수술 후 재활</option>
+											<option value="유연성 운동" <c:if test="${memberInfo.goal.contains('유연성 운동')}">selected</c:if>>유연성 운동</option>
+											<option value="균형 증가" <c:if test="${memberInfo.goal.contains('균형 증가')}">selected</c:if>>균형 증가</option>
+											<option value="심혈관 기능 증진" <c:if test="${memberInfo.goal.contains('심혈관 기능 증진')}">selected</c:if>>심혈관 기능증진</option>
 										</select>
 										
 										<button type="button" class="btn btn-primary" onclick="changeDisease();">변경하기</button>
@@ -318,11 +318,19 @@
 										$(".sumoselect_multiple").SumoSelect({
 											placeholder: "기저질환",
 										});
+										
+										 // 초기 선택 값 설정
+									    const initialValues = $("#disease").val(); // 초기 선택된 값 가져오기
+									    if (initialValues) {
+									        initialValues.forEach(value => {
+									            $(".sumoselect_multiple")[0].sumo.selectItem(value);
+									        });
+									    }
 
 										$("#disease").on("change",()=>{
 											let disease = $("#disease").val();
 											const none = disease.includes('없음');
-
+											
 											
 											// for(d of disease){if(d === '없음'){$(".sumoselect_multiple")[0].sumo.unSelectItem(2);}}
 											if(none){
@@ -334,15 +342,16 @@
 												
 												$(".sumoselect_multiple")[0].sumo.reload();
 											}else{
-										 		$(".sumoselect_multiple option").each(function () {
-								        	        $(this).prop('disabled', false);
-								            	});
+												$(".sumoselect_multiple option").each(function () {
+													$(this).prop('disabled', false);
+												});
 												$(".sumoselect_multiple")[0].sumo.unSelectItem(0);
 												$(".sumoselect_multiple")[0].sumo.reload();
 										
 											}
 
 										});
+										
 									});
 
 									function changeDisease(){
@@ -350,11 +359,39 @@
 										let weight = $("input[name=weight]").val();
 										var disease = $("select[name=disease]").val();
 										var goal = $("select[name=goal]").val();
+										let mHeight = ${memberInfo.height};
+										let mWeight = ${memberInfo.weight};
+										let mDisease = ${disease};
+										let mGoal = "${memberInfo.goal}";
 										
-										console.log(height);
-										console.log(weight);
-										console.log(disease);
-										console.log(goal);
+										if(parseInt(height) === mHeight && parseInt(weight) === mWeight && 
+												   JSON.stringify(disease) === JSON.stringify(mDisease) && goal === mGoal){
+											Swal.fire({ icon:'warning',	title: '바뀐 정보가 없습니다.' })
+										}else{
+											$.ajax({
+												url:"changeDisease.me",
+												method:"POST",
+												data:{
+													"userNo": ${loginUser.userNo},
+													"height": height,
+													"weight": weight,
+													"disease": disease,
+													"goal": goal,
+												},
+												success:(result)=>{
+													if(result === 'DDDY'){
+														Swal.fire({ icon:'success',	title: '변경 성공!' })
+													}else{
+														Swal.fire({ icon:'warning',	title: '정보변경에 실패 했습니다.' })
+													}
+												},
+												error:()=>{
+													console.log("disease change ajax failed");
+													
+												},
+											})
+										}
+										
 									}
 							</script>
 						</div>
@@ -431,7 +468,7 @@
 			</div>
 		</div>
 	</div>
-
+	
 </body>
 
 </html>

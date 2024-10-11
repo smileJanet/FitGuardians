@@ -46,4 +46,12 @@ public class MemberDao {
 		return sqlSession.update("memberMapper.updateAttStatus", qrResult);
 	}
 
+	public MemberInfo selectMemberInfo(SqlSessionTemplate sqlSession, int userNo) {
+		return sqlSession.selectOne("memberMapper.selectMemberInfo", userNo);
+	}
+
+	public int updateDisease(SqlSessionTemplate sqlSession, MemberInfo mInfo) {
+		return sqlSession.update("memberMapper.updateDisease", mInfo);
+	}
+
 }
