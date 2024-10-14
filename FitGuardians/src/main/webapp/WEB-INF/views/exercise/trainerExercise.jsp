@@ -20,10 +20,6 @@
 <!-- 외부 css파일 -->
 <link href="resources/css/trainerExercise.css" rel="stylesheet"
 	type="text/css">
-
-<!-- 외부 자바스크립트 파일 : 캘린더 -->
-<script defer src ="resources/js/exerciseCalendar.js"></script>
-
 </head>
 
 <body id="page-top">
@@ -63,49 +59,59 @@
 						                </button>
 						            </div>
 						            <div class="modal-body">
-						            	<p id="modalExerciseNo" style="display:none;"></p>
 						                <p id="modalWorkoutTitle"></p>
 						                <p id="modalWorkoutCategory"></p>
 						                <p id="modalDifficulty"></p>
 						                <p id="modalDescription"></p>
 						            </div>
 						            <div class="modal-footer">
-						                <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="deleteExercise();">삭제</button>
+						                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 						            </div>
 						        </div>
 						    </div>
 						</div>
+
+						<!-- <script>
+						let calendar;
 						
-						<!-- 모달 내용 수정, 삭제 스크립트-->
-						<script>
-							function deleteExercise(){
-								
-								let exerciseNo = $('#modalExerciseNo').text();
-								
-								if(confirm("정말로 삭제하시겠습니까?")){
-									$.ajax({
-										url : 'deleteExercise.ex',
-										data : {exerciseNo : exerciseNo},
-										success : function(result){
-											if(result ==="success"){
-												console.log("성공구리");
-											}else{
-												console.log("DB이상함구리");
-											}
-										},
-										error : function(){
-											console.log('실패구리');
-										},
-										
-									})
-									alert("성공적으로 삭제하였습니다.");
-								}
-								
-							}
-						
-						</script>
-						
-						
+                        $(document).ready(function(){
+                        	
+                        	$('.selectTrainee').change(function(){
+                        		let userName = $(this).find('option:selected').text(); // 선택된 회원의 이름 표시. val()은 회원의 아이디 표시
+                            	let userId = $(this).find('option:selected').val(); // 선택된 회원의 아이디
+
+                        		$('#trainee').text(userName + "님의 운동 계획하기");
+                        		$('#addExerciseList').text(userName + "님의 스케줄 등록하기");
+                        		
+                        		// 트레이너가 선택한 회원의 모든 운동 스케줄 조회
+                        		// 전달값이 userId 하나이므로
+                        		// 2) String 문자열로 값 보내고 받기
+                            	if(userId !== "none"){
+                            		$.ajax({
+                            			url: "selectWorkout.ex",
+                            			method : "post",
+                            			// contentType:"application/json; charset=utf-8", // 이것만으론 JSON 문자열임을 알릴 수 없다. contentType + JSON.stringify()로 변환해야 한다.
+                            			// JSON.stringify를 사용하지 않는다면?
+                            			// 이 경우 컨트롤러에서 request.getParameter 방식으로 userId를 가져와야 한다.
+                            			// @RequestParam 사용
+                            			data : {userId : userId},
+                            			success: function(response){
+                            				console.log("조회 성공");
+                            				
+                            				showWorkouts(response);
+                            				
+                            			},
+                            			error : function(){
+                            				console.log("조회 실패");
+                            			},
+                            		})
+                            	}
+                        	})
+                        	
+                        })
+              
+                        </script> -->
+
 						<div style="display: flex;">
 							<div class="card mb-3 py-2 border-bottom-info"
 								style="width: 50%; margin: 50px; margin-right: 25px;">
@@ -321,7 +327,7 @@
 						<div class="card shadow mb-4">
 							<div class="card-header py-3">
 								<h6 class="m-0 font-weight-bold text-primary"
-									id="addExerciseList">운동 플랜 등록하기</h6>
+									id="addExerciseList">스케줄 등록</h6>
 							</div>
 							<div class="card-body" id='calendar'>
 								<!-- 캘린더 들어오는 자리 -->
@@ -368,15 +374,7 @@
 											name="calendar_date"> <label for="taskId"
 											class="col-form-label">운동 내용</label>
 										<textarea class="form-control" id="calendar_description"
-											name="calendar_description" style="height: 200px;">(이름입력)님, 안녕하세요! 
-금일 운동 스케줄을 알려드립니다.
-
-
-
-
-오늘도 좋은 운동이 되시길 바랍니다. 감사합니다.
-FitGuardians팀 트레이너
-										</textarea>
+											name="calendar_description" style="height: 200px;"></textarea>
 
 									</div>
 								</div>
@@ -385,9 +383,242 @@ FitGuardians팀 트레이너
 									<button type="button" class="btn btn-secondary"
 										data-dismiss="modal" id="sprintSettingModalClose">취소</button>
 								</div>
+
 							</div>
 						</div>
 					</div>
+
+					<script>
+					
+                    // 캘린더 데이터 관리
+                    document.addEventListener('DOMContentLoaded', function() {
+                    	
+    					// 캘린더 값 조회 (원래 위에 있었는데 도저히 안되서 이사옴)
+                        $(document).ready(function(){
+                        	
+                        	$('.selectTrainee').change(function(){
+                        		let userName = $(this).find('option:selected').text(); // 선택된 회원의 이름 표시. val()은 회원의 아이디 표시
+                            	let userId = $(this).find('option:selected').val(); // 선택된 회원의 아이디
+
+                        		$('#trainee').text(userName + "님의 운동 계획하기");
+                        		$('#addExerciseList').text(userName + "님의 스케줄 등록하기");
+                        		
+                        		// 트레이너가 선택한 회원의 모든 운동 스케줄 조회
+                        		// 전달값이 userId 하나이므로
+                        		// 2) String 문자열로 값 보내고 받기
+                            	if(userId !== "none"){
+                            		$.ajax({
+                            			url: "selectWorkout.ex",
+                            			method : "post",
+                            			// contentType:"application/json; charset=utf-8", // 이것만으론 JSON 문자열임을 알릴 수 없다. contentType + JSON.stringify()로 변환해야 한다.
+                            			// JSON.stringify를 사용하지 않는다면?
+                            			// 이 경우 컨트롤러에서 request.getParameter 방식으로 userId를 가져와야 한다.
+                            			// @RequestParam 사용
+                            			data : {userId : userId},
+                            			success: function(response){
+                            				console.log("조회 성공");
+                            				console.log(response);
+                            				showWorkouts(response);
+                            				
+                            			},
+                            			error : function(){
+                            				console.log("조회 실패");
+                            			},
+                            		})
+                            	}
+                        	})
+                        	
+                        })
+                    	
+                    // 캘린더 설정화면	
+				    const calendarEl = document.getElementById('calendar');
+				    const calendar = new FullCalendar.Calendar(calendarEl, {
+				        themeSystem: 'bootstrap5',
+				        height: '600px',
+				        initialView: 'dayGridMonth',
+				        navLinks: true,
+				        editable: true,
+				        nowIndicator: true,
+				        dayMaxEvents: true,
+				        selectable: true,
+				        weekNumbers: true,
+				        displayEventTime: false,
+				        headerToolbar: {
+				            start: 'dayGridMonth,dayGridWeek,dayGridDay',
+				            center: 'title',
+				            end: 'today prev,next,addEventButton'
+				        },
+				        locale: 'ko',
+				        events: [], // 조회 시 추가됨
+				        customButtons: {
+				            addEventButton: {
+				                text: '일정 추가',
+				                click: function() {
+				                    $("#calendarModal").modal("show");
+				                }
+				            }
+				        },
+				        eventClick: function(info) {
+				        	
+				        	const plan = info.event;
+				        	
+				        	// 난이도에 대한 switch문 
+						    switch (plan.extendedProps.difficulty) {
+						    case 'M':
+						        difficultyLabel = '중간';
+						        break;
+						    case 'L':
+						        difficultyLabel = '쉬움';
+						        break;
+						    case 'H':
+						        difficultyLabel = '어려움';
+						        break;
+						    default:
+						        difficultyLabel = '없음';
+							}
+				        	
+						 	// 표적에 대한 switch문 
+						    switch (plan.extendedProps.workoutCategory) {
+						    case 'UE':
+						        category = '상체';
+						        break;
+						    case 'ABS':
+						        category = '복부, 코어';
+						        break;
+						    case 'LE':
+						        category = '하체';
+						        break;
+						    default:
+						        category = '없음';
+							}
+				        	
+			        	    // Populate the modal with the event details
+			        	    $('#modalWorkoutTitle').text('제목: ' + plan.title);
+						    $('#modalWorkoutCategory').text(' 운동 표적: '+ category);
+						    $('#modalDifficulty').text('운동 난이도: ' + difficultyLabel);
+						    $('#modalDescription').text('운동 설명: '+ plan.extendedProps.description);
+							
+			        	    // Show the modal
+			        	    $('#eventModal').modal('show');
+				        },
+				    }); // calendar 로드 스크립트
+				   
+				    
+				    // 캘린더에 데이터 추가할 값 받기
+				    let ajaxRequest = null;
+				
+				    $("#addCalendar").on("click", function() {
+				    	let userId = $(".selectTrainee").find('option:selected').val();
+				        let title = $("#calendar_title").val();
+				        let difficulty = $(".difficulty:checked").val();
+				        let date = $("#calendar_date").val();
+				        let selectTarget = $(".target:checked").val();
+				        let description = $("#calendar_description").val();
+				
+				        // 정규화
+				        if (!userId || userId === "none") {
+				            alert("회원을 먼저 선택해 주세요.");
+				        	return;
+				        } else if (!title) {
+				            alert("제목을 입력하세요.");
+				            return;
+				        } else if (!difficulty) {
+				            alert("난이도를 선택하세요.");
+				            return;
+				        } else if (!date) {
+				            alert("일자를 선택하세요.");
+				            return;
+				        } else if (!description) {
+				            alert("설명을 작성하세요.");
+				            return;
+				        } else if (!selectTarget) {
+				            alert("표적 부위를 선택하세요.");
+				            return;
+				        } else {
+				        	
+				        	// 여기에 ajax 시전
+				        	// ajax 2번 호출되고 있어서 abort 사용
+				        	if(ajaxRequest !== null){
+				        		ajaxRequest.abort();
+				        	}
+				        	
+				        	// 1) JSON객체로 값 보내고 받기
+				        	ajaxRequest = $.ajax({
+				        		url : "addExercise.bo",
+				        		method : "post",
+				        		data: JSON.stringify({ // JSON.stringify와 
+				        		      userId: userId,
+				        		      title: title,
+				        		      difficulty: difficulty,
+				        		      date: date,
+				        		      description: description,
+				        		      selectTarget: selectTarget
+				        		  }),
+				        		contentType : "application/json; charset=utf-8", // contetntType이 같이 사용되야 JSON객체로 주고받을 수 있다.
+				        		success: function(response){
+				        			
+				        			// Controller에서 삼항 연산자로 성공하면 "success"가 나오게, 실패하면 "error"가 나오게 설정했다.
+				        			// response가 success라는 단어로 나온다면
+				        			if(response.result === "success"){
+				        				alert("운동 계획이 성공적으로 추가되었습니다.");
+				                      
+					        			// 값 초기화
+					        			$("#calendarModal").modal("hide");
+					        			$("#calendar_title").val("");
+					        			$("#calendar_description").val("");
+					        			$("#calendar_date").val("");
+					        			$("input[type='checkbox']").prop('checked', false);
+					        			
+				        			}
+				        		
+				        		},
+				        		error : function(){
+				        			console.log("추가 실패");
+				        		},
+				        	});
+				        }
+				    });// 캘린더에 값 넣기(insert문)
+				    
+				    // 캘린더 렌더링
+				    calendar.render();
+				    
+				    // 삽입한 캘린더 값으로부터 결과 조회하고 캘린더에 표시하기
+				    function showWorkouts(response){
+
+				    	if (Array.isArray(response) && response.length > 0) {
+				            response.forEach(event => {
+				            	
+				            	// console.log("Adding event:", event.workoutTitle);
+				            	 
+				                // Extract values from each event object
+				                let eventDate = event.workoutDate; // Get workoutDate
+				                let eventStart = eventDate; // Using the same date for start
+				                let eventEnd = eventDate; // Adjust if you need a specific duration
+				                
+				                // Add each event to the calendar
+				                calendar.addEvent({
+				                    title: event.workoutTitle,
+				                    start: new Date(event.workoutDate), // Ensure this is a Date object
+				                    extendedProps: {
+				                        difficulty: event.difficulty,
+				                        workoutCategory: event.workoutCategory,
+				                        description: event.description,
+				                    }
+				                });
+				                
+				            });
+
+				            // Render the calendar after adding events
+				            calendar.render();
+				        } else {
+				            console.error("이벤트 삽입이 안되용");
+				        }
+        				
+                    } // showWorkouts
+				    
+				});// document.addEventListener('DOMContentLoaded', function
+                   
+				</script>
 				</div>
 
 				<script>

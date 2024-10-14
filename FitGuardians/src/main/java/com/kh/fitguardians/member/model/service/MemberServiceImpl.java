@@ -1,7 +1,5 @@
 package com.kh.fitguardians.member.model.service;
 
-import java.util.ArrayList;
-
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailSender;
@@ -10,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.kh.fitguardians.common.model.vo.QrInfo;
 import com.kh.fitguardians.member.model.dao.MemberDao;
-import com.kh.fitguardians.member.model.vo.BodyInfo;
 import com.kh.fitguardians.member.model.vo.Member;
 import com.kh.fitguardians.member.model.vo.MemberInfo;
 
@@ -91,42 +88,33 @@ public class MemberServiceImpl implements MemberService{
 	}
 
 	@Override
-	public ArrayList<Member> getTraineeList(String userId) {
-		return mDao.getTraineeList(sqlSession, userId);
+	public MemberInfo selectMemberInfo(int userNo) {
+		return mDao.selectMemberInfo(sqlSession, userNo);
 	}
 
 	@Override
-	public Member getTraineeDetails(String userId) {
-		return mDao.getTraineeDetails(sqlSession, userId);
+	public int updateDisease(MemberInfo mInfo) {
+		return mDao.updateDisease(sqlSession, mInfo);
 	}
 
 	@Override
-	public ArrayList<BodyInfo> getTraineeBodyInfo(String userId) {
-		return mDao.getTraineeBodyInfo(sqlSession, userId);
+	public int updateMemberPwd(Member m) {
+		return mDao.updateMemberPwd(sqlSession, m);
 	}
 
 	@Override
-	public MemberInfo getTraineeInfo(int userNo) {
-		return mDao.getTraineeInfo(sqlSession, userNo);
+	public int updateMemberEmail(Member m) {
+		return mDao.updateMemberEmail(sqlSession, m);
 	}
 
 	@Override
-	public int saveBodyInfo(BodyInfo bi) {
-		return mDao.saveBodyInfo(sqlSession, bi);
-	}
-
-	@Override
-	public int deleteBodyInfo(int bodyInfoNo) {
-		return mDao.deleteBodyInfo(sqlSession, bodyInfoNo);
-	}
-
-	@Override
-	public ArrayList<BodyInfo> getRecentInfo(String userId) {
-		return mDao.getRecentInfo(sqlSession, userId);
+	public int deleteMember(int userNo) {
+		return mDao.deleteMember(sqlSession, userNo);
 	}
 
 	
 
+	
 
 	
 	

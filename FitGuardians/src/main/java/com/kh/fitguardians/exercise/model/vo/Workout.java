@@ -31,7 +31,6 @@ public class Workout {
 	
 	private String difficulty;
 	private String description;
-	private String workoutStatus;
 
 	
 }

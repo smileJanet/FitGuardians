@@ -7,6 +7,7 @@
 <title>Fit Guardians</title>
 </head>
 <body>
+Main
 
 <jsp:forward page="Trainee/traineeDashboard.jsp" />
 
