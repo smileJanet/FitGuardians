@@ -22,7 +22,6 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -126,6 +125,10 @@ public class MemberController {
 			}
 		}
 		
+		int result2 = mService.insertQrInfo(qr);
+		int result1 = mService.insertMember(m);
+		
+		
 		
 		// 기본 프로필 사진 설정
         String profile = m.getProfilePic() == null ? 
@@ -133,6 +136,7 @@ public class MemberController {
             m.getProfilePic();
         m.setProfilePic(profile);
 		
+        System.out.println(memberInfo);
 		// 회원 추가 정보가 있는지 확인
         if (memberInfo != null && !memberInfo.isEmpty()) {
             // 추가 정보가 있으면 추가 정보 저장
@@ -144,22 +148,14 @@ public class MemberController {
             }
             
             int result = mService.insertMemberWithInfo(m, info);
-            int result2 = mService.insertQrInfo(qr);
-            if (result > 0 && result2 > 0) {
+            if (result > 0 && result1 > 0 && result2 > 0) {
                 request.getSession().setAttribute("alertMsg", "회원가입이 완료되었습니다. 환영합니다!");
                 return "Trainee/traineeDashboard";
             }
         } else {
             // 추가 정보가 없으면 기존 방식대로 회원가입 처리
-        	MemberInfo info = new MemberInfo();
-        	info.setUserNo(m.getUserNo());
-        	info.setHeight(0);
-        	info.setWeight(0);
-        	info.setDisease(null);
-        	info.setGoal("");
-            int result = mService.insertMemberWithInfo(m, info);
-            int result2 = mService.insertQrInfo(qr);
-            if (result > 0 && result2 > 0) {
+            int result = mService.insertMember(m);
+            if (result > 0 && result1 > 0 && result2 > 0) {
                 request.getSession().setAttribute("alertMsg", "회원가입이 완료되었습니다. 환영합니다!");
                 return "Trainee/traineeDashboard";
             }
@@ -256,13 +252,13 @@ public class MemberController {
 	public String myPage(HttpServletRequest request) {
 		HttpSession session = request.getSession();
 		Member m = (Member) session.getAttribute("loginUser");
-		if(m.getUserLevel().equals("2")) {
-			MemberInfo mInfo = mService.selectMemberInfo(m.getUserNo());
-			Gson gson = new Gson();
-			String diseaseJson = gson.toJson(mInfo.getDisease());
-			request.setAttribute("memberInfo", mInfo);
-			request.setAttribute("disease", diseaseJson);
-		}
+		MemberInfo mInfo = mService.selectMemberInfo(m.getUserNo());
+		Gson gson = new Gson();
+		String diseaseJson = gson.toJson(mInfo.getDisease());
+		
+		request.setAttribute("memberInfo", mInfo);
+		request.setAttribute("disease", diseaseJson);
+		
 		return "common/myPage";
 	}
 	
@@ -277,65 +273,6 @@ public class MemberController {
 			return "DDDN";
 		}
 	}
-	
-	@ResponseBody
-	@RequestMapping("checkPwd.me")
-	public String memberPwdCheck(Member m , String userEncoPwd, HttpServletRequest request) {
-		// Member login = (Member) request.getSession().getAttribute("loginUser");
-		if(bcryptPasswordEncoder.matches(m.getUserPwd(), userEncoPwd)) {
-			return "YYYP";
-		}else {
-			return "NNNP";
-		}
-		
-	}
-	
-	@ResponseBody
-	@RequestMapping("changePwd.me")
-	public String updateMemberPwd(Member m, HttpServletRequest request) {
-		// 비밀번호 암호화작업
-		String encPwd = bcryptPasswordEncoder.encode(m.getUserPwd());
-		m.setUserPwd(encPwd);
-		
-		int result = mService.updateMemberPwd(m);
-		if(result > 0) {
-			Member loginUser = mService.loginMember(m);
-			request.getSession().setAttribute("loginUser", loginUser);
-			return "YYCP";
-		}else {
-			return "NNCP";
-		}
-		
-	}
-	
-	@ResponseBody
-	@RequestMapping("changeEmail.me")
-	public String updateMemberEmail(Member m, HttpServletRequest request) {
-		System.out.println(m);
-		int result = mService.updateMemberEmail(m);
-		if(result > 0) {
-			Member updateMember = mService.loginMember(m);
-			request.getSession().setAttribute("loginUser", updateMember);
-			return "YYYE";
-		}else {
-			return "NNNE";
-		}
-		
-	}
-	
-	@ResponseBody
-	@RequestMapping("delete.me")
-	public String deleteMember(int userNo, HttpServletRequest request) {
-		
-		int result = mService.deleteMember(userNo);
-		if(result > 0) {
-			request.getSession().invalidate();
-			return "YYYD";
-		}else {
-			return "NNND";
-		}
-	}
-	
 	
 	
 }

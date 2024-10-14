@@ -33,10 +33,4 @@ public interface MemberService {
 	public MemberInfo selectMemberInfo(int userNo);
 	
 	public int updateDisease(MemberInfo mInfo);	
-	
-	public int updateMemberPwd(Member m);
-	
-	public int updateMemberEmail(Member m);
-	
-	public int deleteMember(int userNo);
 }
