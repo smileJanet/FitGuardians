@@ -254,6 +254,8 @@
 		     , goal
 		  from member_info
 		where user_no = #{userNo}
+	</select>
+	
 	<select id="selectMemberInfo" resultMap="memberInfoResult">
 		select user_no
 		     , height
