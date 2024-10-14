@@ -26,6 +26,13 @@ public interface MemberService {
 	// 로그인
 	public Member loginMember(Member m);
 	
+	// 출첵 qr체크
+	public QrInfo qrCheck(QrInfo qr);
+	
+	public int updateAttendance(QrInfo qr);
+	
+	public int updateAttStatus(QrInfo qr);
+	
 	// 트레이너 - 멤버 구하기 + 정보 조회
 	public ArrayList<Member> getTraineeList(String userId);
 	
@@ -46,13 +53,6 @@ public interface MemberService {
 
 	// 최근 6개 신체정보 조회(차트용)
 	ArrayList<BodyInfo> getRecentInfo(String userId);
-	
-	// 출첵 qr체크
-	public QrInfo qrCheck(QrInfo qr);
-	
-	public int updateAttendance(QrInfo qr);
-	
-	public int updateAttStatus(QrInfo qr);
 
 	// 트레이너 정보 알아오기
 	Member getTrainerInfo(String trainerId);
@@ -63,4 +63,8 @@ public interface MemberService {
 	// 회원 신체정보
 	BodyInfo getBodyInfo(String userId);
 	
+	public MemberInfo selectMemberInfo(int userNo);
+	
+	public int updateDisease(MemberInfo mInfo);
+
 }

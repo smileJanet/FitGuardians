@@ -48,6 +48,7 @@
 
 </head>
 <body>
+Main
 
 <jsp:include page="common/topBar.jsp" />
 

@@ -65,18 +65,13 @@
 		<!-- Heading -->
 		<div class="sidebar-heading">회원관리</div>
 
-        <!-- Nav Item - Pages Collapse Menu -->
-        <li class="nav-item">
-          <a
-            class="nav-link collapsed"
-            href="traineeList.me"
-            aria-expanded="true"
-            aria-controls="collapseTwo"
-          >
-            <i class="fas fa-fw fa-cog"></i>
-            <span>내 회원 정보</span>
-          </a>
-        </li>
+		<!-- Nav Item - Pages Collapse Menu -->
+		<li class="nav-item"><a class="nav-link collapsed"
+			href="../Trainer/traineeManagement.jsp" data-toggle="collapse"
+			data-target="#collapseTwo" aria-expanded="true"
+			aria-controls="collapseTwo"> <i
+				class="fas fa-fw fa-cog"></i> <span>내 회원 정보</span>
+		</a></li>
 
 		<!-- Nav Item - Utilities Collapse Menu -->
 		<li class="nav-item"><a class="nav-link collapsed" href="#"

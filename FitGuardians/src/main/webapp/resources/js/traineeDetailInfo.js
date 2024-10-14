@@ -27,7 +27,7 @@ $(document).ready(function(){
             let value = traineeName + "의 측정 결과입니다. <br />"
                         + "<span class='result' style='margin:10px'> · 골격근량 : </span> <span>" + smm.toFixed(1) + " </span> <br/> "
                         + "<span class='result' style='margin:10px'> · BMI(체질량지수) : </span> <span>" + bmi.toFixed(1) + " </span> <br/>"
-                        + "<span class='result' style='margin:10px'> · 체지방량 : </span> <span>" +  fat.toFixed(1) + " </span> ";
+                        + "<span class='result' style='margin:10px'> · 체지방량 : </span> <span>" + fat.toFixed(1) + " </span> ";
                         
             $('.bodyResult').attr('id', 'bodyResult');
             $('#bodyResult').html(value);
@@ -42,9 +42,9 @@ $(document).ready(function(){
            fat = 1.20 * bmi + 0.23 * traineeAge - 16.2;
 
             let value = traineeName + "의 측정 결과입니다. <br />"
-                        + "<span class='result' style='margin:10px'> · 골격근량 : </span> <span>" +  smm.toFixed(1)+ " </span> <br/> "
-                        + "<span class='result' style='margin:10px'> · BMI(체질량지수) : </span> <span>" + bmi.toFixed(1)+ " </span> <br/>"
-                        + "<span class='result' style='margin:10px'> · 체지방량 : </span> <span>" + fixed.toFixed(1) + " </span> ";
+                        + "<span class='result' style='margin:10px'> · 골격근량 : </span> <span>" + smm.toFixed(1) + " </span> <br/> "
+                        + "<span class='result' style='margin:10px'> · BMI(체질량지수) : </span> <span>" + bmi.toFixed(1) + " </span> <br/>"
+                        + "<span class='result' style='margin:10px'> · 체지방량 : </span> <span>" + fat.toFixed(1) + " </span> ";
                         
             $('.bodyResult').attr('id', 'bodyResult');
             $('#bodyResult').html(value);
@@ -77,10 +77,8 @@ $(document).ready(function(){
                 bmi : bmi,
             },
             success : function(result){
-				Swal.fire({
-				  title: "성공적으로 저장하였습니다.",
-				  icon: "success",
-				});
+                console.log(result);
+                alert("성공적으로 저장하였습니다.");
                 
                 // 값 초기화
                 $('#height').val();
@@ -89,7 +87,7 @@ $(document).ready(function(){
                 
                 },
             error : function(){
-                //console.log('bodyInfo 삽입 실패');
+                console.log('bodyInfo 삽입 실패');
                 },
         });
     }
@@ -98,34 +96,24 @@ $(document).ready(function(){
     $('.deleteButton').on('click', function(){
         let bodyInfoNo = $(this).data("body-info-no");
         //console.log(bodyInfoNo); // 데이터 번호가 맞는지 확인함 (맞는걸 확인했음)
-        
-        Swal.fire({
-		  title: "정말로 삭제하시겠습니까?",
-		  text: "삭제 후 복구할 수 없습니다.",
-		  icon: "warning",
-		  showCancelButton: true,
-		  confirmButtonColor: "#3085d6",
-		  cancelButtonColor: "#d33",
-		  confirmButtonText: "삭제"
-		}).then((result) => {
-		  if (result.isConfirmed) {
-              $.ajax({
-	                url : 'deleteBodyInfo.me',
-	                method : 'post',
-	                data : {bodyInfoNo : bodyInfoNo},
-	                success: function(result){
-                        Swal.fire({
-                            title: "성공적으로 삭제하였습니다",
-                            icon: "success"
-                          });
-	                },
-	                error : function(){
-	                    console.log("error got occured");
-	                },
-	            });
 
-		  }
-		});
+        let yes = confirm("정말로 삭제하시겠습니까?");
+
+        if(yes){
+            // 삭제 ajax 실행할 것
+            $.ajax({
+                url : 'deleteBodyInfo.me',
+                method : 'post',
+                data : {bodyInfoNo : bodyInfoNo},
+                success: function(result){
+                   alert('성공적으로 삭제하였습니다.');
+                },
+                error : function(){
+                    console.log("error got occured");
+                },
+            });
+
+        };
 
     })
 
@@ -226,7 +214,7 @@ $(document).ready(function(){
                     ticks: {
                         beginAtZero: true,
                         min:0,
-                        max:45,
+                        max:50,
                         callback: function(value) {
                             if (value <= 19) return '~19%';
                             else if (value > 19 && value <= 23) return '23%';
@@ -319,7 +307,7 @@ $(document).ready(function(){
                     ticks: {
                         beginAtZero: true,
                         min:0,
-                        max:50,
+                        max:60,
                         callback: function(value) {
                             if (value < 16.0) return '~16.0%';
                             else if (value < 18.5) return '18.5%';
@@ -409,7 +397,7 @@ $(document).ready(function(){
                  yAxes: [{
                     ticks: {
                         min:0,
-                        max:30,
+                        max:40,
                         beginAtZero: true,
                         maxTicksLimit: 5,
                         callback: function(value) {

@@ -202,7 +202,8 @@
 						                <p id="modalDescription"></p>
 						            </div>
 						            <div class="modal-footer">
-						                <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="deleteExercise();">삭제</button>
+						                <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+										<button type="button" class="btn btn-danger" data-dismiss="modal" onclick="deleteExercise();">삭제</button>
 						            </div>
 						        </div>
 						    </div>
@@ -462,7 +463,7 @@
 						<div class="card shadow mb-4">
 							<div class="card-header py-3">
 								<h6 class="m-0 font-weight-bold text-primary"
-									id="addExerciseList">운동 플랜 등록하기</h6>
+									id="addExerciseList">스케줄 등록</h6>
 							</div>
 							<div class="card-body" id='calendar'>
 								<!-- 캘린더 들어오는 자리 -->
@@ -526,6 +527,7 @@ FitGuardians팀 트레이너 (트레이너 이름)
 									<button type="button" class="btn btn-secondary"
 										data-dismiss="modal" id="sprintSettingModalClose">취소</button>
 								</div>
+
 							</div>
 						</div>
 					</div>
@@ -536,6 +538,9 @@ FitGuardians팀 트레이너 (트레이너 이름)
                 $(function(){
                 	
                 	$("#aiPlan").click(function(){
+                		let daysPerWeek = $('select[name="days_per_week"]').val();
+                		console.log("Days per week:", daysPerWeek); // 추가된 디버깅 코드
+                		
                         $.ajax({
                 		url:"exercisePlan.bo",
                 		type:"POST",

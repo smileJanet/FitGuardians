@@ -1,6 +1,7 @@
 package com.kh.fitguardians.chat.model.service;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import com.kh.fitguardians.chat.model.dao.ChatDao;
 import com.kh.fitguardians.chat.model.vo.Message;
+import com.kh.fitguardians.chat.model.vo.MessageParticipantDTO;
+import com.kh.fitguardians.member.model.vo.Member;
 
 @Service
 public class ChatServiceImpl implements ChatService {
@@ -30,9 +33,9 @@ public class ChatServiceImpl implements ChatService {
 	}
 
 	@Override
-	public ArrayList<Message> getMessage(int chNo) {
+	public ArrayList<Message> getMessage(int chNo, int senderNo, int receiverNo) {
 		
-		return chatDao.getMessages(sqlSession, chNo);
+		return chatDao.getMessages(sqlSession, chNo, senderNo, receiverNo);
 	}
 
 	@Override
@@ -40,5 +43,34 @@ public class ChatServiceImpl implements ChatService {
 		
 		return chatDao.updateMessageStatus(sqlSession, msgNo, status);
 	}
+
+	
+	
+	
+	// 활성화된 채팅 수 조회
+    @Override
+    public int getActiveChatCount(int userNo) {
+        return chatDao.getActiveChatCount(sqlSession, userNo);
+    }
+    
+    // 활성화된 채팅 참가자 조회 (회원 기준)
+	@Override
+	public ArrayList<MessageParticipantDTO> getActiveParticipantsForUser(int userNo) {
+		return chatDao.getActiveParticipantsForUser(sqlSession, userNo);
+	}
+
+	// 활성화된 채팅 참가자 조회 (트레이너 기준)
+	@Override
+	public ArrayList<MessageParticipantDTO> getActiveParticipantsForTrainer(int userNo) {
+		return chatDao.getActiveParticipantsForTrainer(sqlSession, userNo);
+	}
+
+	// 트레이너 검색
+	@Override
+	public ArrayList<Member> searchTrainers(String keyword) {
+		return chatDao.searchTrainers(sqlSession, keyword);
+	}
+	
+	
 
 }

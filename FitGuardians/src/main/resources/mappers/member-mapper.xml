@@ -18,18 +18,6 @@
 		<result column="qr" property="qr"/>
 		<result column="profile_pic" property="profilePic"/>
 		<result column="membership" property="membership"/>
-		<!-- memberInfo -->
-		<result column="height" property="height" />
-		<result column="weight" property="weight" />
-		<result column="disease" property="disease" />
-		<result column="goal" property="goal" />
-		<!-- bodyInfo -->
-		<result column="body_info_no" property="bodyInfoNo" />
-		<result column="measure_date" property="measureDate" />
-		<result column="bmi" property="bmi" />
-		<result column="fat" property="fat" />
-		<result column="smm" property="smm" />
-		<result column="bi_status" property="biStatus" />
 	</resultMap>
 	
 	<!-- member추가정보 -->
@@ -51,27 +39,25 @@
 		<result column="smm" property="smm"/>
 		<result column="bi_status" property="biStatus" />
 	</resultMap>
-
+	
 	<resultMap type="Schedule" id="scheduleResult">
 		<result column="schedule_no" property="scheduleNo"/>
 		<result column="user_no" property="userNo"/>
-		<result column="schedule_title" property="scheduleTitle"/>
-		<result column="schedule_des" property="scheduleDes"/>
-		<result column="start_date" property="startDate"/>
-		<result column="end_date" property="endDate"/>
-		<result column="dow" property="dow"/>
-		<result column="back_color" property="backColor"/>
+		<result column="height" property="height"/>
+		<result column="weight" property="weight"/>
+		<result column="disease" property="disease" typeHandler="com.kh.fitguardians.common.StringArrayTypeHandler"/>
+		<result column="goal" property="goal"/>
 	</resultMap>
 	
 	<resultMap type="QrInfo" id="qrInfoResult">
-		<result column="qr_no" property="qrNo"/> 
-		<result column="id" property="id"/>
-		<result column="type" property="type"/>
-		<result column="created_at" property="createdAt"/>
-		<result column="valid_date" property="validUntil"/>
-		<result column="attendance" property="attendance"/>
-		<result column="att_status" property="attStatus"/>
-	</resultMap>
+      <result column="qr_no" property="qrNo"/> 
+      <result column="id" property="id"/>
+      <result column="type" property="type"/>
+      <result column="created_at" property="createdAt"/>
+      <result column="valid_date" property="validUntil"/>
+      <result column="attendance" property="attendance"/>
+      <result column="att_status" property="attStatus"/>
+   </resultMap>
 	
 	<select id="checkId" resultType="int">
 		select count(user_id)
@@ -269,20 +255,20 @@
 		 where pt = #{userId}
 		   and user_level = 2
 	</select>
-	
+
 	<select id="getTraineeList" resultMap="memberResultset">
-		SELECT *FROM MEMBER m
-			JOIN BODY_INFO b ON m.USER_ID = b.USER_ID
-			JOIN MEMBER_INFO mi ON m.USER_NO = mi.USER_NO
-			WHERE m.STATUS = 'Y'
-			  AND b.BI_STATUS = 'Y'
-			  AND m.PT = #{userId}
-			  AND b.MEASURE_DATE = (
-			      SELECT MAX(MEASURE_DATE)
-			      FROM BODY_INFO
-			      WHERE USER_ID = m.USER_ID
-			        AND BI_STATUS = 'Y'
-			  )
+	SELECT *FROM MEMBER m
+		JOIN BODY_INFO b ON m.USER_ID = b.USER_ID
+		JOIN MEMBER_INFO mi ON m.USER_NO = mi.USER_NO
+		WHERE m.STATUS = 'Y'
+			AND b.BI_STATUS = 'Y'
+			AND m.PT = #{userId}
+			AND b.MEASURE_DATE = (
+				SELECT MAX(MEASURE_DATE)
+				FROM BODY_INFO
+				WHERE USER_ID = m.USER_ID
+				AND BI_STATUS = 'Y'
+			)
 	</select>
 	
 	<select id="getTraineeDetails" resultMap="memberResultset">
@@ -303,6 +289,38 @@
 		  FROM MEMBER_INFO
 		 WHERE USER_NO = #{userNo}
 	</select>
+
+	
+	<select id="selectMemberInfo" resultMap="memberInfoResultset">
+		select user_no
+		     , height
+		     , weight
+		     , disease
+		     , goal
+		  from member_info
+		where user_no = #{userNo}
+	</select>
+	
+	<update id="updateDisease">
+		update member_info
+		   set height = #{height}
+		     , weight = #{weight}
+		     , disease = #{disease, typeHandler=com.kh.fitguardians.common.StringArrayTypeHandler}
+		     , goal = #{goal}
+		 where user_no = #{userNo}
+	</update>
+	
+	<update id="updateMemberPwd">
+		update member
+		   set user_pwd = #{userPwd}
+		 where user_no = #{userNo}
+	</update>
+	
+	<update id="updateMemberEmail">
+		update member
+		   set email = #{email}
+		 where user_no = #{userNo}
+	</update>
 
 	<insert id="saveBodyInfo">
 	insert 
@@ -378,4 +396,9 @@
 	     where rownum = 1
 	</select>
 	
+	<update id="deleteMember">
+		update member
+		   set status = 'N'
+		 where user_no = #{userNo}
+	</update>
 </mapper>

@@ -49,6 +49,26 @@ public class MemberDao {
 		return sqlSession.update("memberMapper.updateAttStatus", qrResult);
 	}
 
+	public MemberInfo selectMemberInfo(SqlSessionTemplate sqlSession, int userNo) {
+		return sqlSession.selectOne("memberMapper.selectMemberInfo", userNo);
+	}
+
+	public int updateDisease(SqlSessionTemplate sqlSession, MemberInfo mInfo) {
+		return sqlSession.update("memberMapper.updateDisease", mInfo);
+	}
+
+	public Member getTrainerInfo(SqlSessionTemplate sqlSession, String trainerId) {
+		return sqlSession.selectOne("memberMapper.getTrainerInfo", trainerId);
+	}
+
+	public MemberInfo getMemberInfo(SqlSessionTemplate sqlSession, int userNo) {
+		return sqlSession.selectOne("memberMapper.getMemberInfo", userNo);
+	}
+
+	public BodyInfo getBodyInfo(SqlSessionTemplate sqlSession, String userId) {
+		return sqlSession.selectOne("memberMapper.getBodyInfo", userId);
+	}
+
 	public ArrayList<Member> getTraineeList(SqlSessionTemplate sqlSession, String userId) {
 		ArrayList<Member> m = (ArrayList)sqlSession.selectList("memberMapper.getTraineeList", userId);
 		//System.out.println("m의 값" + m);
@@ -78,18 +98,7 @@ public class MemberDao {
 	public ArrayList<BodyInfo> getRecentInfo(SqlSessionTemplate sqlSession, String userId) {
 		return (ArrayList)sqlSession.selectList("memberMapper.getRecentInfo", userId);
 	}
-
-	public Member getTrainerInfo(SqlSessionTemplate sqlSession, String trainerId) {
-		return sqlSession.selectOne("memberMapper.getTrainerInfo", trainerId);
-	}
-
-	public MemberInfo getMemberInfo(SqlSessionTemplate sqlSession, int userNo) {
-		return sqlSession.selectOne("memberMapper.getMemberInfo", userNo);
-	}
-
-	public BodyInfo getBodyInfo(SqlSessionTemplate sqlSession, String userId) {
-		return sqlSession.selectOne("memberMapper.getBodyInfo", userId);
-	}
+	
 	
 	
 
