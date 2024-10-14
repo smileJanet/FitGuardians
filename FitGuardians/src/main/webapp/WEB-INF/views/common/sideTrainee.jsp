@@ -169,13 +169,29 @@ pageEncoding="UTF-8"%>
       </li>
       
       <hr class="sidebar-divider" />
-      
+      <div class="sidebar-heading">헬스장</div>
       <li class="nav-item">
         <a class="nav-link" href="searchGym.ma">
           <i class="fas fa-map"></i>
           <span>헬스장 찾기</span></a
         >
       </li>
+	  
+	  <hr class="sidebar-divider" />
+		
+	  <!-- Heading -->
+	  <div class="sidebar-heading">채팅</div>
+		
+	  <!-- Nav Item - 1:1 Chat -->
+	  <li class="nav-item">
+	      <a class="nav-link" href="chatPage.cp">
+	          <i class="fas fa-comments"></i>
+	          <span>1:1 채팅</span>
+	      </a>
+	  </li>
+
+
+      
       
       
 

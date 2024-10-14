@@ -254,6 +254,14 @@
 		     , goal
 		  from member_info
 		where user_no = #{userNo}
+	<select id="selectMemberInfo" resultMap="memberInfoResult">
+		select user_no
+		     , height
+		     , weight
+		     , disease
+		     , goal
+		  from member_info
+		where user_no = #{userNo}
 	</select>
 	
 	<update id="updateDisease">
@@ -262,6 +270,24 @@
 		     , weight = #{weight}
 		     , disease = #{disease, typeHandler=com.kh.fitguardians.common.StringArrayTypeHandler}
 		     , goal = #{goal}
+		 where user_no = #{userNo}
+	</update>
+	
+	<update id="updateMemberPwd">
+		update member
+		   set user_pwd = #{userPwd}
+		 where user_no = #{userNo}
+	</update>
+	
+	<update id="updateMemberEmail">
+		update member
+		   set email = #{email}
+		 where user_no = #{userNo}
+	</update>
+	
+	<update id="deleteMember">
+		update member
+		   set status = 'N'
 		 where user_no = #{userNo}
 	</update>
 </mapper>
