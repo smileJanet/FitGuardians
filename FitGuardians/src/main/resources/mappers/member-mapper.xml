@@ -254,14 +254,6 @@
 		     , goal
 		  from member_info
 		where user_no = #{userNo}
-	<select id="selectMemberInfo" resultMap="memberInfoResult">
-		select user_no
-		     , height
-		     , weight
-		     , disease
-		     , goal
-		  from member_info
-		where user_no = #{userNo}
 	</select>
 	
 	<update id="updateDisease">

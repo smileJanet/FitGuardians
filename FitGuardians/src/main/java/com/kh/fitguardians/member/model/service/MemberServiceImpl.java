@@ -1,5 +1,7 @@
 package com.kh.fitguardians.member.model.service;
 
+import java.util.ArrayList;
+
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailSender;
@@ -10,6 +12,7 @@ import com.kh.fitguardians.common.model.vo.QrInfo;
 import com.kh.fitguardians.member.model.dao.MemberDao;
 import com.kh.fitguardians.member.model.vo.Member;
 import com.kh.fitguardians.member.model.vo.MemberInfo;
+import com.kh.fitguardians.member.model.vo.Schedule;
 
 @Service
 public class MemberServiceImpl implements MemberService{
@@ -97,6 +100,25 @@ public class MemberServiceImpl implements MemberService{
 		return mDao.updateDisease(sqlSession, mInfo);
 	}
 
+	@Override
+	public int updateMemberPwd(Member m) {
+		return mDao.updateMemberPwd(sqlSession, m);
+	}
+
+	@Override
+	public int updateMemberEmail(Member m) {
+		return mDao.updateMemberEmail(sqlSession, m);
+	}
+
+	@Override
+	public int deleteMember(int userNo) {
+		return mDao.deleteMember(sqlSession, userNo);
+	}
+
+	@Override
+	public ArrayList<Schedule> selectSchedule(int userNo) {
+		return mDao.selectSchedule(sqlSession, userNo);
+	}
 
 	
 
