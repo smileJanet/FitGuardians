@@ -18,18 +18,6 @@
 		<result column="qr" property="qr"/>
 		<result column="profile_pic" property="profilePic"/>
 		<result column="membership" property="membership"/>
-		<!-- memberInfo -->
-		<result column="height" property="height" />
-		<result column="weight" property="weight" />
-		<result column="disease" property="disease" />
-		<result column="goal" property="goal" />
-		<!-- bodyInfo -->
-		<result column="body_info_no" property="bodyInfoNo" />
-		<result column="measure_date" property="measureDate" />
-		<result column="bmi" property="bmi" />
-		<result column="fat" property="fat" />
-		<result column="smm" property="smm" />
-		<result column="bi_status" property="biStatus" />
 	</resultMap>
 	
 	<resultMap type="Schedule" id="scheduleResult">
@@ -51,6 +39,14 @@
 		<result column="valid_date" property="validUntil"/>
 		<result column="attendance" property="attendance"/>
 		<result column="att_status" property="attStatus"/>
+	</resultMap>
+	
+	<resultMap type="MemberInfo" id="memberInfoResult">
+		<result column="user_no" property="userNo"/>
+		<result column="height" property="height"/>
+		<result column="weight" property="weight"/>
+		<result column="disease" property="disease" typeHandler="com.kh.fitguardians.common.StringArrayTypeHandler"/>
+		<result column="goal" property="goal"/>
 	</resultMap>
 	
 	<select id="checkId" resultType="int">
@@ -89,33 +85,6 @@
         	 , #{address}
         	 , #{userLevel} 
         	 , #{profilePic}
-        	 , #{qr}
-        	 )
-	</insert>
-	
-	<select id="selectUserNo" resultType="int">
-	    SELECT seq_mno.currval 
-	      FROM dual
-	</select>
-	
-	<insert id="insertMemberInfo" parameterType="MemberInfo">
-		INSERT 
-		  INTO MEMBER_INFO
-		     (
-		       user_no
-		     , height
-		     , weight
-		     , disease
-		     , goal
-		     )
-		VALUES
-		     (
-		       #{userNo}
-		     , #{height}
-		     , #{weight}
-		     , #{disease}
-		     , #{goal}
-		     )
         	 , #{qr}
         	 )
 	</insert>
@@ -277,284 +246,40 @@
 		   and user_level = 2
 	</select>
 	
-	<select id="getTraineeList" resultMap="memberResultset">
-		SELECT *FROM MEMBER m
-			JOIN BODY_INFO b ON m.USER_ID = b.USER_ID
-			JOIN MEMBER_INFO mi ON m.USER_NO = mi.USER_NO
-			WHERE m.STATUS = 'Y'
-			  AND b.BI_STATUS = 'Y'
-			  AND m.PT = #{userId}
-			  AND b.MEASURE_DATE = (
-			      SELECT MAX(MEASURE_DATE)
-			      FROM BODY_INFO
-			      WHERE USER_ID = m.USER_ID
-			        AND BI_STATUS = 'Y'
-			  )
+	<select id="selectMemberInfo" resultMap="memberInfoResult">
+		select user_no
+		     , height
+		     , weight
+		     , disease
+		     , goal
+		  from member_info
+		where user_no = #{userNo}
 	</select>
 	
-	<select id="getTraineeDetails" resultMap="memberResultset">
-		SELECT * 
-	    FROM MEMBER  
-	    WHERE USER_ID = #{userId} 
-	</select>
-	
-	<select id="getTraineeBodyInfo" resultMap="BodyInfoResultset">
-		SELECT *
-		  FROM BODY_INFO
-		 WHERE USER_ID = #{userId}
-		   AND BI_STATUS = 'Y'
-	</select>
-	
-	<select id="getTraineeInfo" resultMap="memberInfoResultset">
-		SELECT * 
-		  FROM MEMBER_INFO
-		 WHERE USER_NO = #{userNo}
-	</select>
-
-	<insert id="saveBodyInfo">
-	insert 
-	  into body_info
-	     (
-	       body_info_no
-	     , user_id
-	     , measure_date
-	     , bmi
-	     , fat
-	     , smm
-	     , bi_status
-	     )
-	values
-	     (
-	       seq_bf_no.nextval
-	     , #{userId}
-	     , sysdate
-	     , #{bmi}
-	     , #{fat}
-	     , #{smm}
-	     , 'Y'
-	     )
-	</insert>
-	
-	<update id="deleteBodyInfo">
-	update body_info
-	   set bi_status = 'N'
-	 where body_info_no = #{bodyInfoNo}
-	</update>
-	
-	<select id="getRecentInfo" resultMap="BodyInfoResultset">
-	select *
-	  from (
-	  		select
-	  				body_info_no
-	  			  , user_id
-	  			  , measure_date
-	  			  , bmi
-	  			  , fat
-	  			  , smm
-	  			  , bi_status
-	  		  from  body_info
-	  		 where  user_id = #{userId}
-	  		   and  bi_status = 'Y'
-	  		 order
-	  		    by  measure_date desc
-	  )
-	 where rownum &lt;= 6
-	</select>
-	
-	
-	<insert id="insertTrainerCalendar">
-		insert 
-		  into schedule
-		     (
-		       schedule_no
-		     , user_no
-		     , schedule_title
-		     , start_date
-		     , end_date
-		     , back_color
-		     )
-		values
-		     (
-		       seq_cno.nextval
-		     , #{userNo}
-		     , #{scheduleTitle}
-		     , #{startDate}
-		     , #{endDate}
-		     , #{backColor}
-		     )
-	</insert>
-	
-	<select id="selectSchedule" resultMap="scheduleResult">
-		select schedule_no
-		     , schedule_title
-		     , start_date
-		     , end_date
-		     , back_color
-		  from schedule
+	<update id="updateDisease">
+		update member_info
+		   set height = #{height}
+		     , weight = #{weight}
+		     , disease = #{disease, typeHandler=com.kh.fitguardians.common.StringArrayTypeHandler}
+		     , goal = #{goal}
 		 where user_no = #{userNo}
-	</select>
-	
-	<select id="findDuplicate" resultType="int">
-		select count(schedule_no)
-		  from schedule
-		 where schedule_title = #{scheduleTitle}
-		   and start_date = #{startDate}
-	</select>
-	
-	<insert id="insertQrInfo">
-		insert 
-		  into qrinfo
-		     (
-		       qr_no
-		     , id
-		     , type
-		     , created_at
-		     , valid_until
-		     )
-		values
-			 (
-			   seq_qno.nextval
-			 , #{id}
-			 , #{type}
-			 , #{createdAt}
-			 , #{validUntil}
-			 )
-	</insert>
-	
-	<select id="qrCheck" resultMap="qrInfoResult">
-		select qr_no
-		     , id
-		     , type
-		     , created_at
-		     , valid_until
-		     , attendance
-		     , att_status
-		  from qrinfo
-		 where status = 'Y'
-		   and id = #{id}
-           and to_timestamp(created_at, 'YYYY-MM-DD"T"HH24:MI:SS.FF') between
-           to_timestamp(#{createdAt}, 'YYYY-MM-DD"T"HH24:MI:SS.FF') and
-           to_timestamp(#{validUntil}, 'YYYY-MM-DD"T"HH24:MI:SS.FF')
-	</select>
-	
-	<update id="updateAttendance">
-		update qrinfo
-		   set attendance = #{attendance}
-		   <choose>
-		   		<when test="type == 'trainee'">
-				     , att_status = '결석'
-		   		</when>
-		   		<otherwise>
-		   			, att_status = '출근'
-		   		</otherwise>
-		   </choose>
-		  where qr_no = #{qrNo}
 	</update>
 	
-	<update id="updateAttStatus">
-		update qrinfo
-		   set attendance = null
-		   <choose>
-		   		<when test="type == 'trainee'">
-				     , att_status = '출석'
-		   		</when>
-		   		<otherwise>
-		   			, att_status = '퇴근'
-		   		</otherwise>
-		   </choose>
-		 where qr_no = #{qrNo}
+	<update id="updateMemberPwd">
+		update member
+		   set user_pwd = #{userPwd}
+		 where user_no = #{userNo}
 	</update>
 	
-	
-	<select id="getTrainee" resultMap="memberResultset">
-		select * 
-		  from member 
-		 where pt = #{userId}
-		   and user_level = 2
-	</select>
-	
-	<select id="getTraineeList" resultMap="memberResultset">
-		SELECT *FROM MEMBER m
-			JOIN BODY_INFO b ON m.USER_ID = b.USER_ID
-			JOIN MEMBER_INFO mi ON m.USER_NO = mi.USER_NO
-			WHERE m.STATUS = 'Y'
-			  AND b.BI_STATUS = 'Y'
-			  AND m.PT = #{userId}
-			  AND b.MEASURE_DATE = (
-			      SELECT MAX(MEASURE_DATE)
-			      FROM BODY_INFO
-			      WHERE USER_ID = m.USER_ID
-			        AND BI_STATUS = 'Y'
-			  )
-	</select>
-	
-	<select id="getTraineeDetails" resultMap="memberResultset">
-		SELECT * 
-	    FROM MEMBER  
-	    WHERE USER_ID = #{userId} 
-	</select>
-	
-	<select id="getTraineeBodyInfo" resultMap="BodyInfoResultset">
-		SELECT *
-		  FROM BODY_INFO
-		 WHERE USER_ID = #{userId}
-		   AND BI_STATUS = 'Y'
-	</select>
-	
-	<select id="getTraineeInfo" resultMap="memberInfoResultset">
-		SELECT * 
-		  FROM MEMBER_INFO
-		 WHERE USER_NO = #{userNo}
-	</select>
-
-	<insert id="saveBodyInfo">
-	insert 
-	  into body_info
-	     (
-	       body_info_no
-	     , user_id
-	     , measure_date
-	     , bmi
-	     , fat
-	     , smm
-	     , bi_status
-	     )
-	values
-	     (
-	       seq_bf_no.nextval
-	     , #{userId}
-	     , sysdate
-	     , #{bmi}
-	     , #{fat}
-	     , #{smm}
-	     , 'Y'
-	     )
-	</insert>
-	
-	<update id="deleteBodyInfo">
-	update body_info
-	   set bi_status = 'N'
-	 where body_info_no = #{bodyInfoNo}
+	<update id="updateMemberEmail">
+		update member
+		   set email = #{email}
+		 where user_no = #{userNo}
 	</update>
 	
-	<select id="getRecentInfo" resultMap="BodyInfoResultset">
-	select *
-	  from (
-	  		select
-	  				body_info_no
-	  			  , user_id
-	  			  , measure_date
-	  			  , bmi
-	  			  , fat
-	  			  , smm
-	  			  , bi_status
-	  		  from  body_info
-	  		 where  user_id = #{userId}
-	  		   and  bi_status = 'Y'
-	  		 order
-	  		    by  measure_date desc
-	  )
-	 where rownum &lt;= 6
-	</select>
-	
+	<update id="deleteMember">
+		update member
+		   set status = 'N'
+		 where user_no = #{userNo}
+	</update>
 </mapper>
