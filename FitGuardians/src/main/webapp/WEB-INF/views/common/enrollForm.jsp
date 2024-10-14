@@ -5,7 +5,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Enroll Form</title>
+    <title>회원가입</title>
     <link href="./resources/templates/css/sb-admin-2.css" rel="stylesheet" />
     <!-- Bootstrap core JavaScript-->
     <script src="./resources/templates/vendor/jquery/jquery.min.js"></script>
@@ -18,9 +18,9 @@
     <link rel="stylesheet" href="resources/css/enrollForm.css">
 </head>
     <body>
-        <div class="topLogoContainer">
+        <a class="topLogoContainer" href="main.co">
             <img src="resources/images/FitGuardians로고-001.png" alt="">
-        </div>
+		</a>
         <div class="container">
             <!-- 상위 버튼 -->
             <ul class="links">
@@ -38,10 +38,10 @@
             <!-- 입력 폼 -->
             <form action="enroll.me" method="post">
             	<div class="form-check-inline mb-3 ml-4">
-                    <label class="form-check-label" for="Male">회원분류 : 트레이너
+                    <label class="form-check-label" for="trainer">회원분류 : 트레이너
                         <input class="form-check-input" type="radio" name="userLevel" id="trainer" value="1"/>
                     </label>
-                    <label class="form-check-label" for="Female">일반회원
+                    <label class="form-check-label" for="trainee">일반회원
                         <input class="form-check-input" type="radio" name="userLevel" id="trainee" value="2" checked="checked">
                     </label>
                 </div>
@@ -100,9 +100,17 @@
                 <div class="input-group mb-3 ml-4">
                     <input type="text" placeholder="상세주소" class="form-control" id="address" name="address"/>
                 </div>
+                
+                <!-- 추가회원 정보 모달 열기 -->
+                <div class="input-group mb-3 ml-4">
+                    <button type="button" onclick="javascript:void(0)" class="form-control" id="additionalInfoBtn" name="additionalInfoBtn" style="text-align: left;">추가정보</button>
+                </div>
+				
+                <!-- 추가회원정보에 대한 내용이 담겨있는 히든 인풋 태그 -->
+            	<input type="hidden" id="memberInfo" name="memberInfo">
             	
                 <!-- 회원가입 버튼 -->
-                <button id="enrollBtn" class="btn-primary btn-block btn disabled" disabled>회원가입</button>
+                <button id="enrollBtn" class="btn-primary btn-block btn disabled mb-3 ml-4" disabled>회원가입</button>
             </form>
         </div>
         
@@ -315,6 +323,68 @@
 			        }
 			    }).open();
 			}
+			
+			
+			// 추가 정보 입력 모달
+			$("#additionalInfoBtn").click(function() {
+			    Swal.fire({
+			        title: '추가 정보 입력',
+			        html: `
+			            <input type="number" id="height" name="height" class="swal2-input" placeholder="키 (cm)">
+			            <input type="number" id="weight" name="weight" class="swal2-input" placeholder="몸무게 (kg)">
+						
+						<select id="disease" name="disease" class="custom-select">
+							<option value="" hidden selected disabled>기저질환</option>
+							<option value="없음">없음</option>
+							<option value="혈압조절장애">혈압조절장애(고혈압, 저혈압)</option>
+							<option value="고지혈증">고지혈증</option>
+							<option value="당뇨">당뇨</option>
+							<option value="대사증후군">대사증후군</option>
+							<option value="디스크">디스크(목, 허리)</option>
+							<option value="천식">천식</option>
+							<option value="심혈관_질환">심혈관 질환</option>
+							<option value="골다공증">골다공증</option>
+							<option value="관절염">관절염(류마티스 등)</option>
+							<option value="편두통_혹은_만성두통">편두통 혹은 만성두통</option>
+							<option value="갑상선_장애">디스크(목, 허리)</option>
+						</select>
+						<select id="goal" class="custom-select">
+							<option value="" hidden selected disabled>운동 목표</option>
+							<option value="체중_감량">체중 감량</option>
+							<option value="근력_증가">근력 증가</option>
+							<option value="수술_후_재활">수술 후 재활</option>
+							<option value="유연성_운동">유연성 운동</option>
+							<option value="균형_증가">균형 증가</option>
+							<option value="심혈관_기능증진">심혈관 기능증진</option>
+						</select>
+			        `,
+			        confirmButtonText: '저장',
+					customClass: {
+						popup: 'custom-popup',    // 팝업 전체에 커스텀 스타일 적용
+						content: 'custom-content' // 컨텐츠에 대한 스타일 적용
+					},
+			        preConfirm: () => {
+			            return {
+			                height: $("#height").val(),
+			                weight: $("#weight").val(),
+			                disease: $("#disease").val(),
+			                goal: $("#goal").val(),
+			            }
+			        },
+					showCancelButton: true,
+					cancelButtonText: '취소',
+				}).then((result) => {
+			        if (result.isConfirmed) {
+			            let info = result.value;
+			            if (info.height && info.weight && info.disease && info.goal) {
+			                $("#memberInfo").val(JSON.stringify(info));
+			                Swal.fire('저장되었습니다!', '', 'success');
+			            } else {
+			                Swal.fire('모든 정보를 입력해 주세요', '', 'error');
+			            }
+			        }
+			    });
+			});
 		</script>
 		
         <footer>

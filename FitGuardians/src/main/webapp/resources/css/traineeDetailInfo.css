@@ -14,3 +14,14 @@
     font-weight:600;
     color:royalblue;
 }
+
+#bodyResult{
+	border: 1px solid royalblue;
+	padding: 10px;
+	margin: 5px;
+	height: auto;
+}
+
+.btn-light{
+    margin:5px;
+}

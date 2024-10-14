@@ -1,13 +1,18 @@
 package com.kh.fitguardians.member.model.service;
 
+import java.util.ArrayList;
+
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 
+import com.kh.fitguardians.common.model.vo.QrInfo;
 import com.kh.fitguardians.member.model.dao.MemberDao;
+import com.kh.fitguardians.member.model.vo.BodyInfo;
 import com.kh.fitguardians.member.model.vo.Member;
+import com.kh.fitguardians.member.model.vo.MemberInfo;
 
 @Service
 public class MemberServiceImpl implements MemberService{
@@ -44,11 +49,84 @@ public class MemberServiceImpl implements MemberService{
 	public int insertMember(Member m) {
 		return mDao.insertMember(sqlSession, m);
 	}
+	
+	@Override
+	public int insertQrInfo(QrInfo qr) {
+		return mDao.insertQrInfo(sqlSession, qr);
+	}
+	
+	@Override
+	public int insertMemberWithInfo(Member m, MemberInfo info) {
+		// MEMBER 테이블에 데이터 삽입 및 userNo 반환
+	    int result1 = mDao.insertMember(sqlSession, m);
+	    
+	    if (result1 > 0) {
+	        int userNo = mDao.selectUserNo(sqlSession); // 새로 생성된 userNo 조회
+	        info.setUserNo(userNo); // MemberInfo에 userNo 설정
+	        int result2 = mDao.insertMemberInfo(sqlSession, info); // MEMBER_INFO에 데이터 삽입
+	        return (result2 > 0) ? 1 : 0;
+	    }
+	    
+	    return 0;
+	}
 
 	@Override
 	public Member loginMember(Member m) {
 		return mDao.loginMember(sqlSession, m);
 	}
+
+	@Override
+	public QrInfo qrCheck(QrInfo qr) {
+		return mDao.qrCheck(sqlSession, qr);
+	}
+
+	@Override
+	public int updateAttendance(QrInfo qr) {
+		return mDao.updateAttendance(sqlSession, qr);
+	}
+
+	@Override
+	public int updateAttStatus(QrInfo qr) {
+		return mDao.updateAttStatus(sqlSession, qr);
+	}
+
+	@Override
+	public ArrayList<Member> getTraineeList(String userId) {
+		return mDao.getTraineeList(sqlSession, userId);
+	}
+
+	@Override
+	public Member getTraineeDetails(String userId) {
+		return mDao.getTraineeDetails(sqlSession, userId);
+	}
+
+	@Override
+	public ArrayList<BodyInfo> getTraineeBodyInfo(String userId) {
+		return mDao.getTraineeBodyInfo(sqlSession, userId);
+	}
+
+	@Override
+	public MemberInfo getTraineeInfo(int userNo) {
+		return mDao.getTraineeInfo(sqlSession, userNo);
+	}
+
+	@Override
+	public int saveBodyInfo(BodyInfo bi) {
+		return mDao.saveBodyInfo(sqlSession, bi);
+	}
+
+	@Override
+	public int deleteBodyInfo(int bodyInfoNo) {
+		return mDao.deleteBodyInfo(sqlSession, bodyInfoNo);
+	}
+
+	@Override
+	public ArrayList<BodyInfo> getRecentInfo(String userId) {
+		return mDao.getRecentInfo(sqlSession, userId);
+	}
+
+	
+
 
 	
 	
