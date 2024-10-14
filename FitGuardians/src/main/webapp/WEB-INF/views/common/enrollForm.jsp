@@ -346,8 +346,6 @@
 			$("#additionalInfoBtn").click(function() {
 				var traineeCheck = $("#trainee").prop("checked");
 				if(traineeCheck){
-					console.log("aaa");
-					
 					Swal.fire({
 					title: '추가 정보 입력',
 					html: `
@@ -366,17 +364,17 @@
 							<option value="심혈관_질환">심혈관 질환</option>
 							<option value="골다공증">골다공증</option>
 							<option value="관절염">관절염(류마티스 등)</option>
-							<option value="편두통_혹은_만성두통">편두통 혹은 만성두통</option>
-							<option value="갑상선_장애">디스크(목, 허리)</option>
+							<option value="편두통혹은만성두통">편두통 혹은 만성두통</option>
+							<option value="갑상선장애">디스크(목, 허리)</option>
 						</select>
 						<select id="goal" class="custom-select">
 							<option value="" hidden selected disabled>운동 목표</option>
-							<option value="체중_감량">체중 감량</option>
-							<option value="근력_증가">근력 증가</option>
-							<option value="수술_후_재활">수술 후 재활</option>
-							<option value="유연성_운동">유연성 운동</option>
-							<option value="균형_증가">균형 증가</option>
-							<option value="심혈관_기능증진">심혈관 기능증진</option>
+							<option value="체중 감량">체중 감량</option>
+							<option value="근력 증가">근력 증가</option>
+							<option value="수술 후 재활">수술 후 재활</option>
+							<option value="유연성 운동">유연성 운동</option>
+							<option value="균형 증가">균형 증가</option>
+							<option value="심혈관 기능증진">심혈관 기능증진</option>
 						</select>
 					`,
 					confirmButtonText: '저장',

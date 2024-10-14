@@ -97,3 +97,12 @@ select qr_no
            to_timestamp('2024-10-08T17:10:10.776433', 'YYYY-MM-DD"T"HH24:MI:SS.FF') and
            to_timestamp('2025-10-08T16:40:43.6191067', 'YYYY-MM-DD"T"HH24:MI:SS.FF') 
            ;
+           
+select user_no
+     , height
+     , weight
+     , disease
+     , goal
+  from member_info
+where user_no = 15
+;
