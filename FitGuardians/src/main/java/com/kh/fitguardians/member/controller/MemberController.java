@@ -253,13 +253,13 @@ public class MemberController {
 	public String myPage(HttpServletRequest request) {
 		HttpSession session = request.getSession();
 		Member m = (Member) session.getAttribute("loginUser");
-		MemberInfo mInfo = mService.selectMemberInfo(m.getUserNo());
-		Gson gson = new Gson();
-		String diseaseJson = gson.toJson(mInfo.getDisease());
-		
-		request.setAttribute("memberInfo", mInfo);
-		request.setAttribute("disease", diseaseJson);
-		
+		if(m.getUserLevel().equals("2")) {
+			MemberInfo mInfo = mService.selectMemberInfo(m.getUserNo());
+			Gson gson = new Gson();
+			String diseaseJson = gson.toJson(mInfo.getDisease());
+			request.setAttribute("memberInfo", mInfo);
+			request.setAttribute("disease", diseaseJson);
+		}
 		return "common/myPage";
 	}
 	
