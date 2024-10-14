@@ -11,6 +11,7 @@
 		<typeAlias alias="Member" type="com.kh.fitguardians.member.model.vo.Member"/>
 		<typeAlias type="com.kh.fitguardians.chat.model.vo.ChatRoom" alias="ChatRoom"/>
 		<typeAlias type="com.kh.fitguardians.chat.model.vo.Message" alias="Message"/>
+		<typeAlias type="com.kh.fitguardians.chat.model.vo.MessageParticipantDTO" alias="MessageParticipantDTO"/>
 	</typeAliases>
 	
 	<mappers>

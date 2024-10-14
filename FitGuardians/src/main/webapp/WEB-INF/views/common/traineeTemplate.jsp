@@ -22,19 +22,17 @@
 <body id="page-top">
 	<!-- Page Wrapper -->
     <div id="wrapper">
-     <jsp:include page="../common/sideTrainee.jsp" />
-     <div id="content-wrapper" class="d-flex flex-column">
-     <!-- Main Content -->
-     	<div id="content">
-     		<jsp:include page="../common/topBar.jsp"/>
-     		<!-- Begin Page Content -->
-                <div class="container-fluid">
-					여기다 본인의 컨텐츠 작성하면 됨!
-                </div>
-     	
-     	
-     	</div>
-     </div>
+    	<jsp:include page="../common/sideTrainer.jsp" />
+    	<div id="content-wrapper" class="d-flex flex-column">
+    		<!-- Main Content -->
+    		<div id="content">
+    			<jsp:include page="../common/topBar.jsp"/>
+    			<!-- Begin Page Content -->
+    			<div class="container-fluid">
+                    여기다 본인의 컨텐츠 작성하면 됨!
+    			</div>         
+			</div>
+		</div>
     </div>
 </body>
 
