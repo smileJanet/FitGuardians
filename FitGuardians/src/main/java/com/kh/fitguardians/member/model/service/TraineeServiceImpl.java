@@ -25,4 +25,8 @@ public class TraineeServiceImpl implements TraineeService{
 		return tnDao.selectTraineeWorkoutList(sqlSession, userId);
 	}
 
+	public int deleteTraineeExPlan(int exerciseNo) {
+		return tnDao.deleteTraineeExPlan(sqlSession, exerciseNo);
+	}
+
 }

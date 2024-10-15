@@ -45,5 +45,16 @@ public class TraineeController {
 		int result = tnService.addTraineeExPlan(tn);
 		return result;
 	}
+	
+	@ResponseBody
+	@RequestMapping(value ="deleteTraineeExPlan.tn")
+	public int deleteTraineeExPlan(int exerciseNo) {
+		//System.out.println("exerciseNo값 잘 나오는지 : " + exerciseNo);
+		int result = tnService.deleteTraineeExPlan(exerciseNo);
+		return result;
+	}
+	
+	
+	
 
 }

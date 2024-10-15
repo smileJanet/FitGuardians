@@ -49,11 +49,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 difficultyLabel = '없음';
             }
 
+            // target에 대한 switch문
+
+            switch(plan.extendedProps.target){
+                case 'biceps' : targetMuscle = '이두근'; break;
+                case 'triceps' : targetMuscle = '삼두근'; break;
+                case 'chest' : targetMuscle = '가슴근'; break;
+                case 'abdominals' : targetMuscle = '복근'; break;
+                case 'lats' : targetMuscle = '광배근'; break;
+                case 'back' : targetMuscle = '등근'; break;
+                case 'glutes' : targetMuscle = '엉덩이근'; break;
+                case 'quadriceps' : targetMuscle = '사두근'; break;
+                case 'hamstrings' : targetMuscle = '햄스트링근'; break;
+            }
        
             // 값 찍기
             $('#modalExerciseNo').text(plan.extendedProps.exerciseNo);
             $('#modalWorkoutTitle').text('제목: ' + plan.title);
-            $('#modalWorkoutTarget').text(' 운동 표적: '+ plan.extendedProps.target);
+            $('#modalWorkoutTarget').text(' 운동 표적: '+ targetMuscle);
             $('#modalDifficulty').text('운동 난이도: ' + difficultyLabel);
             $('#modalDescription').text('운동 설명: '+ plan.extendedProps.description);
             

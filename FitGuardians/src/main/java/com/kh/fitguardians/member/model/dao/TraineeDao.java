@@ -18,4 +18,8 @@ public class TraineeDao {
 		return (ArrayList)sqlSession.selectList("memberMapper.selectTraineeWorkoutList", userId);
 	}
 
+	public int deleteTraineeExPlan(SqlSessionTemplate sqlSession, int exerciseNo) {
+		return sqlSession.update("memberMapper.deleteTraineeExPlan", exerciseNo);
+	}
+
 }

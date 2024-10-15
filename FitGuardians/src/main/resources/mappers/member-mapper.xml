@@ -445,9 +445,14 @@
 	select *
 	  from tn_workout
 	 where user_id = #{userId}
+	   and workout_status = 'Y'
 	</select>
 	
-	
+	<update id="deleteTraineeExPlan" >
+	update tn_workout
+	   set workout_status = 'N'
+	 where ex_no = #{exerciseNo}
+	</update>
 	
 	
 	

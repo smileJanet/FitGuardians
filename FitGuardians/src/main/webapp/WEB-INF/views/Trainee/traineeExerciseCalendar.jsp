@@ -251,6 +251,27 @@
 					</div>
 					<script>
 						// 플래너 삭제버튼 구현
+						function deleteExPlan(){
+							let exerciseNo = $('#modalExerciseNo').text();
+							$.ajax({
+								url : "deleteTraineeExPlan.tn",
+								method : "post",
+								data : {
+									exerciseNo : exerciseNo,
+								},
+								success : function(result){
+									if(result == 1){
+										Swal.fire({
+											title: "플랜이 성공적으로 삭제되었습니다.",
+											icon: "success",
+											});
+									}
+								},
+								error : function(){
+									
+								},
+							})
+						}
 					</script>
 				</div>
 			</div>
