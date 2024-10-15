@@ -9,6 +9,8 @@ import org.springframework.stereotype.Repository;
 import com.kh.fitguardians.chat.model.vo.Message;
 import com.kh.fitguardians.chat.model.vo.MessageParticipantDTO;
 import com.kh.fitguardians.member.model.vo.Member;
+import com.kh.fitguardians.chat.model.vo.MessageParticipantDTO;
+import com.kh.fitguardians.member.model.vo.Member;
 
 @Repository
 public class ChatDao {
@@ -45,28 +47,4 @@ public class ChatDao {
         param.put("status", status);
         return session.update("ChatMapper.updateMessageStatus", param);
     }
-    
-    // 활성화된 채팅 수
-    public int getActiveChatCount(SqlSessionTemplate sqlSession, int userNo) {
-        return sqlSession.selectOne("ChatMapper.getActiveChatCount", userNo);
-    }
-
-    // 활성화된 채팅 상대 조회 (회원용)
-    public ArrayList<MessageParticipantDTO> getActiveParticipantsForUser(SqlSessionTemplate sqlSession, int userNo) {
-        return (ArrayList) sqlSession.selectList("ChatMapper.getActiveParticipantsForUser", userNo);
-    }
-
-    // 활성화된 채팅 상대 조회 (트레이너용)
-    public ArrayList<MessageParticipantDTO> getActiveParticipantsForTrainer(SqlSessionTemplate sqlSession, int userNo) {
-    	System.out.println("Fetching active participants for trainer with userNo: " + userNo);
-        return (ArrayList) sqlSession.selectList("ChatMapper.getActiveParticipantsForTrainer", userNo);
-    }
-    
-    // 트레이너 검색
-    public ArrayList<Member> searchTrainers(SqlSessionTemplate sqlSession, String keyword) {
-    	System.out.println("Searching for trainers with keyword: " + keyword);
-        ArrayList<Member> trainers = (ArrayList)sqlSession.selectList("ChatMapper.searchTrainers", keyword);
-        return trainers;
-    }
-
 }

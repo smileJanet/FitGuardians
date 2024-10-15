@@ -4,10 +4,12 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
+import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
@@ -17,11 +19,13 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,17 +37,18 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.kh.fitguardians.common.model.vo.QrInfo;
 import com.kh.fitguardians.member.model.service.MemberServiceImpl;
-import com.kh.fitguardians.member.model.vo.BodyInfo;
 import com.kh.fitguardians.member.model.vo.Member;
 import com.kh.fitguardians.member.model.vo.MemberInfo;
+import com.kh.fitguardians.member.model.vo.Schedule;
+import com.kh.fitguardians.member.model.vo.TrainerInfo;
 
 @Controller
 public class MemberController {
-	
+
 	@Autowired
 	private MemberServiceImpl mService = new MemberServiceImpl();
 	@Autowired
-	private BCryptPasswordEncoder bcryptPasswordEncoder; 
+	private BCryptPasswordEncoder bcryptPasswordEncoder;
 	@Autowired
 	private ServletContext servletContext;
 	
@@ -51,68 +56,40 @@ public class MemberController {
 	public String goMain() {
 		return "Trainee/traineeDashboard";
 	}
-	
-    @RequestMapping("traineeDetail.me")
-    public ModelAndView memberDetailView(@RequestParam("userId") String userId, ModelAndView mv) {
 
-    	Member m = mService.getTraineeDetails(userId);
-    	ArrayList<BodyInfo> bi = mService.getTraineeBodyInfo(userId);
-    	MemberInfo mi = mService.getTraineeInfo(m.getUserNo());
-    	// 최근 6개 데이터 조회문
-    	ArrayList<BodyInfo> recentBi = mService.getRecentInfo(userId);
-    	
-    	// 가장 최근 1개 데이터 조회문
-    	BodyInfo lastBodyInfo = null;
-    	
-    	for (BodyInfo bodyInfo : bi) {
-    	    lastBodyInfo = bodyInfo;
-    	}
-    	double lastSmm = lastBodyInfo.getSmm();
-    	double lastFat = lastBodyInfo.getFat();
-    	double lastBmi = lastBodyInfo.getBmi();
-    	
-    	mv.addObject("m" , m);
-    	mv.addObject("bi" , bi);
-    	mv.addObject("mi", mi);
-    	mv.addObject("lastSmm", String.format("%.1f", lastSmm));
-    	mv.addObject("lastFat", String.format("%.1f", lastFat));
-    	mv.addObject("lastBmi", String.format("%.1f", lastBmi));
-    	mv.addObject("recentBi", recentBi);
-    	
-    	mv.setViewName("Trainer/traineeDetailInfo");
-    	
-        return mv;
-    }
+	@RequestMapping("traineeDetail.me")
+	public String memberDetailView() {
+		return "Trainer/traineeDetailInfo";
+	}
 
 	@RequestMapping("loginform.me")
 	public String loginForm() throws IOException {
 		return "common/loginForm";
 	}
-	
+
 	@RequestMapping("enrollForm.me")
 	public String enrollForm() {
 		return "common/enrollForm";
 	}
-	
+
 	@ResponseBody
 	@RequestMapping("checkId.me")
 	public String memberCheckId(String userId) {
 		int result = mService.checkId(userId);
-		if(result > 0) {
+		if (result > 0) {
 			return "YYYN";
-		}else {
+		} else {
 			return "YYYI";
 		}
 	}
-	
+
 	@ResponseBody
 	@RequestMapping("auth.email")
 	public String ajaxAuthEmail(String email) {
 		int randomCode = mService.authEmail(email);
 		return randomCode + "";
 	}
-	
-	
+
 	@RequestMapping(value = "enroll.me", produces = "text/html; charset=UTF-8")
 	public String memberEnroll(Member m, String memberInfo, HttpServletRequest request) throws IOException {
 		String encPwd = bcryptPasswordEncoder.encode(m.getUserPwd());
@@ -149,18 +126,24 @@ public class MemberController {
 			}
 		}
 		
-		int result2 = mService.insertQrInfo(qr);
-		int result1 = mService.insertMember(m);
-		
-		
 		
 		// 기본 프로필 사진 설정
         String profile = m.getProfilePic() == null ? 
             (m.getGender().equals("F") ? "resources/profilePic/gymW.png" : "resources/profilePic/gymM.png") : 
             m.getProfilePic();
         m.setProfilePic(profile);
-		
-        System.out.println(memberInfo);
+        
+        // 트레이너일때 기본 트레이너 정보 입력
+        if(m.getUserLevel().equals("1")) {
+        	TrainerInfo trInfo = new TrainerInfo();
+        	trInfo.setUserNo(m.getUserNo());
+        	trInfo.setTrCareer("");
+        	trInfo.setTrCerti("");
+        	trInfo.setTrDescript("");
+        	trInfo.setTrProfile("resources/trProfile/blank-profile-picture.webp");
+        	int result3 = mService.insertTrainerInfo(trInfo); 
+        	
+        }
 		// 회원 추가 정보가 있는지 확인
         if (memberInfo != null && !memberInfo.isEmpty()) {
             // 추가 정보가 있으면 추가 정보 저장
@@ -172,14 +155,22 @@ public class MemberController {
             }
             
             int result = mService.insertMemberWithInfo(m, info);
-            if (result > 0 && result1 > 0 && result2 > 0) {
+            int result2 = mService.insertQrInfo(qr);
+            if (result > 0 && result2 > 0) {
                 request.getSession().setAttribute("alertMsg", "회원가입이 완료되었습니다. 환영합니다!");
                 return "Trainee/traineeDashboard";
             }
         } else {
             // 추가 정보가 없으면 기존 방식대로 회원가입 처리
-            int result = mService.insertMember(m);
-            if (result > 0 && result1 > 0 && result2 > 0) {
+        	MemberInfo info = new MemberInfo();
+        	info.setUserNo(m.getUserNo());
+        	info.setHeight(0);
+        	info.setWeight(0);
+        	info.setDisease(null);
+        	info.setGoal("");
+            int result = mService.insertMemberWithInfo(m, info);
+            int result2 = mService.insertQrInfo(qr);
+            if (result > 0 && result2 > 0) {
                 request.getSession().setAttribute("alertMsg", "회원가입이 완료되었습니다. 환영합니다!");
                 return "Trainee/traineeDashboard";
             }
@@ -187,14 +178,13 @@ public class MemberController {
         request.getSession().setAttribute("errorMsg", "회원가입에 실패했습니다.");
         return "common/loginForm";
 	}
-	
+
 	@RequestMapping("login.me")
 	public String memberLogin(Member m, HttpServletRequest request) {
 		Member loginUser = mService.loginMember(m);
 		HttpSession session = request.getSession();
-		if(loginUser != null) {
-			if(bcryptPasswordEncoder.matches(m.getUserPwd(), loginUser.getUserPwd())) {
-				
+		if (loginUser != null) {
+			if (bcryptPasswordEncoder.matches(m.getUserPwd(), loginUser.getUserPwd())) {
 				session.setAttribute("loginUser", loginUser);
 				
 				// 트레이너 정보 알아오기
@@ -227,13 +217,20 @@ public class MemberController {
 				session.setAttribute("errorMsg", "비밀번호가 일치하지 않습니다. 다시 입력해주세요!");
 				return "redirect:loginform.me";
 			}
-			
-		}else {
+
+		} else {
 			session.setAttribute("errorMsg", "아이디가 틀렸습니다 다시 입력해주세요!");
 			return "redirect:loginform.me";
 		}
-		
+
 	}
+
+	@RequestMapping("logout.me")
+	public String memberlogOut(HttpServletRequest request) {
+		request.getSession().invalidate();
+		return "redirect:/";
+	}
+
 	
 	@RequestMapping("traineeList.me")
 	public ModelAndView traineeList(HttpSession session, ModelAndView mv) {
@@ -277,7 +274,7 @@ public class MemberController {
 	public String qrCheckForm() {
 		return "common/checkQr";
 	}
-	
+
 	@ResponseBody
 	@RequestMapping("qrCheck.me")
 	public String MemberQrCheck(@RequestBody Map<String, String> request) {
@@ -288,44 +285,42 @@ public class MemberController {
 		int result2 = 0;
 		try {
 			qrInfo = objectMapper.readValue(qrData, QrInfo.class);
-				// qr 일치 확인
-				QrInfo qrResult = mService.qrCheck(qrInfo);
-				LocalDateTime now = LocalDateTime.now();
-				
-				if(qrResult != null) {
-					// 출석
-					if(qrResult.getAttendance() == null) {
-						qrResult.setAttendance(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME));
-						int upResult = mService.updateAttendance(qrResult);
-						return "YYYQ";
-					}else {
-						
-						LocalDateTime attendanceTime = LocalDateTime.parse(qrResult.getAttendance(), DateTimeFormatter.ISO_DATE_TIME); 
-						Duration duration = Duration.between(attendanceTime, now);
-						long hours = duration.toHours();
-						System.out.println(hours);
-						
-						
-						if(qrResult.getType().equals("trainee") && hours >= 1) {
-							qrResult.setAttendance(now.toString());
-							result1 = mService.updateAttStatus(qrResult);
-						}else if(qrResult.getType().equals("trainer") && hours >= 6) {
-							qrResult.setAttendance(now.toString());
-							result2 = mService.updateAttStatus(qrResult);
-						}
-						
-						
+			// qr 일치 확인
+			QrInfo qrResult = mService.qrCheck(qrInfo);
+			LocalDateTime now = LocalDateTime.now();
+
+			if (qrResult != null) {
+				// 출석
+				if (qrResult.getAttendance() == null) {
+					qrResult.setAttendance(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME));
+					int upResult = mService.updateAttendance(qrResult);
+					return "YYYQ";
+				} else {
+
+					LocalDateTime attendanceTime = LocalDateTime.parse(qrResult.getAttendance(),
+							DateTimeFormatter.ISO_DATE_TIME);
+					Duration duration = Duration.between(attendanceTime, now);
+					long hours = duration.toHours();
+					System.out.println(hours);
+
+					if (qrResult.getType().equals("trainee") && hours >= 1) {
+						qrResult.setAttendance(now.toString());
+						result1 = mService.updateAttStatus(qrResult);
+					} else if (qrResult.getType().equals("trainer") && hours >= 6) {
+						qrResult.setAttendance(now.toString());
+						result2 = mService.updateAttStatus(qrResult);
 					}
+
 				}
-				
-				
+			}
+
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
-		
-		if(result1 > 0 || result2 > 0) {
+
+		if (result1 > 0 || result2 > 0) {
 			return "YYQQ";
-		}else {
+		} else {
 			return "NNQQ";
 		}
 	}

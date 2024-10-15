@@ -203,9 +203,12 @@
 		                                <a class="dropdown-item" href="">
 		                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
 											profile
+											profile
 		                                </a>
 		                                <a class="dropdown-item" href="mypage.me">
+		                                <a class="dropdown-item" href="mypage.me">
 		                                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+		                                    My Page
 		                                    My Page
 		                                </a>
 		                                <a class="dropdown-item" href="#">
@@ -542,6 +545,385 @@
 	            }
 	        });
 	    });
+	</script>
+
+
+			    
+			    <!-- 사진변경 모달 -->
+			     <div class="modal fade" id="changePictureModal" tabindex="-1" role="dialog" aria-labelledby="changePictureModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="changePictureModalLabel">사진 변경</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="changePictureForm" action="changePicture.me" method="post" enctype="multipart/form-data">
+                                    <div id="productImages"></div>
+                                    <div class='d-flex justify-content-center'>
+	                                    <div class="btn-group">
+		                                    <label class="btn btn-warning mb-0" for="input-files" >
+		                                        사진 업로드
+		                                    </label>
+		                                    <input class="btn btn-info" type="file" id="input-files" name="upfile" accept="image/*" style="display: none;" required>
+		                                    <input type="hidden" id="userNo" name="userNo" value="${loginUser.userNo}">
+		                                    <input type="hidden" id="userId" name="userId" value="${loginUser.userId}">
+		                                    <input type="hidden" id="profilePic" name="profilePic" value="${loginUser.profilePic}">
+		                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+		                                    <button type="submit" class="btn btn-primary">사진 변경</button>
+	                                    </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+	<script>
+	    // 현재 시간을 가져오는 함수
+	    var getCurrentTime = function() {
+		    var now = new Date();
+		    var year = now.getFullYear();
+		    var month = ('0' + (now.getMonth() + 1)).slice(-2); // 월은 0부터 시작하므로 +1
+		    var day = ('0' + now.getDate()).slice(-2);
+		    var hours = ('0' + now.getHours()).slice(-2);
+		    var minutes = ('0' + now.getMinutes()).slice(-2);
+		    
+		    return year + '-' + month + '-' + day + ' ' + hours + ':' + minutes;
+		};
+		
+	    
+	 	// 변수 선언
+	    var userNo = ${sessionScope.loginUser.userNo}; // 세션에서 가져온 사용자 번호
+	    var userLevel = ${sessionScope.loginUser.userLevel}; // 세션에서 가져온 사용자 레벨
+	    var currentUserNo = userNo; // 현재 로그인한 유저 NO
+	    var selectedUserNo; // 상대방 유저 NO
+	    var chNo; // 채팅방 번호
+	    
+	 	// 드롭다운 아이템 클릭 시 : 이거로 채팅창 내역을 긁어올 예정!
+	    $(document).on('click', '.dropdown-item', function() {
+	        selectedUserNo = $(this).data('user-no'); // 상대방 유저 NO
+	        chNo = $(this).data('chat-room-no'); // 채팅방 NO
+	        console.log("선택된 유저 NO:", selectedUserNo); // 디버깅용
+	        console.log("선택된 채팅방 NO:", chNo); // 디버깅용
+	        
+	     // AJAX 요청
+	        $.ajax({
+	            url: '/fitguardians/chat/messages/' + chNo, // 메시지를 가져오는 API 엔드포인트
+	            method: 'GET',
+	            data: {
+	                senderNo: currentUserNo, // 현재 로그인한 유저 NO
+	                receiverNo: selectedUserNo, // 상대방 유저 NO
+	            },
+	            success: function(response) {
+	                console.log("AJAX 응답:", response); // 응답 내용 확인
+	                if (response && response.length > 0) {
+	                    updateChatMessages(response); // 메시지 업데이트 함수 호출
+	                } else {
+	                    console.warn("응답이 비어 있습니다."); // 경고 메시지 출력
+	                }
+	            },
+	            error: function(xhr, status, error) {
+	                console.error("메시지 로드 오류:", error);
+	            }
+	        });
+	        
+	    });
+	    
+	 	
+	    // 채팅 메시지를 업데이트하는 함수
+	    function updateChatMessages(messages) {
+	        var chatMessagesContainer = $('#chatMessages');
+	        chatMessagesContainer.empty(); // 기존 메시지 삭제
+
+	        // 메시지 렌더링
+	        messages.forEach(function(message) {
+	            var messageElement;
+	         	// sendDate를 포맷팅
+	            var formattedDate = message.sendDate;
+
+	            if (message.senderNo == currentUserNo) {
+	                // 본인이 보낸 메시지
+	                messageElement = '<div class="d-flex mb-3">' +
+	                                 '<div class="bg-primary text-white p-2 rounded" style="max-width: 70%; margin-left: auto;">' +
+	                                 '<p class="mb-0">' + message.msgContent + '</p>' +
+	                                 '<small class="text-muted">You · ' + formattedDate + '</small>' +
+	                                 '</div></div>';
+	            } else {
+	                // 상대방이 보낸 메시지
+	                messageElement = '<div class="d-flex mb-3">' +
+	                                 '<div class="mr-2">' +
+	                                 '<img class="rounded-circle" src="' + message.profileImg + '" alt="' + message.senderName + '" style="width: 40px;">' +
+	                                 '</div>' +
+	                                 '<div class="bg-light p-2 rounded" style="max-width: 70%;">' +
+	                                 '<p class="mb-0">' + message.msgContent + '</p>' +
+	                                 '<small class="text-muted">' + message.senderName + ' · ' + formattedDate + '</small>' +
+	                                 '</div></div>';
+	            }
+
+	            chatMessagesContainer.append(messageElement); // 메시지를 컨테이너에 추가
+	        });
+	    }
+
+	    
+	    
+	
+	    // 메시지 전송 함수
+	    function sendMessage() {
+	    	
+	    	console.log('sendMessage 함수 호출됨'); // 함수 호출 확인
+	    	
+	        // 입력 필드에서 메시지 가져오기
+	        var messageContent = $('#messageInput').val();
+	        console.log('입력된 메시지:', messageContent); // 로그 출력
+	
+	        // 메시지가 비어있지 않은 경우에만 진행
+	        if (messageContent.trim() !== "") {
+	        	
+	        	// 전송할 데이터 확인을 위해 console.log 추가
+	            var messageData = {
+	                content: messageContent,
+	                senderNo: currentUserNo,  // 현재 로그인한 유저 No
+	                receiverNo: selectedUserNo,  // 상대방 유저 No
+	                chNo: chNo  // 채팅방 번호
+	            };
+	            console.log('전송할 메시지 데이터:', JSON.stringify(messageData)); // 여기서 데이터 로그 출력
+	        		        	
+	            // 메시지 전송을 위한 AJAX 요청
+	            $.ajax({
+	                url: '/fitguardians/chat/send', // 메시지 전송 엔드포인트
+	                method: 'POST',
+	                contentType: 'application/json',
+	                data: JSON.stringify({
+	                	msgContent: messageContent,
+	                    senderNo: currentUserNo,  // 현재 로그인한 유저 No
+	                    receiverNo: selectedUserNo,  // 상대방 유저 No
+	                    chNo: chNo  // 채팅방 번호
+	                }),
+	                success: function(response) {
+	                    // 메시지 전송 성공 시, 메시지 추가
+	                    var newMessage = '<div class="d-flex justify-content-end mb-3">' +
+	                        '<div class="bg-primary text-white p-2 rounded" style="max-width: 70%;">' +
+	                            '<p class="mb-0">' + messageContent + '</p>' +
+	                            '<small class="text-muted">당신 ·' + getCurrentTime() + '</small>' +
+	                        '</div>' +
+	                    '</div>';
+	                    $('#chatMessages').append(newMessage);
+	                    // 입력 필드 비우기
+	                    $('.input-group input[type="text"]').val('');
+	                    // 스크롤을 가장 아래로 내리기
+	                    $('#chatMessages').scrollTop($('#chatMessages')[0].scrollHeight);
+	                },
+	                error: function(xhr, status, error) {
+	                    console.error('메시지를 전송하는 중 오류 발생:', error);
+	                }
+	            });
+	        } else {
+	            console.log('메시지를 입력하세요.'); // 메시지 비어있을 경우 콘솔에 로그 출력
+	        }
+	    }
+	
+	    $(function() {
+	        
+	
+	        // 활성화 채팅 수 가져오기
+	        $.ajax({
+	            url: '/fitguardians/chat/activeChatCount/' + userNo,
+	            type: 'GET',
+	            success: function(activeChatCount) {
+	                // 활성화 채팅 수 업데이트
+	                $('#activeChatCount').text(activeChatCount);
+	            },
+	            error: function(xhr, status, error) {
+	                console.error('활성화 채팅 수를 가져오는 중 오류 발생:', error);
+	            }
+	        });
+	
+	        if (userLevel === 2) { // 유저인 경우
+	            // 활성화된 채팅 참가자 가져오기 (회원 기준)
+	            $.ajax({
+	                url: '/fitguardians/chat/activeParticipants/user/' + userNo,
+	                type: 'GET',
+	                success: function(activeParticipants) {
+	                    console.log(activeParticipants); // AJAX로 받은 데이터 확인
+	
+	                    // 활성화된 참가자가 있는지 확인
+	                    if (activeParticipants.length > 0) {
+	                        console.log("첫 번째 참가자:", activeParticipants[0]);
+	                    } else {
+	                        console.log("활성화된 참가자가 없습니다."); // 데이터가 없을 경우 메시지 출력
+	                        $('#participantList').append('<div class="dropdown-item text-center small text-gray-500">활성화된 채팅이 없습니다.</div>');
+	                        return; // 더 이상 진행하지 않도록 return
+	                    }
+	
+	                    var participantList = $('#participantList'); // 변수 이름 변경
+	                    participantList.empty(); // 기존 내용 비우기
+	
+	                    let items = ''; // 초기화
+	
+	                    activeParticipants.forEach(participant => {
+	                        console.log("참가자 이미지:", participant.participantImage);
+	                        console.log("마지막 메시지:", participant.lastMessage);
+	                        console.log("참가자 이름:", participant.participantName);
+	                        console.log("마지막 활동:", participant.lastActive);
+	                        console.log("상태:", participant.participantStatus);
+	                        
+	                        const image = participant.participantImage || 'default-image.png';
+	                        const lastMessage = participant.lastMessage || '메시지가 없습니다.';
+	                        const participantName = participant.participantName || '참가자 없음';
+	                        const lastActive = participant.lastActive || '활동 없음';
+	                        const statusClass = participant.participantStatus === 'Y' ? 'bg-success' : 'bg-danger';
+	
+	                        // 문자열 연결 방식으로 아이템 생성
+	                        items += '<a class="dropdown-item d-flex align-items-center" href="#" data-toggle="modal" data-target="#chatModal" data-user-no="' + participant.participantNo + '" data-chat-room-no="' + participant.chatRoomNo + '">' +
+	                                    '<div class="dropdown-list-image mr-3">' +
+	                                        '<img class="rounded-circle" src="' + image + '" alt="...">' +
+	                                        '<div class="status-indicator ' + statusClass + '"></div>' +
+	                                    '</div>' +
+	                                    '<div class="font-weight-bold">' +
+	                                        '<div class="text-truncate">' + lastMessage + '</div>' +
+	                                        '<div class="small text-gray-500">' + participantName + ' · ' + lastActive + '</div>' +
+	                                    '</div>' +
+	                                '</a>';
+	                    });
+	
+	                    // 최종 items 확인
+	                    console.log("최종 아이템 HTML:", items);
+	                    participantList.append(items); // 요소 추가
+	                },
+	                error: function(xhr, status, error) {
+	                    console.error('회원용 활성화된 참가자를 가져오는 중 오류 발생:', error); // 에러 메시지 출력
+	                }
+	            });
+	        } else if (userLevel === 1) { // 트레이너인 경우
+	            // 활성화된 채팅 참가자 가져오기 (트레이너 기준)
+	            $.ajax({
+	                url: '/fitguardians/chat/activeParticipants/trainer/' + userNo,
+	                type: 'GET',
+	                success: function(activeParticipants) {
+	                    console.log(activeParticipants); // AJAX로 받은 데이터 확인
+	
+	                    // 활성화된 참가자가 있는지 확인
+	                    if (activeParticipants.length > 0) {
+	                        console.log("첫 번째 참가자:", activeParticipants[0]);
+	                    } else {
+	                        console.log("활성화된 참가자가 없습니다."); // 데이터가 없을 경우 메시지 출력
+	                        $('#participantList').append('<div class="dropdown-item text-center small text-gray-500">활성화된 채팅이 없습니다.</div>');
+	                        return; // 더 이상 진행하지 않도록 return
+	                    }
+	
+	                    var participantList = $('#participantList'); // 변수 이름 변경
+	                    participantList.empty(); // 기존 내용 비우기
+	
+	                    let items = ''; // 초기화
+	
+	                    activeParticipants.forEach(participant => {
+	                        console.log("참가자 이미지:", participant.participantImage);
+	                        console.log("마지막 메시지:", participant.lastMessage);
+	                        console.log("참가자 이름:", participant.participantName);
+	                        console.log("마지막 활동:", participant.lastActive);
+	                        console.log("상태:", participant.participantStatus);
+	                        
+	                        const image = participant.participantImage || 'default-image.png';
+	                        const lastMessage = participant.lastMessage || '메시지가 없습니다.';
+	                        const participantName = participant.participantName || '참가자 없음';
+	                        const lastActive = participant.lastActive || '활동 없음';
+	                        const statusClass = participant.participantStatus === 'Y' ? 'bg-success' : 'bg-danger';
+	
+	                        // 문자열 연결 방식으로 아이템 생성
+	                        items += '<a class="dropdown-item d-flex align-items-center" href="#" data-toggle="modal" data-target="#chatModal" data-user-no="' + participant.participantNo + '" data-chat-room-no="' + participant.chatRoomNo + '">' +
+	                                    '<div class="dropdown-list-image mr-3">' +
+	                                        '<img class="rounded-circle" src="' + image + '" alt="...">' +
+	                                        '<div class="status-indicator ' + statusClass + '"></div>' +
+	                                    '</div>' +
+	                                    '<div class="font-weight-bold">' +
+	                                        '<div class="text-truncate">' + lastMessage + '</div>' +
+	                                        '<div class="small text-gray-500">' + participantName + ' · ' + lastActive + '</div>' +
+	                                    '</div>' +
+	                                '</a>';
+	                    });
+	
+	                    // 최종 items 확인
+	                    console.log("최종 아이템 HTML:", items);
+	                    participantList.append(items); // 요소 추가
+	                },
+	                error: function(xhr, status, error) {
+	                    console.error('트레이너용 활성화된 참가자를 가져오는 중 오류 발생:', error); // 에러 메시지 출력
+	                }
+	            });
+	        }
+	
+	        	
+	        // '전송' 버튼 클릭 시 메시지 전송
+	        $('#sendMessageButton').on('click', function() {
+	        	console.log('전송 버튼 클릭됨'); // 클릭 확인
+	            sendMessage();
+	        });
+	
+	        // Enter 키를 눌렀을 때 메시지 전송
+	        $('.input-group input[type="text"]').on('keypress', function(event) {
+	            if (event.which === 13) { // Enter 키 코드
+	                sendMessage();
+	                event.preventDefault(); // Enter 키로 인해 폼이 제출되는 것을 방지
+	            }
+	        });
+	        
+	        
+	        
+	    });
+	    
+	 	// 사진 변경
+        function changePicture(){
+            // 모달 띄우기
+            $('#changePictureModal').modal('show');
+		}
+	 	
+	 	$(function (){
+	 	// 파일 미리보기
+	 	    $("#input-file").change(function (event) {
+	 	        var reader = new FileReader();
+
+	 	        reader.onload = function (event) {
+	 	            var img = $("#productImage img");
+
+	 	            if(img.length === 0){
+	 	                var img = $("<img>");
+	 	                $("#productImage").append(img);
+	 	            }
+	 	            img.attr("src", event.target.result);
+	 	        };
+	 	        reader.readAsDataURL(event.target.files[0]);
+	 	        console.log(event);
+	 	    });
+
+	 	    $("#input-files").change(function (event) {
+	 	        var reader = new FileReader();
+
+	 	        reader.onload = function (event) {
+	 	            var img = $("#productImages img");
+
+	 	            if(img.length === 0){
+	 	                var img = $("<img>");
+	 	                $("#productImages").append(img);
+	 	            }
+	 	            img.attr("src", event.target.result);
+	 	        };
+	 	        reader.readAsDataURL(event.target.files[0]);
+	 	        console.log(event);
+	 	    });
+	 	    
+	 	    // 태그가 추가되면 이벤트 발생
+	 	    $("#tag").on('change', function() {
+	 	        console.log(tagify.detail.value);
+	 	    });
+
+	 	    $(".openTag").click(function(){
+	 	        $(".detailCategory").css("display", "block");
+	 	        $(this).css("display", "none")
+	 	    });
+
+	 	})
 	</script>
 
 

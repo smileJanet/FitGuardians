@@ -10,9 +10,10 @@ import org.springframework.stereotype.Service;
 
 import com.kh.fitguardians.common.model.vo.QrInfo;
 import com.kh.fitguardians.member.model.dao.MemberDao;
-import com.kh.fitguardians.member.model.vo.BodyInfo;
 import com.kh.fitguardians.member.model.vo.Member;
 import com.kh.fitguardians.member.model.vo.MemberInfo;
+import com.kh.fitguardians.member.model.vo.Schedule;
+import com.kh.fitguardians.member.model.vo.TrainerInfo;
 
 @Service
 public class MemberServiceImpl implements MemberService{
@@ -117,38 +118,81 @@ public class MemberServiceImpl implements MemberService{
 	}
 
 	@Override
-	public ArrayList<Member> getTraineeList(String userId) {
-		return mDao.getTraineeList(sqlSession, userId);
+	public MemberInfo selectMemberInfo(int userNo) {
+		return mDao.selectMemberInfo(sqlSession, userNo);
 	}
 
 	@Override
-	public Member getTraineeDetails(String userId) {
-		return mDao.getTraineeDetails(sqlSession, userId);
+	public int updateDisease(MemberInfo mInfo) {
+		return mDao.updateDisease(sqlSession, mInfo);
+	}
+
+	
+	@Override
+	public Member getTrainerInfo(String trainerId) {
+		return mDao.getTrainerInfo(sqlSession, trainerId);
 	}
 
 	@Override
-	public ArrayList<BodyInfo> getTraineeBodyInfo(String userId) {
-		return mDao.getTraineeBodyInfo(sqlSession, userId);
+	public MemberInfo getMemberInfo(int userNo) {
+		return mDao.getMemberInfo(sqlSession, userNo);
 	}
 
 	@Override
-	public MemberInfo getTraineeInfo(int userNo) {
-		return mDao.getTraineeInfo(sqlSession, userNo);
+	public BodyInfo getBodyInfo(String userId) {
+		return mDao.getBodyInfo(sqlSession, userId);
 	}
 
 	@Override
-	public int saveBodyInfo(BodyInfo bi) {
-		return mDao.saveBodyInfo(sqlSession, bi);
+	public MemberInfo selectMemberInfo(int userNo) {
+		return mDao.selectMemberInfo(sqlSession, userNo);
 	}
 
 	@Override
-	public int deleteBodyInfo(int bodyInfoNo) {
-		return mDao.deleteBodyInfo(sqlSession, bodyInfoNo);
+	public int updateDisease(MemberInfo mInfo) {
+		return mDao.updateDisease(sqlSession, mInfo);
 	}
 
 	@Override
-	public ArrayList<BodyInfo> getRecentInfo(String userId) {
-		return mDao.getRecentInfo(sqlSession, userId);
+	public int updateMemberPwd(Member m) {
+		return mDao.updateMemberPwd(sqlSession, m);
+	}
+
+	@Override
+	public int updateMemberEmail(Member m) {
+		return mDao.updateMemberEmail(sqlSession, m);
+	}
+
+	@Override
+	public int deleteMember(int userNo) {
+		return mDao.deleteMember(sqlSession, userNo);
+	}
+
+	@Override
+	public ArrayList<Schedule> selectSchedule(int userNo) {
+		return mDao.selectSchedule(sqlSession, userNo);
+	}
+
+	@Override
+	public int updateMemberProfilePic(Member m) {
+		return mDao.updateMemberProfilePic(sqlSession, m);
+	}
+
+	@Override
+	public int insertTrainerInfo(TrainerInfo trInfo) {
+		 int userNo = mDao.selectUserNo(sqlSession);
+		 trInfo.setUserNo(userNo);
+		return mDao.insertTrainerInfo(sqlSession, trInfo);
+	}
+
+	@Override
+	public TrainerInfo selectTrainerInfo(int userNo) {
+		return mDao.selectTrainerInfo(sqlSession, userNo);
+	}
+
+	@Override
+	public int updateTrainerInfo(TrainerInfo trInfo) {
+		return mDao.updateTrainerInfo(sqlSession, trInfo);
 	}
 
 	

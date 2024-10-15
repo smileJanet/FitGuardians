@@ -6,6 +6,8 @@ import com.kh.fitguardians.common.model.vo.QrInfo;
 import com.kh.fitguardians.member.model.vo.BodyInfo;
 import com.kh.fitguardians.member.model.vo.Member;
 import com.kh.fitguardians.member.model.vo.MemberInfo;
+import com.kh.fitguardians.member.model.vo.Schedule;
+import com.kh.fitguardians.member.model.vo.TrainerInfo;
 
 public interface MemberService {
 	
@@ -67,4 +69,25 @@ public interface MemberService {
 	
 	public int updateDisease(MemberInfo mInfo);
 
+	public int updateAttStatus(QrInfo qr);
+	
+	public MemberInfo selectMemberInfo(int userNo);
+	
+	public int updateDisease(MemberInfo mInfo);	
+	
+	public int updateMemberPwd(Member m);
+	
+	public int updateMemberEmail(Member m);
+	
+	public int deleteMember(int userNo);
+	
+	public ArrayList<Schedule> selectSchedule(int userNo);
+	
+	public int updateMemberProfilePic(Member m);
+	
+	public int insertTrainerInfo(TrainerInfo trInfo);
+	
+	public TrainerInfo selectTrainerInfo(int userNo);
+	
+	public int updateTrainerInfo(TrainerInfo trInfo);
 }

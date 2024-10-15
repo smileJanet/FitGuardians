@@ -63,6 +63,8 @@ public class ExerciseController {
 		
 		mv.addObject("list", list).setViewName("exercise/trainerExercise");;
 		
+		mv.addObject("list", list).setViewName("exercise/trainerExercise");;
+		
 		return mv;
 	} // showExercisePage
 
