@@ -200,10 +200,10 @@
 		                            <!-- Dropdown - User Information -->
 		                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
 		                                aria-labelledby="userDropdown">
-		                                <span class="dropdown-item" onclick="changePicture();">
+		                                <a class="dropdown-item" onclick="changePicture();">
 		                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
 											profile
-		                                </span>
+		                                </a>
 		                                <a class="dropdown-item" href="mypage.me">
 		                                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
 		                                    My Page
