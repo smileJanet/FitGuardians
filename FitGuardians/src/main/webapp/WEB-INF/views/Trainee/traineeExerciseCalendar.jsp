@@ -193,7 +193,6 @@
 										
 										if(response.result === "success"){
 											
-											console.log("Yo");
 											
 										Swal.fire({
 											title: "플랜이 성공적으로 추가되었습니다.",
