@@ -21,6 +21,7 @@
 	 	<!-- sweetalert2 -->
 	    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.1/dist/sweetalert2.all.min.js"></script>
 		<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.1/dist/sweetalert2.min.css" rel="stylesheet">
+		
 		<style>
 		input[type=checkbox]{
 			margin:10px;
@@ -134,6 +135,7 @@
 						<script>
 							
 							$("#addCalendar").on("click", function() {
+								
 							
 							// 로그인한 회원의 아이디로 데이터를 저장할 것이므로..
 							let userId = '${loginUser.userId}';
@@ -172,12 +174,8 @@
 							icon: "warning",
 							});
 							} else {
-					
-								// if(ajaxRequest !== null){
-								// 	ajaxRequest.abort();
-								// }
-						
-								ajaxRequest = $.ajax({
+						 
+								$.ajax({
 									url : "addTraineeExPlan.tn",
 									method : "post",
 									contentType : 'application/json; charset=utf-8',
@@ -190,9 +188,9 @@
 										description: description,
 									}),
 									success: function(response){
-										
-										if(response.result === "success"){
-											
+										 // "success"로 값을 받았더니 안된다
+										 // 너무 안되서 그냥 1 받는걸로 했다.
+										if(response === 1){
 											
 										Swal.fire({
 											title: "플랜이 성공적으로 추가되었습니다.",
@@ -206,19 +204,54 @@
 											$("#calendar_date").val("");
 											$("select[name='muscle']").prop('selectedIndex', 0); // 첫번째 값 선택되도록
 											
+										}else{
+										 Swal.fire({
+								            title: "플랜 추가에 실패했습니다.",
+								            icon: "error",
+									        });
 										}
-									
+									 
 									},
 									error : function(){
 										//console.log("추가 실패");
 									},
 								});
 							}
-						});// 캘린더에 값 넣기(insert문)
-
-
-						</script>	
+						});
+						</script>
+						<script>
+							let exPlanList = ${list};
+						</script>
+						<script src="./resources/js/traineeExerciseCalendar.js"></script>
 					</div>
+
+					<!-- 회원의 입력 플래너 보기 -->
+					<div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel" aria-hidden="true">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="eventModalLabel">운동 세부일정표</h5>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+								<div class="modal-body">
+									<p id="modalExerciseNo" style="display:none;"></p>
+									<p id="modalWorkoutTitle"></p>
+									<p id="modalWorkoutTarget"></p>
+									<p id="modalDifficulty"></p>
+									<p id="modalDescription"></p>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+									<button type="button" class="btn btn-danger" data-dismiss="modal" onclick="deleteExPlan();">삭제</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<script>
+						// 플래너 삭제버튼 구현
+					</script>
 				</div>
 			</div>
 		</div>

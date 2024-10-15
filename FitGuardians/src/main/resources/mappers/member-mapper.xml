@@ -441,7 +441,11 @@
 		    )
 	</insert>
 	
-	
+	<select id="selectTraineeWorkoutList" resultMap="tnWorkoutResultset">
+	select *
+	  from tn_workout
+	 where user_id = #{userId}
+	</select>
 	
 	
 	

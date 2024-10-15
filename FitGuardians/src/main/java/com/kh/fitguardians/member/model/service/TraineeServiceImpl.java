@@ -1,5 +1,7 @@
 package com.kh.fitguardians.member.model.service;
 
+import java.util.ArrayList;
+
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,10 @@ public class TraineeServiceImpl implements TraineeService{
 	
 	public int addTraineeExPlan(TnWorkout tn) {
 		return tnDao.addTraineeExPlan(sqlSession, tn);
+	}
+
+	public ArrayList<TnWorkout> selectTraineeWorkoutList(String userId) {
+		return tnDao.selectTraineeWorkoutList(sqlSession, userId);
 	}
 
 }

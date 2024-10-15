@@ -79,8 +79,6 @@ public class MemberController {
     	mv.addObject("lastBmi", String.format("%.1f", lastBmi));
     	mv.addObject("recentBi", recentBi);
     	
-    	System.out.println("인생");
-    	
     	mv.setViewName("Trainer/traineeDetailInfo");
     	
         return mv;
