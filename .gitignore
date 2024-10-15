@@ -2,4 +2,6 @@
 /Servers/
 /TripVibe/
 FitGuardians/target/
+FitGuardians/.settings/
+FitGuardians/.classpath/
 /RemoteSystemsTempFiles/

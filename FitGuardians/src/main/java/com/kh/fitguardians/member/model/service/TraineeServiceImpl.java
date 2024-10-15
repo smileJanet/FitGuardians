@@ -1,8 +1,22 @@
 package com.kh.fitguardians.member.model.service;
 
+import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.kh.fitguardians.exercise.model.vo.TnWorkout;
+import com.kh.fitguardians.member.model.dao.TraineeDao;
 
 @Service
 public class TraineeServiceImpl implements TraineeService{
+
+	@Autowired
+	private TraineeDao tnDao;
+	@Autowired
+	private SqlSessionTemplate sqlSession;
+	
+	public int addTraineeExPlan(TnWorkout tn) {
+		return tnDao.addTraineeExPlan(sqlSession, tn);
+	}
 
 }

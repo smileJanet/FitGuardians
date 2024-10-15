@@ -58,6 +58,18 @@
       <result column="attendance" property="attendance"/>
       <result column="att_status" property="attStatus"/>
    </resultMap>
+   
+   <!-- 회원 운동계획표 입력 정보 -->
+   <resultMap type="TnWorkout" id = "tnWorkoutResultset">
+  	  <result column="ex_no" property="exerciseNo" />
+  	  <result column="user_id" property="userId" />
+  	  <result column="workout_title" property="workoutTitle" />
+  	  <result column="workout_date" property="workoutDate" />
+  	  <result column="workout_target" property="workoutTarget" />
+  	  <result column="difficulty" property="difficulty" />
+  	  <result column="description" property="description" />
+  	  <result column="workout_status" property="workoutStatus" />
+   </resultMap>
 	
 	<select id="checkId" resultType="int">
 		select count(user_id)
@@ -401,4 +413,39 @@
 		   set status = 'N'
 		 where user_no = #{userNo}
 	</update>
+	
+	<!-- trainee를 위한 Mappers -->
+	<insert id="addTraineeExPlan">
+		insert
+		  into tn_workout
+		    (
+		      ex_no
+		    , user_id
+		    , workout_title
+		    , workout_date
+		    , workout_target
+		    , difficulty
+		    , description
+		    , workout_status
+		    )
+		values
+		    (
+		      seq_tn_workout_ex_no.nextval
+		    , #{userId}  
+		    , #{workoutTitle}
+		    , #{workoutDate}
+		    , #{workoutTarget}
+		    , #{difficulty}
+		    , #{description}
+		    , 'Y'
+		    )
+	</insert>
+	
+	
+	
+	
+	
+	
+	
+	
 </mapper>

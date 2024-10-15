@@ -6,15 +6,31 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="UTF-8">
-            <title>Trainer Calendar</title>
-            <!-- calendar -->
-            <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
-			<!-- bootstrap	
-			<link href='https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.css' rel='stylesheet'>
-			<link href='https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13.1/css/all.css' rel='stylesheet'>
-			-->
-        </head>
+	<meta charset="UTF-8">
+		<title>Trainer Calendar</title>
+		<!-- calendar -->
+		<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+		<!-- bootstrap	
+		<link href='https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.css' rel='stylesheet'>
+		<link href='https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13.1/css/all.css' rel='stylesheet'>
+		-->
+
+		<!-- 외부 자바스크립트 -->
+		<script defer src="./resources/js/traineeExerciseCalendar.js"></script>
+		
+	 	<!-- sweetalert2 -->
+	    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.1/dist/sweetalert2.all.min.js"></script>
+		<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.1/dist/sweetalert2.min.css" rel="stylesheet">
+		<style>
+		input[type=checkbox]{
+			margin:10px;
+			text-align: center;
+		}
+		
+		
+		</style>
+
+	</head>
         <body>
             <c:if test="${ not empty alertMsg }">
                 <script>
@@ -52,204 +68,154 @@
                         <!-- Begin Page Content -->
                         <div class="container-fluid">
 						<!-- Page Heading -->
-							<h1 class="h3 mb-4 text-gray-800">calendar</h1>
+						<h1 class="h3 mb-4 text-gray-800">오늘 운동 계획표 입력하기</h1>
 							
-							<script>
-								var sch = []
-							</script>
-							<c:forEach var="s" items="${schedule}">
-								<script>
-									sch.push({
-										title:"${s.scheduleTitle}",
-										start:"${s.startDate}",
-										end:"${s.endDate}",
-										backColor:"${s.backColor}"
-									});
-									
-									
-								</script>
-							</c:forEach>
-								<script>
-									document.addEventListener('DOMContentLoaded', function () {
-										
-										const eventDate = sch.map(event => ({
-											title: event.title,
-											start: event.start,
-											end: event.end,
-											color: event.backColor,
-										}))
-										
-										
-										$("input[id=allday]").on('change', ()=>{
-											if($("input[id=allday]").is(":checked")){
-												// 체크 됐을 때
-												$("#calendar_start_time").val("00:00");
-												$("#calendar_end_time").val("00:00");
-											}else{
-												// 체크 해제 했을 때
-												$("#calendar_start_time").val("");
-												$("#calendar_end_time").val("");
-											}
-										})
-										
-										const calendarEl = document.getElementById('calendar');
-										const calendar = new FullCalendar.Calendar(calendarEl,
-											{
-												customButtons:{
-													addEventButton:{
-														text:"일정 추가",
-														click: ()=>{
-															$("#calendarModal").modal("show");
-														}
-													},
-													saveButton:{
-														text:"저장하기",
-														click: ()=>{
-															const events = calendar.getEvents();
-															const eventsData = events.map(event=> ({
-																scheduleTitle: event.title,
-																startDate: event.start ? event.start.toISOString() : null,
-																endDate: event.end ? event.end.toISOString() : null,
-																backColor: event.backgroundColor,
-															}));
-															console.log(eventsData);
-															$.ajax({
-																url:"addCalendar.tr",
-																type:"POST",
-																contentType: 'application/json',
-																data: JSON.stringify(eventsData),
-																success:(result)=>{
-																	if(result === "YYYC"){
-																		Swal.fire({icon: 'success', text: "일정 저장 성공!"});
-																	}else if(result === "NNNC"){
-																		Swal.fire({icon: 'error', text: "일정 저장에 실패 했습니다"});
-																	}else if(result === "DDDC"){
-																		Swal.fire({icon: 'warning', text: "새로운 일정이 없습니다."});
-																	}
-																	
-																},
-																error:()=>{
-																	console.log("add calendar ajax failed");
-																},
-															})
-														}
-													}
-												},
-												headerToolbar: {
-													left: 'prev addEventButton,saveButton,today',
-													center: 'title',
-													right: 'dayGridMonth,dayGridWeek,dayGridDay next',
-												},
-												height: '800px',
-												expandRows:true,
-												slotMinTime: '08:00',
-												slotMaxTime: '22:00',
-												themeSystem: 'bootstrap',
-												initialView: 'dayGridMonth',
-												selectable: true,
-												editable: true,
-												displayEventTime: true,
-												events:eventDate,											
-											}
-											
-										)
-										calendar.render()
-										calendar.on('eventClick', (info)=>{
-											console.log(info);
-										})
-									
-										// 캘린더에 추가
-										$("#addCalendar").on("click",()=>{
-											let start_date = $("#calendar_start_date").val();
-											let end_date = $("#calendar_end_date").val();
-											let start_time = $("#calendar_start_time").val();
-											let end_time = $("#calendar_end_time").val();
-											let allday = $("input[id=allday]").is(":checked");
-											
-											
-											
-											var eventData = {
-													title: $("#calendar_content").val(),
-													start: new Date(start_date + "T" + start_time),
-													end: new Date(end_date + "T" + end_time),
-													color: $("#color").val(),
-													allday: allday,
-											}
-											
-											console.log(eventData);
-											
-											if(eventData.title === null || eventData.title === ""){
-												Swal.fire({icon: 'warning', text: "내용을 입력해주세요"});
-											}else if(eventData.start === "" || eventData.end === ""){
-												Swal.fire({icon: 'warning', text: "날짜를 입력해주세요"});
-											}else if(new Date(eventData.end)- new Date(eventData.start) < 0){
-												Swal.fire({icon: 'warning', text: "종료일이 시작일보다 먼저입니다"});
-											}else if(start_time === "" || end_time === ""){
-												Swal.fire({icon: 'warning', text: "시간을 입력해주세요"});
-											}else if(eventData.end.valueOf() < eventData.start.valueOf()){
-												Swal.fire({icon: 'warning', text: "종료시간이 시작시간보다 먼저입니다"});
-											}else{
-												calendar.addEvent(eventData);
-												$("#calendarModal").modal("hide");
-												$("#calendar_content").val("")
-												$("#calendar_start_date").val("");
-												$("#calendar_end_date").val("");
-												$("#calendar_start_time").val("");
-												$("#calendar_end_time").val("");
-											}
-										})
-										
-									})
-									
-								
-								
-								</script>
-							<%-- </c:if> --%>
 						<div id='calendar'></div>
 
-						<div class="modal fade" id="calendarModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+						<!-- modal 입력창 -->
+							<div class="modal fade" id="calendarModal" tabindex="-1"
+							role="dialog" aria-labelledby="exampleModalLabel"
+							aria-hidden="true">
 							<div class="modal-dialog" role="document">
 								<div class="modal-content">
 									<div class="modal-header">
-										<h5 class="modal-title" id="exampleModalLabel">일정을 입력하세요.</h5>
-										<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										<h5 class="modal-title" id="exampleModalLabel">${loginUser.userName}의 운동 플랜 기록하기</h5>
+										<button type="button" class="close" data-dismiss="modal"
+											aria-label="Close">
 											<span aria-hidden="true">&times;</span>
 										</button>
 									</div>
 									<div class="modal-body">
 										<div class="form-group">
-											<label for=taskId class="col-form-label">색상</label>
-											<select id="color" class="form-control">
-								                <option value="blue">파랑색</option>
-								                <option value="red">빨강색</option>
-								                <option value="orange">주황색</option>
-								                <option value="yellow">노랑색</option>
-	   							                <option value="green">초록색</option>
-								                <option value="indigo">남색</option>
-								                <option value="purple">보라색</option>
-								            </select>
-											<label for="taskId" class="col-form-label">일정 내용</label>
-											<input type="text" class="form-control" id="calendar_content" name="calendar_content">
-											<label for="taskId" class="col-form-label">시작 날짜</label>
-											<input type="date" class="form-control" id="calendar_start_date" name="calendar_start_date">
-											<label for="taskId" class="col-form-label">종료 날짜</label>
-											<input type="date" class="form-control" id="calendar_end_date" name="calendar_end_date">
-											<label for="taskId" class="col-form-label">시작 시간</label>
-											<input type="time" class="form-control" name="calendar_start_time" id="calendar_start_time">
-											<label for="taskId" class="col-form-label">종료 시간</label>
-											<input type="time" class="form-control" name="calendar_end_time" id="calendar_end_time">
-											<label for="taskId" class="col-form-label">하루종일</label>
-											<input type="checkbox" id="allday" name="allday"/> 
+											<label for="taskId" class="col-form-label">일정 제목</label> <input
+												type="text" class="form-control" id="calendar_title"
+												name="calendar_title"> <label for="taskId"
+												class="col-form-label">난이도</label>
+											<div style="display: flex;">
+												<label><input type="checkbox" class="difficulty"
+													value="H">어려움(H)</label> <label><input
+													type="checkbox" class="difficulty" value="M">보통(M)</label> <label><input
+													type="checkbox" class="difficulty" value="L">쉬움(L)</label>
+											</div>
+
+											<label for="taskId" class="col-form-label">운동 부위</label>
+											<div style="display: flex;">
+												<select id="muscleGroup" class="form-select" name="muscle">
+													<option value="none">선택하세요</option>
+													<option value="biceps">이두근</option>
+													<option value="triceps">삼두근</option>
+													<option value="chest">가슴근</option>
+													<option value="abdominals">복근</option>
+													<option value="lats">광배근</option>
+													<option value="back">등근</option>
+													<option value="glutes">엉덩이근</option>
+													<option value="quadriceps">사두근</option>
+													<option value="hamstrings">햄스트링근</option>
+												</select>
+											</div>
+
+											<label for="taskId" class="col-form-label">운동일</label> <input
+												type="date" class="form-control" id="calendar_date"
+												name="calendar_date"> <label for="taskId"
+												class="col-form-label">운동 내용</label>
+											<textarea class="form-control" id="calendar_description"
+												name="calendar_description" style="height: 200px;"></textarea>
+
 										</div>
 									</div>
 									<div class="modal-footer">
 										<button type="button" class="btn btn-warning" id="addCalendar">추가</button>
-										<button type="button" class="btn btn-secondary" data-dismiss="modal"
-											id="sprintSettingModalClose">취소</button>
+										<button type="button" class="btn btn-secondary"
+											data-dismiss="modal" id="sprintSettingModalClose">취소</button>
 									</div>
+
 								</div>
 							</div>
-						</div>
+						<script>
+							
+							$("#addCalendar").on("click", function() {
+							
+							// 로그인한 회원의 아이디로 데이터를 저장할 것이므로..
+							let userId = '${loginUser.userId}';
+							let title = $('#calendar_title').val();
+							let difficulty = $(".difficulty:checked").val();
+							let date = $("#calendar_date").val();
+							let selectTarget = $("select[name='muscle']").val();
+							let description = $("#calendar_description").val();
+							
+							console.log(userId, title, difficulty, date, selectTarget, description)
+
+							// 정규화
+							if (!title) {
+							Swal.fire({
+							title: "제목을 입력하세요",
+							icon: "warning",
+							});
+							} else if (!difficulty) {
+							Swal.fire({
+							title: "난이도를 선택하세요.",
+							icon: "warning",
+							});
+							} else if (!date) {
+							Swal.fire({
+							title: "일자를 선택하세요.",
+							icon: "warning",
+							});
+							} else if (!description) {
+							Swal.fire({
+							title: "설명을 작성하세요.",
+							icon: "warning",
+							});
+							} else if (selectTarget === "none") {
+							Swal.fire({
+							title: "표적 부위를 선택하세요.",
+							icon: "warning",
+							});
+							} else {
+					
+								// if(ajaxRequest !== null){
+								// 	ajaxRequest.abort();
+								// }
+						
+								ajaxRequest = $.ajax({
+									url : "addTraineeExPlan.tn",
+									method : "post",
+									contentType : 'application/json; charset=utf-8',
+									data: JSON.stringify({
+										userId : userId,
+										title : title,
+										difficulty : difficulty,
+										date : date,
+										target : selectTarget,
+										description: description,
+									}),
+									success: function(response){
+										
+										if(response.result === "success"){
+										Swal.fire({
+											title: "플랜이 성공적으로 추가되었습니다.",
+											icon: "success",
+											});
+											
+											// 값 초기화
+											$("#calendarModal").modal("hide");
+											$("#calendar_title").val("");
+											$("#calendar_description").val("");
+											$("#calendar_date").val("");
+											$("select[name='muscle']").prop('selectedIndex', 0); // 첫번째 값 선택되도록
+											
+										}
+									
+									},
+									error : function(){
+										//console.log("추가 실패");
+									},
+								});
+							}
+						});// 캘린더에 값 넣기(insert문)
+
+
+						</script>	
 					</div>
 				</div>
 			</div>
