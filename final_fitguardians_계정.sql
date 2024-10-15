@@ -110,11 +110,12 @@ insert
      )
 values
      (
-       seq_trainer_info
+       seq_trainer_info.nextval
      , 4
      , 5
      , '대회 우승'
-     , 'resources/trProfilePic/jang.jpg
-     
+     , 'resources/trProfilePic/jang.jpg'
+     , '잘부탁드립니다'
      )
+     ;
      
