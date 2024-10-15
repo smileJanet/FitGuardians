@@ -13,6 +13,7 @@ import com.kh.fitguardians.member.model.dao.MemberDao;
 import com.kh.fitguardians.member.model.vo.Member;
 import com.kh.fitguardians.member.model.vo.MemberInfo;
 import com.kh.fitguardians.member.model.vo.Schedule;
+import com.kh.fitguardians.member.model.vo.TrainerInfo;
 
 @Service
 public class MemberServiceImpl implements MemberService{
@@ -118,6 +119,28 @@ public class MemberServiceImpl implements MemberService{
 	@Override
 	public ArrayList<Schedule> selectSchedule(int userNo) {
 		return mDao.selectSchedule(sqlSession, userNo);
+	}
+
+	@Override
+	public int updateMemberProfilePic(Member m) {
+		return mDao.updateMemberProfilePic(sqlSession, m);
+	}
+
+	@Override
+	public int insertTrainerInfo(TrainerInfo trInfo) {
+		 int userNo = mDao.selectUserNo(sqlSession);
+		 trInfo.setUserNo(userNo);
+		return mDao.insertTrainerInfo(sqlSession, trInfo);
+	}
+
+	@Override
+	public TrainerInfo selectTrainerInfo(int userNo) {
+		return mDao.selectTrainerInfo(sqlSession, userNo);
+	}
+
+	@Override
+	public int updateTrainerInfo(TrainerInfo trInfo) {
+		return mDao.updateTrainerInfo(sqlSession, trInfo);
 	}
 
 	

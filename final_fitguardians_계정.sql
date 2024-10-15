@@ -97,3 +97,24 @@ select qr_no
            to_timestamp('2024-10-08T17:10:10.776433', 'YYYY-MM-DD"T"HH24:MI:SS.FF') and
            to_timestamp('2025-10-08T16:40:43.6191067', 'YYYY-MM-DD"T"HH24:MI:SS.FF') 
            ;
+           
+insert 
+  into trainerinfo
+     (
+       tr_info_no
+     , user_no
+     , tr_career
+     , tr_certi
+     , tr_profile
+     , tr_descript
+     )
+values
+     (
+       seq_trainer_info
+     , 4
+     , 5
+     , '´ëÈ¸ ¿ì½Â'
+     , 'resources/trProfilePic/jang.jpg
+     
+     )
+     

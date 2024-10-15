@@ -6,6 +6,7 @@ import com.kh.fitguardians.common.model.vo.QrInfo;
 import com.kh.fitguardians.member.model.vo.Member;
 import com.kh.fitguardians.member.model.vo.MemberInfo;
 import com.kh.fitguardians.member.model.vo.Schedule;
+import com.kh.fitguardians.member.model.vo.TrainerInfo;
 
 public interface MemberService {
 	
@@ -44,4 +45,12 @@ public interface MemberService {
 	public int deleteMember(int userNo);
 	
 	public ArrayList<Schedule> selectSchedule(int userNo);
+	
+	public int updateMemberProfilePic(Member m);
+	
+	public int insertTrainerInfo(TrainerInfo trInfo);
+	
+	public TrainerInfo selectTrainerInfo(int userNo);
+	
+	public int updateTrainerInfo(TrainerInfo trInfo);
 }

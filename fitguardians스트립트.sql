@@ -181,3 +181,15 @@ COMMENT ON COLUMN TRAINER_MATCHING.TRAINER_NO IS '트레이너번호';
 
 CREATE SEQUENCE SEQ_TRAINER_MATCHING NOCACHE;
 
+--- 트레이너 정보
+CREATE TABLE trainerInfo (
+    user_no NUMBER NOT NULL,                     -- 회원번호
+    tr_career NUMBER,                            -- 경력 년수
+    tr_certi varchar2(100),                      -- 자격 사항
+    tr_profile VARCHAR2(300),                    -- 프로필 경로+파일명
+    tr_descript varchar2(1000)                   -- 간략 소개
+);
+
+create sequence seq_trainer_info nocache;
+
+

@@ -49,6 +49,14 @@
 		<result column="goal" property="goal"/>
 	</resultMap>
 	
+	<resultMap type="TrainerInfo" id="TrainerInfoResult">
+		<result column="user_no" property="userNo"/>
+		<result column="tr_career" property="trCareer"/>
+		<result column="tr_Certi" property="trCerti"/>
+		<result column="tr_descript" property="trDescript"/>
+		<result column="tr_profile" property="trProfile"/>
+	</resultMap>
+	
 	<select id="checkId" resultType="int">
 		select count(user_id)
 		  from member
@@ -280,6 +288,51 @@
 	<update id="deleteMember">
 		update member
 		   set status = 'N'
+		 where user_no = #{userNo}
+	</update>
+	
+	<update id="updateMemberProfilePic">
+		update member
+		   set profile_pic = #{profilePic}
+		 where user_no = #{userNo}
+	</update>
+	
+	<insert id="insertTrainerInfo">
+		insert 
+		  into trainerinfo
+		     (
+		     , user_no
+		     , tr_career
+		     , tr_certi
+		     , tr_profile
+		     , tr_descript
+		     )
+		values
+		     (
+		       #{userNo}
+		     , #{trCareer}
+		     , #{trCerti}
+		     , #{trProfile}
+		     , #{trDescript}
+		     )
+	</insert>
+	
+	<select id="selectTrainerInfo" resultMap="TrainerInfoResult">
+		select
+		        tr_career
+		      , tr_certi
+		      , tr_profile
+		      , tr_descript
+		  from trainerinfo
+		 where user_no = #{userNo}
+	</select>
+	
+	<update id="updateTrainerInfo">
+		update trainerinfo
+		   set tr_career = #{trCareer}
+		     , tr_certi = #{trCerti}
+		     , tr_profile = #{trProfile}
+		     , tr_descript = #{trDescript}
 		 where user_no = #{userNo}
 	</update>
 </mapper>

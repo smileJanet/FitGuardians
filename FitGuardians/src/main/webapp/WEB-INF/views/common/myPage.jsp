@@ -7,14 +7,14 @@
 <meta charset="UTF-8">
 <title>My Page</title>
 <!-- Custom fonts for this template-->
-<link href="resources/templates/vendor/fontawesome-free/css/all.min.css"
-	rel="stylesheet" type="text/css">
-<link
+<!-- <link href="resources/templates/vendor/fontawesome-free/css/all.min.css"
+	rel="stylesheet" type="text/css"> -->
+<!-- <link
 	href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-	rel="stylesheet">
+	rel="stylesheet"> -->
 <link rel="stylesheet" href="resources/css/sumoselect.css">
 
-<script defer src="resources/templates/vendor/jquery/jquery.min.js"></script>
+<!-- <script defer src="resources/templates/vendor/jquery/jquery.min.js"></script> -->
 <script defer src="resources/js/jquery.sumoselect.js"></script>
 </head>
 
@@ -261,98 +261,133 @@
 										onclick="changePwd();" style="display: none">비밀번호 변경</button>
 								</div>
 							</div>
-
-							<c:if test="${ loginUser.userLevel == '2' }">
-								<!-- 개인 인적사항 변경 -->
-								<div class="card shadow mb-4">
-									<div
-										class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-										<h6 class="m-0 font-weight-bold text-primary">개인 인적사항 변경</h6>
-										<div class="dropdown no-arrow">
-											<a class="dropdown-toggle text-gray-500" href="#"
-												role="button" id="dropdownMenuLink" data-toggle="dropdown"
-												aria-haspopup="true" aria-expanded="false"> 블라인드해제 <i
-												class="fas fa-ellipsis-v fa-sm fa-fw "></i>
-											</a>
-											<div
-												class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-												aria-labelledby="dropdownMenuLink">
-												<div class="dropdown-header">블라인드 해제:</div>
-												<button class="dropdown-item" onclick="offBlur();">해제</button>
-												<button class="dropdown-item" onclick="onBlur();">활성화</button>
+							<c:choose>
+								<c:when test="${ loginUser.userLevel == '2' }">
+									<!-- 개인 인적사항 변경 -->
+									<div class="card shadow mb-4">
+										<div
+											class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+											<h6 class="m-0 font-weight-bold text-primary">개인 인적사항 변경</h6>
+											<div class="dropdown no-arrow">
+												<a class="dropdown-toggle text-gray-500" href="#"
+													role="button" id="dropdownMenuLink" data-toggle="dropdown"
+													aria-haspopup="true" aria-expanded="false"> 블라인드해제 <i
+													class="fas fa-ellipsis-v fa-sm fa-fw "></i>
+												</a>
+												<div
+													class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+													aria-labelledby="dropdownMenuLink">
+													<div class="dropdown-header">블라인드 해제:</div>
+													<button class="dropdown-item" onclick="offBlur();">해제</button>
+													<button class="dropdown-item" onclick="onBlur();">활성화</button>
+												</div>
 											</div>
 										</div>
+										<div class="card-body" id="disease-card"
+											style="filter: blur(5px)">
+											<form action="">
+												<div class="input-group mb-3">
+													<input type="number" id="height" name="height"
+														class="form-control" placeholder="키 (cm)"
+														value="${ memberInfo.height }" required> <input
+														type="number" id="weight" name="weight"
+														class="form-control" placeholder="몸무게 (kg)"
+														value="${ memberInfo.weight }" required>
+												</div>
+												<select id="disease" name="disease"
+													class="mb-3 sumoselect_multiple" multiple="multiple">
+													<option value="없음">없음</option>
+													<option value="혈압조절장애"
+														<c:if test="${memberInfo.disease.contains('혈압조절장애')}">selected</c:if>>혈압조절장애(고혈압,
+														저혈압)</option>
+													<option value="고지혈증"
+														<c:if test="${memberInfo.disease.contains('고지혈증')}">selected</c:if>>고지혈증</option>
+													<option value="당뇨"
+														<c:if test="${memberInfo.disease.contains('당뇨')}">selected</c:if>>당뇨</option>
+													<option value="대사증후군"
+														<c:if test="${memberInfo.disease.contains('대사증후군')}">selected</c:if>>대사증후군</option>
+													<option value="디스크(허리)"
+														<c:if test="${memberInfo.disease.contains('디스크(허리)')}">selected</c:if>>디스크(허리)</option>
+													<option value="천식"
+														<c:if test="${memberInfo.disease.contains('천식')}">selected</c:if>>천식</option>
+													<option value="심혈관질환"
+														<c:if test="${memberInfo.disease.contains('심혈관 질환')}">selected</c:if>>심혈관
+														질환</option>
+													<option value="골다골증"
+														<c:if test="${memberInfo.disease.contains('골다골증')}">selected</c:if>>골다골증</option>
+													<option value="관절염"
+														<c:if test="${memberInfo.disease.contains('관절염')}">selected</c:if>>관절염(류마티스
+														등)</option>
+													<option value="편두통혹은만성두통"
+														<c:if test="${memberInfo.disease.contains('편두통혹은만성두통')}">selected</c:if>>편두통
+														혹은 만성두통</option>
+													<option value="갑상선장애"
+														<c:if test="${memberInfo.disease.contains('갑상선장애')}">selected</c:if>>갑상선
+														장애</option>
+												</select> <select id="goal" name="goal" class="custom-select mb-2">
+													<option value="없음">운동 목표</option>
+													<option value="체중 감량"
+														<c:if test="${memberInfo.goal.contains('체중 감량')}">selected</c:if>>체중
+														감량</option>
+													<option value="근력 증가"
+														<c:if test="${memberInfo.goal.contains('근력 증가')}">selected</c:if>>근력
+														증가</option>
+													<option value="수술 후 재활"
+														<c:if test="${memberInfo.goal.contains('수술 후 재활')}">selected</c:if>>수술
+														후 재활</option>
+													<option value="유연성 운동"
+														<c:if test="${memberInfo.goal.contains('유연성 운동')}">selected</c:if>>유연성
+														운동</option>
+													<option value="균형 증가"
+														<c:if test="${memberInfo.goal.contains('균형 증가')}">selected</c:if>>균형
+														증가</option>
+													<option value="심혈관 기능 증진"
+														<c:if test="${memberInfo.goal.contains('심혈관 기능 증진')}">selected</c:if>>심혈관
+														기능증진</option>
+												</select>
+	
+												<button type="button" class="btn btn-primary"
+													onclick="changeDisease();">변경하기</button>
+											</form>
+										</div>
 									</div>
-									<div class="card-body" id="disease-card"
-										style="filter: blur(5px)">
-										<form action="">
-											<div class="input-group mb-3">
-												<input type="number" id="height" name="height"
-													class="form-control" placeholder="키 (cm)"
-													value="${ memberInfo.height }" required> <input
-													type="number" id="weight" name="weight"
-													class="form-control" placeholder="몸무게 (kg)"
-													value="${ memberInfo.weight }" required>
+								</c:when>
+								<c:otherwise>
+									<div class="card shadow mb-4">
+										<!-- 트레이너 경력사항 변경 -->
+										<div
+											class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+											<h6 class="m-0 font-weight-bold text-primary">트레이너 경력사항</h6>
+		
+										</div>
+										<div class="card-body" id="change-email">
+											<div class="input-group mt-3">
+												<label class="col-form-label mr-4">경  력 </label> 
+												<input type="text" class="form-control ml-4 col-1" id="trCareer" value="${trInfo.trCareer}">
+												<label class="col-form-label">년</label>
 											</div>
-											<select id="disease" name="disease"
-												class="mb-3 sumoselect_multiple" multiple="multiple">
-												<option value="없음">없음</option>
-												<option value="혈압조절장애"
-													<c:if test="${memberInfo.disease.contains('혈압조절장애')}">selected</c:if>>혈압조절장애(고혈압,
-													저혈압)</option>
-												<option value="고지혈증"
-													<c:if test="${memberInfo.disease.contains('고지혈증')}">selected</c:if>>고지혈증</option>
-												<option value="당뇨"
-													<c:if test="${memberInfo.disease.contains('당뇨')}">selected</c:if>>당뇨</option>
-												<option value="대사증후군"
-													<c:if test="${memberInfo.disease.contains('대사증후군')}">selected</c:if>>대사증후군</option>
-												<option value="디스크(허리)"
-													<c:if test="${memberInfo.disease.contains('디스크(허리)')}">selected</c:if>>디스크(허리)</option>
-												<option value="천식"
-													<c:if test="${memberInfo.disease.contains('천식')}">selected</c:if>>천식</option>
-												<option value="심혈관질환"
-													<c:if test="${memberInfo.disease.contains('심혈관 질환')}">selected</c:if>>심혈관
-													질환</option>
-												<option value="골다골증"
-													<c:if test="${memberInfo.disease.contains('골다골증')}">selected</c:if>>골다골증</option>
-												<option value="관절염"
-													<c:if test="${memberInfo.disease.contains('관절염')}">selected</c:if>>관절염(류마티스
-													등)</option>
-												<option value="편두통혹은만성두통"
-													<c:if test="${memberInfo.disease.contains('편두통혹은만성두통')}">selected</c:if>>편두통
-													혹은 만성두통</option>
-												<option value="갑상선장애"
-													<c:if test="${memberInfo.disease.contains('갑상선장애')}">selected</c:if>>갑상선
-													장애</option>
-											</select> <select id="goal" name="goal" class="custom-select mb-2">
-												<option value="없음">운동 목표</option>
-												<option value="체중 감량"
-													<c:if test="${memberInfo.goal.contains('체중 감량')}">selected</c:if>>체중
-													감량</option>
-												<option value="근력 증가"
-													<c:if test="${memberInfo.goal.contains('근력 증가')}">selected</c:if>>근력
-													증가</option>
-												<option value="수술 후 재활"
-													<c:if test="${memberInfo.goal.contains('수술 후 재활')}">selected</c:if>>수술
-													후 재활</option>
-												<option value="유연성 운동"
-													<c:if test="${memberInfo.goal.contains('유연성 운동')}">selected</c:if>>유연성
-													운동</option>
-												<option value="균형 증가"
-													<c:if test="${memberInfo.goal.contains('균형 증가')}">selected</c:if>>균형
-													증가</option>
-												<option value="심혈관 기능 증진"
-													<c:if test="${memberInfo.goal.contains('심혈관 기능 증진')}">selected</c:if>>심혈관
-													기능증진</option>
-											</select>
-
-											<button type="button" class="btn btn-primary"
-												onclick="changeDisease();">변경하기</button>
-										</form>
+											<div class="input-group mt-3">
+												<label class="col-form-label mr-3">자격 사항</label> 
+												<input type="text" class="form-control" id="trCerti" placeholder=", 로 구분해서 작성해주세요" value="${trInfo.trCerti}">
+											</div>
+											<div class="input-group mt-3">
+												<label class="col-form-label mr-3">간략 소개</label> 
+												<textarea rows="5" class="form-control" id="trDescript" style="resize:none">${trInfo.trDescript}</textarea>
+											</div>
+											<div class="input-group mt-3">
+												<label class="col-form-label mr-3" for="trProfile">프로필사진</label>
+												<input type="file" class="form-control-file" id="trProfile" value="${trInfo.trProfile}">
+												<c:if test="${not empty trInfo.trProfile}">
+													<a href="${trInfo.trProfile}" target="_blank">기존 프로필 사진</a>
+													<input type="hidden" id="originFile" name="trProfile" value="${trInfo.trProfile}">
+												</c:if>
+											</div>
+											
+											<button class="btn btn-primary mt-3" id="tcUpdateBtn" onclick="updateTc();">정보 변경</button>
+										</div>
 									</div>
-								</div>
-							</c:if>
-
+								</c:otherwise>
+							</c:choose>
 						</div>
 						<div class="col-lg-6">
 							<div class="card shadow mb-4">
@@ -429,143 +464,192 @@
 			</div>
 		</div>
 	</div>
-	<c:if test="${ loginUser.userLevel eq '2' }">
-		
-	</c:if>
-	<script>
-		// 일반회원일때만 실행시킬 함수
-		// 개인정보 블러 처리
-			function onBlur(){
-				$("#disease-card").css("filter", "blur(5px)")
-			}
-			
-			// 블러 해제시 비밀번호확인
-			function offBlur(){
-				let userEncoPwd = "${loginUser.userPwd}";
-				Swal.fire({
-					icon:"info",
-					title: "비밀번호 입력",
-					showCancelButton: true,
-					confirmButtonText: "확인",
-					cancelButtonText: "취소",
-					input:"password",
-					inputPlaceholder: "비밀번호를 입력해주세요",
-					preConfirm:((password)=>{
-						return new Promise((resolve, reject) =>{
-							$.ajax({
-								url:"checkPwd.me",
-								method:"POST",
-								data:{
-									"userPwd":password,
-									"userEncoPwd":userEncoPwd,
-								},
-								success:(result)=>{
-									if(result === "YYYP"){
-										resolve();
-									}else{
-										reject("비밀번호가 일치하지 않습니다.")
-									}
-									
-								},
-								error:()=>{
-									reject("오류가 발생했습니다.")
-								},
-							})
-						});
-						
-					}),
-				}).then(result=>{
-					if(result.isConfirmed){
-						$("#disease-card").css("filter", "none");
-					}
-						
-					
-				})
-				
-			}
-			
-			// multi select
-			$(()=>{
-				$(".sumoselect_multiple").SumoSelect({
-					placeholder: "기저질환",
-				});
-				
-				 // 초기 선택 값 설정
-			    const initialValues = $("#disease").val(); // 초기 선택된 값 가져오기
-			    if (initialValues) {
-			        initialValues.forEach(value => {
-			            $(".sumoselect_multiple")[0].sumo.selectItem(value);
-			        });
-			    }
-		
-				$("#disease").on("change",()=>{
-					let disease = $("#disease").val();
-					const none = disease.includes('없음');
-					
-					
-					// for(d of disease){if(d === '없음'){$(".sumoselect_multiple")[0].sumo.unSelectItem(2);}}
-					if(none){
-						$(".sumoselect_multiple option").each(function(){
-							if($(this).val() !== '없음'){
-								$(this).prop('disabled', true);
-							}
-						});
-						
-						$(".sumoselect_multiple")[0].sumo.reload();
-					}else{
-						$(".sumoselect_multiple option").each(function () {
-							$(this).prop('disabled', false);
-						});
-						$(".sumoselect_multiple")[0].sumo.unSelectItem(0);
-						$(".sumoselect_multiple")[0].sumo.reload();
-				
-					}
-		
-				});
-				
-			});
-		
-			function changeDisease(){
-				let height = $("input[name=height]").val();
-				let weight = $("input[name=weight]").val();
-				var disease = $("select[name=disease]").val();
-				var goal = $("select[name=goal]").val();
-				let mHeight = ${memberInfo.height};
-				let mWeight = ${memberInfo.weight};
-				let mDisease = ${disease};
-				let mGoal = "${memberInfo.goal}";
-				
-				if(parseInt(height) === mHeight && parseInt(weight) === mWeight && 
-						   JSON.stringify(disease) === JSON.stringify(mDisease) && goal === mGoal){
-					Swal.fire({ icon:'warning',	title: '바뀐 정보가 없습니다.' })
-				}else{
-					$.ajax({
-						url:"changeDisease.me",
-						method:"POST",
-						data:{
-							"userNo": ${loginUser.userNo},
-							"height": height,
-							"weight": weight,
-							"disease": disease,
-							"goal": goal,
-						},
-						success:(result)=>{
-							if(result === 'DDDY'){
-								Swal.fire({ icon:'success',	title: '변경 성공!' })
-							}else{
-								Swal.fire({ icon:'warning',	title: '정보변경에 실패 했습니다.' })
-							}
-						},
-						error:()=>{
-							console.log("disease change ajax failed");
-							
-						},
-					})
+	<c:choose>
+		<c:when test="${ loginUser.userLevel eq '2' }">
+		<script>
+			// 일반회원일때만 실행시킬 함수
+			// 개인정보 블러 처리
+				function onBlur(){
+					$("#disease-card").css("filter", "blur(5px)")
 				}
 				
-			}
-	</script>
-	
+				// 블러 해제시 비밀번호확인
+				function offBlur(){
+					let userEncoPwd = "${loginUser.userPwd}";
+					Swal.fire({
+						icon:"info",
+						title: "비밀번호 입력",
+						showCancelButton: true,
+						confirmButtonText: "확인",
+						cancelButtonText: "취소",
+						input:"password",
+						inputPlaceholder: "비밀번호를 입력해주세요",
+						preConfirm:((password)=>{
+							return new Promise((resolve, reject) =>{
+								$.ajax({
+									url:"checkPwd.me",
+									method:"POST",
+									data:{
+										"userPwd":password,
+										"userEncoPwd":userEncoPwd,
+									},
+									success:(result)=>{
+										if(result === "YYYP"){
+											resolve();
+										}else{
+											reject("비밀번호가 일치하지 않습니다.")
+										}
+										
+									},
+									error:()=>{
+										reject("오류가 발생했습니다.")
+									},
+								})
+							});
+							
+						}),
+					}).then(result=>{
+						if(result.isConfirmed){
+							$("#disease-card").css("filter", "none");
+						}
+							
+						
+					})
+					
+				}
+				
+				// multi select
+				$(()=>{
+					$(".sumoselect_multiple").SumoSelect({
+						placeholder: "기저질환",
+					});
+					
+					 // 초기 선택 값 설정
+				    const initialValues = $("#disease").val(); // 초기 선택된 값 가져오기
+				    if (initialValues) {
+				        initialValues.forEach(value => {
+				            $(".sumoselect_multiple")[0].sumo.selectItem(value);
+				        });
+				    }
+			
+					$("#disease").on("change",()=>{
+						let disease = $("#disease").val();
+						const none = disease.includes('없음');
+						
+						
+						// for(d of disease){if(d === '없음'){$(".sumoselect_multiple")[0].sumo.unSelectItem(2);}}
+						if(none){
+							$(".sumoselect_multiple option").each(function(){
+								if($(this).val() !== '없음'){
+									$(this).prop('disabled', true);
+								}
+							});
+							
+							$(".sumoselect_multiple")[0].sumo.reload();
+						}else{
+							$(".sumoselect_multiple option").each(function () {
+								$(this).prop('disabled', false);
+							});
+							$(".sumoselect_multiple")[0].sumo.unSelectItem(0);
+							$(".sumoselect_multiple")[0].sumo.reload();
+					
+						}
+			
+					});
+					
+				});
+			
+				function changeDisease(){
+					let height = $("input[name=height]").val();
+					let weight = $("input[name=weight]").val();
+					var disease = $("select[name=disease]").val();
+					var goal = $("select[name=goal]").val();
+					let mHeight = ${memberInfo.height};
+					let mWeight = ${memberInfo.weight};
+					let mDisease = ${disease};
+					let mGoal = "${memberInfo.goal}";
+					
+					if(parseInt(height) === mHeight && parseInt(weight) === mWeight && 
+							   JSON.stringify(disease) === JSON.stringify(mDisease) && goal === mGoal){
+						Swal.fire({ icon:'warning',	title: '바뀐 정보가 없습니다.' })
+					}else{
+						$.ajax({
+							url:"changeDisease.me",
+							method:"POST",
+							data:{
+								"userNo": ${loginUser.userNo},
+								"height": height,
+								"weight": weight,
+								"disease": disease,
+								"goal": goal,
+							},
+							success:(result)=>{
+								if(result === 'DDDY'){
+									Swal.fire({ icon:'success',	title: '변경 성공!' })
+								}else{
+									Swal.fire({ icon:'warning',	title: '정보변경에 실패 했습니다.' })
+								}
+							},
+							error:()=>{
+								console.log("disease change ajax failed");
+								
+							},
+						})
+					}
+					
+				}
+		</script>
+		</c:when>
+		<c:otherwise>
+			<script> // 트레이너 일때만 실행시킬 함수
+					function updateTc(){
+						const trCareer = $("#trCareer").val();
+						const trCerti =  $("#trCerti").val();
+						const trDescript = $("#trDescript").val();
+						const profileInput = $("#trProfile").get(0);
+						const trProfile = profileInput.files;
+						const originFile = $("#originFile").val();
+						const userNo = ${loginUser.userNo};
+						const formdata = new FormData();
+						formdata.append("userNo", userNo);
+						formdata.append("trCareer", trCareer);
+						formdata.append("trCerti", trCerti);
+						formdata.append("trDescript", trDescript);
+						formdata.append("trProfile", originFile);
+						formdata.append("upfiles", trProfile[0]);
+						
+						$.ajax({
+							url:"updateInfo.tr",
+							method:"POST",
+							contentType:false,
+							processData:false,
+							data:formdata,
+							success:(result)=>{
+								if(result === "YYTR"){
+									Swal.fire({
+										icon:"success",
+										title:"트레이너정보가 변경 되었습니다!"
+									}).then(result=>{
+										if(result.isConfirmed){
+											location.href = "mypage.me";
+										}
+									})
+								}else{
+									Swal.fire({
+										icon:"error",
+										title:"트레이너정보 변경 실패"
+									})
+									
+								}
+							},
+							error:()=>{
+								console.log("update trainer info ajax failed");
+							}
+						})
+					}
+			</script>
+		</c:otherwise>
+	</c:choose>
 	<script>
 	// 공통 실행 함수		
 			
